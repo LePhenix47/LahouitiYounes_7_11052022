@@ -1,4 +1,6 @@
 const app = require("./app");
+const dotEnv = require("dotenv");
+dotEnv.config();
 
 const normalizePort = (val) => {
     const port = parseInt(val, 10);
@@ -38,14 +40,14 @@ const errorHandler = (error) => {
 };
 
 const https = require("https");
-const fs = require("fs");
+const fileSystem = require("fs");
 
 const options = {
-    key: fs.readFileSync("./certificate/key.pem"),
-    cert: fs.readFileSync("./certificate/cert.pem"),
+    key: fileSystem.readFileSync("./certificate/key.pem"),
+    cert: fileSystem.readFileSync("./certificate/cert.pem"),
 };
 
-const server = https.createServer(app, options);
+const server = https.createServer(options, app);
 
 server.on("error", errorHandler);
 

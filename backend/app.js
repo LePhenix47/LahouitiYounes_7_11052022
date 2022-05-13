@@ -29,4 +29,6 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(helmet());
 
+//Routes
+
 module.exports = app;

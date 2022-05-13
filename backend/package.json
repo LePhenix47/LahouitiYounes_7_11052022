@@ -4,13 +4,20 @@
     "description": "Code Back-end du P7",
     "main": "server.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "node server.js"
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Younes Lahouiti",
     "license": "ISC",
-
     "dependencies": {
-        "nodemon": "^2.0.16"
+        "bcrypt": "^5.0.1",
+        "cors": "^2.8.5",
+        "dotenv": "^16.0.1",
+        "express": "^4.18.1",
+        "helmet": "^5.0.2",
+        "jsonwebtoken": "^8.5.1",
+        "multer": "^1.4.4",
+        "nodemon": "^2.0.16",
+        "password-validator": "^5.2.1",
+        "validator": "^13.7.0"
     }
 }
