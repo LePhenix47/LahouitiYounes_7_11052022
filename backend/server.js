@@ -39,6 +39,7 @@ const errorHandler = (error) => {
     }
 };
 
+//Initialises the Back-end server in HTTPS to avoid MITM attacks
 const https = require("https");
 const fileSystem = require("fs");
 
@@ -59,6 +60,7 @@ server.on("listening", () => {
 
 server.listen(port);
 
+//Given the fact that the Front-End and the Back-End have different servers, we have to
 const CORS = require("cors");
 
 app.use(
