@@ -3,16 +3,23 @@ const helmet = require("helmet");
 const dotEnv = require("dotenv");
 const path = require("path");
 const bodyParser = require("body-parser");
+const { Client } = require("pg");
 
-//Connects to the PostgreSQL database
+/* 
+Ways to interact with the Database
+*/
 let connectToDatabase = async () => {
-  const { Client } = require("pg");
+  //Connect
   const client = new Client();
   await client.connect();
+
+  //Query
   const res = await client.query("SELECT $1::text as message", [
     "Attempting to connect with the database",
   ]);
-  console.log(res.rows[0].message); //Logs the 1st message
+  console.log(res.rows[0].message);
+
+  //Disconnect
   await client.end();
 };
 
