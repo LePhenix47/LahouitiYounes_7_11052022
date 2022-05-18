@@ -8,19 +8,19 @@ const { Client } = require("pg");
 /* 
 Ways to interact with the Database
 */
-let connectToDatabase = async () => {
-  //Connect
-  const client = new Client();
-  await client.connect();
+let connectToDatabase = async() => {
+    //Connect
+    const client = new Client();
+    await client.connect();
 
-  //Query
-  const res = await client.query("SELECT $1::text as message", [
-    "Attempting to connect with the database",
-  ]);
-  console.log(res.rows[0].message);
+    //Query
+    const res = await client.query("SELECT $1::text as message", [
+        "Attempting to connect with the database",
+    ]);
+    console.log(res.rows[0].message);
 
-  //Disconnect
-  await client.end();
+    //Disconnect
+    await client.end();
 };
 
 //Configures the environment variables to avoid getting sensible data stolen from GitHub
@@ -30,16 +30,16 @@ const app = express();
 
 //Makes it so that everyone has access to our API
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  next();
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
+    );
+    res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    );
+    next();
 });
 
 //To have access to the body of the request by intercepting all requests with a JSON mimetype
@@ -51,6 +51,12 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 //Library that protects the headers of the requests and from XSS attacks
 app.use(helmet());
+
+//Synchroniser les modèles & la B2D
+const db = require("./models");
+db.sequelize.sync({ force: true }).then(() => {
+    console.log("Drop and re-sync db.");
+});
 
 //Routes
 const userRoutes = require("./routes/user.route");
