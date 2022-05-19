@@ -7,7 +7,7 @@ const { Client } = require("pg");
 
 /* 
 Ways to interact with the Database
-*/
+
 let connectToDatabase = async() => {
     //Connect
     const client = new Client();
@@ -22,7 +22,7 @@ let connectToDatabase = async() => {
     //Disconnect
     await client.end();
 };
-
+//*/
 //Configures the environment variables to avoid getting sensible data stolen from GitHub
 dotEnv.config();
 
