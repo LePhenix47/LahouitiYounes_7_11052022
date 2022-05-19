@@ -10,9 +10,13 @@ exports.signup = async(req, res, next) => {
 
         let user = await User.findOne({ email: req.body.email });
         if (!user) {
-            console.log("User with email :" + email + " hasn't signed up yet");
+            console.log(
+                "User with email :" +
+                email +
+                " hasn't signed up yet → Beginning acocunt creation"
+            );
             let hashedPassword = await bcrypt.hash(password, 15);
-            if (!hashedPassword) {
+            if (hashedPassword === null) {
                 return res.status(500).json({ message: "Server ERROR" });
             }
             const newUser = new User({
@@ -30,7 +34,7 @@ exports.signup = async(req, res, next) => {
                 req.body.email +
                 " has already an account registered in the DB"
             );
-            res.status(401).json({
+            return res.status(401).json({
                 message: "User already signed up with this email" + email,
             });
         }
@@ -41,19 +45,20 @@ exports.signup = async(req, res, next) => {
 
 exports.login = async(req, res, next) => {
     try {
-        console.log("Email attempting to login: " + req.body.email);
         let email = req.body.email;
         let passwordFromBodyRequest = req.body.password;
 
-        console.log("Email attempting to signup: " + email);
+        console.log("Email attempting to login: " + email);
 
         let user = await User.findOne({ email: req.body.email });
         let hashedPasswordInDatabase = user.password;
         if (!user) {
             console.log(
-                "user with email: " + email + " isn't registered in the Database"
+                "ERROR! User with email: " +
+                email +
+                " isn't registered in the Database! (Logging in is impossible)"
             );
-            res.status(401).json();
+            return res.status(401).json({ error: "User isn't registered" });
         }
         let isPasswordValid = await bcrypt.compare(
             passwordFromBodyRequest,
@@ -61,14 +66,14 @@ exports.login = async(req, res, next) => {
         );
         if (!isPasswordValid) {
             console.log("The password is INCORRECT! BOOLEAN:" + isPasswordValid);
-            res.status(401).json();
+            return res.status(401).json();
         }
         console.log(
             "The password is correct! SUCCESSFUL AUTHENTIFICATION, BOOLEAN:" +
             isPasswordValid
         );
-        res.status(200).json({
-            user_id: user._id, //← Ne va JAMAIS marcher
+        return res.status(200).json({
+            user_id: user.user_id, //← Ne va JAMAIS marcher
             token: jwt.sign({ user_id: user._id }, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: "24h",
             }),

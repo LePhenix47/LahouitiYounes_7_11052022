@@ -3,7 +3,6 @@ const helmet = require("helmet");
 const dotEnv = require("dotenv");
 const path = require("path");
 const bodyParser = require("body-parser");
-const { Client } = require("pg");
 
 /* 
 Ways to interact with the Database
