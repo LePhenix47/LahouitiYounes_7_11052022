@@ -8,15 +8,15 @@ exports.signup = async(req, res, next) => {
         let password = req.body.password;
         console.log("Email attempting to signup: " + email);
 
-        let user = await User.findOne({ email: req.body.email });
+        let user = await User.findOne({ user_email: email });
         if (!user) {
             console.log(
                 "User with email :" +
                 email +
-                " hasn't signed up yet → Beginning acocunt creation"
+                " hasn't signed up yet → Beginning account creation"
             );
             let hashedPassword = await bcrypt.hash(password, 15);
-            if (hashedPassword === null) {
+            if (hashedPassword === null || hashedPassword === password) {
                 return res.status(500).json({ message: "Server ERROR" });
             }
             const newUser = new User({
@@ -24,14 +24,14 @@ exports.signup = async(req, res, next) => {
                 user_password: hashedPassword,
             });
 
-            let saveNewUserInDatabase = await newUser.save();
-            console.log(saveNewUserInDatabase);
+            let saveNewUserInDatabase = await newUser.create();
+            console.log("New user added to the database: " + saveNewUserInDatabase);
 
             return res.status(201).json({ message: "User SUCCESSFULLY signed up" });
         } else {
             console.log(
                 "User with the email: " +
-                req.body.email +
+                req.email +
                 " has already an account registered in the DB"
             );
             return res.status(401).json({
@@ -45,12 +45,12 @@ exports.signup = async(req, res, next) => {
 
 exports.login = async(req, res, next) => {
     try {
-        let email = req.body.email;
+        let email = req.email;
         let passwordFromBodyRequest = req.body.password;
 
         console.log("Email attempting to login: " + email);
 
-        let user = await User.findOne({ email: req.body.email });
+        let user = await User.findOne({ user_email: req.email });
         let hashedPasswordInDatabase = user.password;
         if (!user) {
             console.log(
@@ -70,7 +70,9 @@ exports.login = async(req, res, next) => {
         }
         console.log(
             "The password is correct! SUCCESSFUL AUTHENTIFICATION, BOOLEAN:" +
-            isPasswordValid
+            isPasswordValid +
+            " for user with email: " +
+            email
         );
         return res.status(200).json({
             user_id: user.user_id, //← Ne va JAMAIS marcher

@@ -4,24 +4,6 @@ const dotEnv = require("dotenv");
 const path = require("path");
 const bodyParser = require("body-parser");
 
-/* 
-Ways to interact with the Database
-
-let connectToDatabase = async() => {
-    //Connect
-    const client = new Client();
-    await client.connect();
-
-    //Query
-    const res = await client.query("SELECT $1::text as message", [
-        "Attempting to connect with the database",
-    ]);
-    console.log(res.rows[0].message);
-
-    //Disconnect
-    await client.end();
-};
-//*/
 //Configures the environment variables to avoid getting sensible data stolen from GitHub
 dotEnv.config();
 
@@ -59,7 +41,9 @@ db.sequelize.sync({ force: true }).then(() => {
 
 //Routes
 const userRoutes = require("./routes/user.route");
+const postRoutes = require("./routes/post.route");
 
 app.use("/api/auth", userRoutes);
+app.use("api/post", postRoutes);
 
 module.exports = app;
