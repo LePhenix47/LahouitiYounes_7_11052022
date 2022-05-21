@@ -14,8 +14,8 @@ exports.create = (req, res) => {
     }
     // Create a Post
     const post = {
-        post_id: x,
-        user_id: req.body.user_id,
+        post_id: req.params.id,
+        user_id: req.body.userId,
         title: req.body.title,
         description: req.body.description,
         image: req.body.image ? req.body.image : false,
@@ -30,37 +30,117 @@ exports.create = (req, res) => {
         })
         .catch((err) => {
             res.status(500).send({
-                message: err.message || "Some error occurred while creating the Tutorial.",
+                message: err.message || "Some error occurred while creating the Post.",
             });
         });
 };
-// Retrieve all Tutorials from the database.
-exports.findAll = (req, res) => {};
-// Find a single Tutorial with an id
-exports.findOne = (req, res) => {};
-// Update a Tutorial by the id in the request
-exports.update = (req, res) => {};
-// Delete a Tutorial with the specified id in the request
-exports.delete = (req, res) => {};
-// Delete all Tutorials from the database.
-exports.deleteAll = (req, res) => {};
-// Find all published Tutorials
-exports.findAllPublished = (req, res) => {};
+// Retrieve all Posts from the database.
+exports.findAll = (req, res) => {
+    const post_id = req.query.post_id;
+    let condition = post_id ?
+        {
+            title: {
+                [Op.iLike]: `%${post_id}%`,
+            },
+        } :
+        null;
+    Post.findAll({ where: condition })
+        .then((data) => {
+            console.log("Posts found!");
+            res.status(200).send(data);
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: err.message || "Some error occurred while retrieving posts.",
+            });
+        });
+};
+// Find a single Post with an id
+exports.findOne = (req, res) => {
+    const postId = req.params.id;
+    Post.findByPk(postId)
+        .then((data) => {
+            if (data) {
+                res.status(200).send(data);
+            } else {
+                res.status(404).send({
+                    message: `Cannot find Post with id of ${postId}.`,
+                });
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: "Error retrieving Post with id of " + postId + ", error: " + err,
+            });
+        });
+};
+// Update a Post by the id in the request
+exports.update = (req, res) => {
+    const postId = req.params.id;
+    Post.update(req.body, {
+            where: { id: postId },
+        })
+        .then((num) => {
+            if (num == 1) {
+                res.status(200).send({
+                    message: "Post was updated successfully.",
+                });
+            } else {
+                res.status(400).send({
+                    message: `Cannot update Post with id of ${postId}. Maybe Post was not found or req.body is empty!`,
+                });
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: "Error updating Post with id=" + postId + ", error: " + err,
+            });
+        });
+};
+// Delete a Post with the specified id in the request
+exports.deletePost = (req, res) => {
+    const postId = req.params.id;
+    Post.destroy({
+            where: { id: postId },
+        })
+        .then((num) => {
+            if (num == 1) {
+                res.stauts(200).send({
+                    message: "Post was deleted successfully!",
+                });
+            } else {
+                res.status(400).send({
+                    message: `Cannot delete Post with id=${postId}. Maybe Post was not found!`,
+                });
+            }
+        })
+        .catch((err) => {
+            res.status(500).send({
+                message: "Could not delete Post with id=" + postId + " error: " + err,
+            });
+        });
+};
 
 /*
-create a new Tutorial: create(object)
+// Delete all Posts from the database.
+exports.deleteAll = (req, res) => {};
+// Find all published Posts
+exports.findAllPublished = (req, res) => {};
 
-find a Tutorial by id: findByPk(id)
 
-get all Tutorials: findAll()
+create a new Post: create(object)
+
+find a Post by id: findByPk(id)
+
+get all Posts: findAll()
 
 
-update a Tutorial by id: update(data, where: { id: id })
+update a Post by id: update(data, where: { id: id })
 
-remove a Tutorial: destroy(where: { id: id })
+remove a Post: destroy(where: { id: id })
 
-remove all Tutorials: destroy(where: {})
+remove all Posts: destroy(where: {})
 
-find all Tutorials by title: findAll({ where: { title: ... } })
+find all Posts by title: findAll({ where: { title: ... } })
 
 */
