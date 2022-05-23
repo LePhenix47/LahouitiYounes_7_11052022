@@ -2,14 +2,20 @@ const { post } = require("../models");
 const database = require("../models");
 const Post = database.post;
 const Operator = database.Sequelize.Op;
+
+/*
 // Create and Save a new Post
+*/
 exports.createPost = (req, res, next) => {
     // Validate request
     let areTitleAndDescriptionFilled =
         req.body.description !== null && req.body.title !== null ? true : false;
     if (!areTitleAndDescriptionFilled) {
+        console.log(
+            "ERROR while attempting to create the post: Title or description is empty"
+        );
         res.status(400).send({
-            message: "Content of title and description cannot be empty!",
+            message: "Content of title or description cannot be empty!",
         });
         return;
     }
@@ -35,7 +41,10 @@ exports.createPost = (req, res, next) => {
             });
         });
 };
+
+/*
 // Retrieve all Posts from the database.
+*/
 exports.getAllPosts = (req, res, next) => {
     Post.findAll()
         .then((posts) => {
@@ -49,7 +58,10 @@ exports.getAllPosts = (req, res, next) => {
             });
         });
 };
+
+/*
 // Find a single Post with an id
+*/
 exports.getPostById = (req, res, next) => {
     const postId = req.params.id;
     Post.findByPk(postId)
@@ -69,7 +81,10 @@ exports.getPostById = (req, res, next) => {
             });
         });
 };
+
+/*
 // Update a Post by the id in the request
+*/
 exports.updatePost = (req, res, next) => {
     const postId = req.params.id;
     Post.update(req.body, {
@@ -92,7 +107,10 @@ exports.updatePost = (req, res, next) => {
             });
         });
 };
+
+/*
 // Delete a Post with the specified id in the request
+*/
 exports.deletePost = (req, res, next) => {
     const postId = req.params.id;
     Post.destroy({
@@ -119,6 +137,9 @@ exports.deletePost = (req, res, next) => {
         });
 };
 
+/*
+//Likes, dislikes, unlikes or undislikes the post (CANNOT like & dislike the same post) 
+*/
 exports.likePost = (req, res, next) => {
     const postId = req.params.id;
 };
@@ -143,7 +164,7 @@ remove a Post: destroy(where: { id: id })
 
 remove all Posts: destroy(where: {})
 
-find all Posts by [condition]: findAll({ where: { condition: ... } })
+find all Posts by [condition]: findAll({ where: { condition: ... } }) → SELECT * FROM (table) WHERE [condition]
 
 
 WITH CONDITION
