@@ -1,8 +1,8 @@
-const db = require("../models");
-const Post = db.post;
-const Op = db.Sequelize.Op;
+const database = require("../models");
+const Post = database.post;
+const Operator = database.Sequelize.Op;
 // Create and Save a new Post
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
     // Validate request
     let areTitleAndDescriptionFilled =
         req.body.description !== null && req.body.title !== null ? true : false;
@@ -28,19 +28,19 @@ exports.create = (req, res) => {
             console.log("Post created");
             res.status(201).send(data);
         })
-        .catch((err) => {
+        .catch((error) => {
             res.status(500).send({
-                message: err.message || "Some error occurred while creating the Post.",
+                message: error.message || "Some error occurred while creating the Post.",
             });
         });
 };
 // Retrieve all Posts from the database.
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
     const post_id = req.query.post_id;
     let condition = post_id ?
         {
             title: {
-                [Op.iLike]: `%${post_id}%`,
+                [Operator.iLike]: `%${post_id}%`,
             },
         } :
         null;
@@ -49,33 +49,34 @@ exports.findAll = (req, res) => {
             console.log("Posts found!");
             res.status(200).send(data);
         })
-        .catch((err) => {
+        .catch((error) => {
             res.status(500).send({
-                message: err.message || "Some error occurred while retrieving posts.",
+                message: error.message || "Some error occurred while retrieving posts.",
             });
         });
 };
 // Find a single Post with an id
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
     const postId = req.params.id;
     Post.findByPk(postId)
-        .then((data) => {
-            if (data) {
-                res.status(200).send(data);
+        .then((post) => {
+            if (post) {
+                console.log("Post found: " + post);
+                res.status(200).send(post);
             } else {
                 res.status(404).send({
                     message: `Cannot find Post with id of ${postId}.`,
                 });
             }
         })
-        .catch((err) => {
+        .catch((error) => {
             res.status(500).send({
-                message: "Error retrieving Post with id of " + postId + ", error: " + err,
+                message: "Error retrieving Post with id of " + postId + ", error: " + error,
             });
         });
 };
 // Update a Post by the id in the request
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
     const postId = req.params.id;
     Post.update(req.body, {
             where: { id: postId },
@@ -91,14 +92,14 @@ exports.update = (req, res) => {
                 });
             }
         })
-        .catch((err) => {
+        .catch((error) => {
             res.status(500).send({
-                message: "Error updating Post with id=" + postId + ", error: " + err,
+                message: "Error updating Post with id=" + postId + ", error: " + error,
             });
         });
 };
 // Delete a Post with the specified id in the request
-exports.deletePost = (req, res) => {
+exports.deletePost = (req, res, next) => {
     const postId = req.params.id;
     Post.destroy({
             where: { id: postId },
@@ -110,15 +111,22 @@ exports.deletePost = (req, res) => {
                 });
             } else {
                 res.status(400).send({
-                    message: `Cannot delete Post with id=${postId}. Maybe Post was not found!`,
+                    message: `Cannot delete Post with id = ${postId}. Post was not found!`,
                 });
             }
         })
-        .catch((err) => {
+        .catch((error) => {
             res.status(500).send({
-                message: "Could not delete Post with id=" + postId + " error: " + err,
+                message: "Could not delete Post with id=" +
+                    postId +
+                    " beacuse of error: " +
+                    error,
             });
         });
+};
+
+exports.likePost = (req, res, next) => {
+    const postId = req.params.id;
 };
 
 /*

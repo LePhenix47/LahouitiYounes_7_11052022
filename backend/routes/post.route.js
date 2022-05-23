@@ -3,15 +3,9 @@ const router = express.Router();
 const auth = require("../middlewares/auth");
 
 const postController = require("../controllers/post.controller");
-const {
-    create,
-    findAll,
-    findOne,
-    update,
-    deletePost,
-    deleteAll,
-    findAllPublished,
-} = postController;
+
+const { create, findAll, findOne, update, deletePost, likePost } =
+postController;
 
 const multer = require("../middlewares/multer-config");
 
@@ -25,6 +19,6 @@ router.put("/:id", auth, multer, update);
 
 router.delete("/:id", auth, deletePost);
 
-router.post("/:id/like", auth, likePost);
+//router.post("/:id/like", auth, likePost);
 
 module.exports = router;

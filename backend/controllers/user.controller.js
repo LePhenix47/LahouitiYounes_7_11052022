@@ -50,7 +50,11 @@ exports.login = async(req, res, next) => {
 
         console.log("Email attempting to login: " + email);
 
-        let user = await User.findOne({ user_email: req.email });
+        /*
+             const postId = req.params.id;
+        Post.findByPk(postId)
+            */
+        //  let user = await User.findOne({ user_email: req.email });
         let hashedPasswordInDatabase = user.password;
         if (!user) {
             console.log(
