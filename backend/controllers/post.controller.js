@@ -1,8 +1,9 @@
+const { post } = require("../models");
 const database = require("../models");
 const Post = database.post;
 const Operator = database.Sequelize.Op;
 // Create and Save a new Post
-exports.create = (req, res, next) => {
+exports.createPost = (req, res, next) => {
     // Validate request
     let areTitleAndDescriptionFilled =
         req.body.description !== null && req.body.title !== null ? true : false;
@@ -18,7 +19,7 @@ exports.create = (req, res, next) => {
         user_id: req.body.userId,
         title: req.body.title,
         description: req.body.description,
-        image: req.body.image ? req.body.image : false,
+        image_url: req.body.image ? req.body.image : null,
         likes: 0,
         dislikes: 0,
     };
@@ -35,28 +36,21 @@ exports.create = (req, res, next) => {
         });
 };
 // Retrieve all Posts from the database.
-exports.findAll = (req, res, next) => {
-    const post_id = req.query.post_id;
-    let condition = post_id ?
-        {
-            title: {
-                [Operator.iLike]: `%${post_id}%`,
-            },
-        } :
-        null;
-    Post.findAll({ where: condition })
-        .then((data) => {
-            console.log("Posts found!");
-            res.status(200).send(data);
+exports.getAllPosts = (req, res, next) => {
+    Post.findAll()
+        .then((posts) => {
+            console.log("Posts found!" + posts);
+            res.status(200).send(posts);
         })
         .catch((error) => {
+            console.log("Posts NOT found! ----ERROR : " + error);
             res.status(500).send({
                 message: error.message || "Some error occurred while retrieving posts.",
             });
         });
 };
 // Find a single Post with an id
-exports.findOne = (req, res, next) => {
+exports.getPostById = (req, res, next) => {
     const postId = req.params.id;
     Post.findByPk(postId)
         .then((post) => {
@@ -76,10 +70,10 @@ exports.findOne = (req, res, next) => {
         });
 };
 // Update a Post by the id in the request
-exports.update = (req, res, next) => {
+exports.updatePost = (req, res, next) => {
     const postId = req.params.id;
     Post.update(req.body, {
-            where: { id: postId },
+            where: { post_id: postId },
         })
         .then((num) => {
             if (num == 1) {
@@ -102,7 +96,7 @@ exports.update = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     const postId = req.params.id;
     Post.destroy({
-            where: { id: postId },
+            where: { post_id: postId },
         })
         .then((num) => {
             if (num == 1) {
@@ -149,6 +143,29 @@ remove a Post: destroy(where: { id: id })
 
 remove all Posts: destroy(where: {})
 
-find all Posts by title: findAll({ where: { title: ... } })
+find all Posts by [condition]: findAll({ where: { condition: ... } })
+
+
+WITH CONDITION
+exports.findAll = (req, res, next) => {
+    const post_id = req.query.post_id;
+    let condition = post_id ?
+        {
+            title: {
+                [Operator.iLike]: `%${post_id}%`,
+            },
+        } :
+        null;
+    Post.findAll({ where: condition })
+        .then((data) => {
+            console.log("Posts found!");
+            res.status(200).send(data);
+        })
+        .catch((error) => {
+            res.status(500).send({
+                message: error.message || "Some error occurred while retrieving posts.",
+            });
+        });
+};
 
 */

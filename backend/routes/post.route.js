@@ -4,18 +4,24 @@ const auth = require("../middlewares/auth");
 
 const postController = require("../controllers/post.controller");
 
-const { create, findAll, findOne, update, deletePost, likePost } =
-postController;
+const {
+    createPost,
+    getAllPosts,
+    getPostById,
+    updatePost,
+    deletePost,
+    likePost,
+} = postController;
 
 const multer = require("../middlewares/multer-config");
 
-router.get("/", auth, findAll);
+router.get("/", auth, getAllPosts);
 
-router.get("/:id", auth, findOne);
+router.get("/:id", auth, getPostById);
 
-router.post("/", auth, multer, create);
+router.post("/", auth, multer, createPost);
 
-router.put("/:id", auth, multer, update);
+router.put("/:id", auth, multer, updatePost);
 
 router.delete("/:id", auth, deletePost);
 

@@ -11,8 +11,14 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
         idle: dbConfig.pool.idle,
     },
 });
-const db = {};
-db.Sequelize = Sequelize; //Classe qui permet de donnaitre les types &  connecte B2D w/ librairie pour gérer les différentes requetes SQL
-db.sequelize = sequelize; //Instance de la B2D
-db.user = require("./user.model")(sequelize, Sequelize);
-module.exports = db;
+const database = {};
+database.Sequelize = Sequelize; //Classe qui permet de donnaitre les types &  connecte B2D w/ librairie pour gérer les différentes requetes SQL
+database.sequelize = sequelize; //Instance de la B2D
+
+/*
+Variables d'exportation des modèles
+*/
+database.user = require("./user.model")(sequelize, Sequelize);
+database.post = require("./post.model")(sequelize, Sequelize);
+
+module.exports = database;
