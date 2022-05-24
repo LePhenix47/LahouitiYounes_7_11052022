@@ -21,7 +21,7 @@ module.exports = (sequelize, Sequelize) => {
 /*
 RAPPEL: 
 
-sequelize (s minuscule) → Classe qui permet de connaître les types & connecte B2D w/ librairie pour gérer les différentes requetes SQL
+Sequelize (S majuscule) → Classe qui permet de connaître les types 
 
-Sequelize (S majuscule) → Instance de la B2D
+sequelize (s minuscule) → Instance de la B2D qui la connecte w/ librairie pour gérer les différentes requetes SQL
 */

@@ -34,9 +34,9 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use(helmet());
 
 //Synchroniser les modèles & la B2D
-const db = require("./models");
-db.sequelize.sync({ force: true }).then(() => {
-    console.log("Drop and re-sync db.");
+const database = require("./models");
+database.sequelize.sync({ force: true }).then(() => {
+    console.log("Drop and re-sync database.");
 });
 
 //Routes

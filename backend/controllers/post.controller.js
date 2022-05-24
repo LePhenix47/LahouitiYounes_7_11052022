@@ -1,7 +1,7 @@
-const { post } = require("../models");
 const database = require("../models");
 const Post = database.post;
 const Operator = database.Sequelize.Op;
+const fileSystem = require("fs");
 
 /*
 // Create and Save a new Post
@@ -12,7 +12,8 @@ exports.createPost = (req, res, next) => {
         req.body.description !== null && req.body.title !== null ? true : false;
     if (!areTitleAndDescriptionFilled) {
         console.log(
-            "ERROR while attempting to create the post: Title or description is empty"
+            "ERROR while attempting to create the post: Title or description is empty, BOOLEAN value = " +
+            areTitleAndDescriptionFilled
         );
         res.status(400).send({
             message: "Content of title or description cannot be empty!",
@@ -25,7 +26,9 @@ exports.createPost = (req, res, next) => {
         user_id: req.body.userId,
         title: req.body.title,
         description: req.body.description,
-        image_url: req.body.image ? req.body.image : null,
+        image_url: req.file ?
+            `${req.protocol}://${req.get("host")}/images/${req.file.filename}` :
+            null,
         likes: 0,
         dislikes: 0,
     };
@@ -48,13 +51,13 @@ exports.createPost = (req, res, next) => {
 exports.getAllPosts = (req, res, next) => {
     Post.findAll()
         .then((posts) => {
-            console.log("Posts found!" + posts);
+            console.log("Posts found: \n" + posts);
             res.status(200).send(posts);
         })
         .catch((error) => {
             console.log("Posts NOT found! ----ERROR : " + error);
             res.status(500).send({
-                message: error.message || "Some error occurred while retrieving posts.",
+                message: error.message || "Some error occurred while retrieving the posts.",
             });
         });
 };
@@ -145,8 +148,11 @@ exports.likePost = (req, res, next) => {
 };
 
 /*
+
 // Delete all Posts from the database.
 exports.deleteAll = (req, res) => {};
+
+
 // Find all published Posts
 exports.findAllPublished = (req, res) => {};
 

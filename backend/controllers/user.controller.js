@@ -1,140 +1,179 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.model");
+const { user } = require("../models");
+const database = require("../models");
+const User = database.user;
+const Operator = database.Sequelize.Op;
 
-exports.signup = async(req, res, next) => {
-    try {
-        let email = req.body.email;
-        let password = req.body.password;
-        console.log("Email attempting to signup: " + email);
+exports.signup = (req, res, next) => {
+    let emailFromBodyRequest = req.body.email;
+    let password = req.body.password;
+    console.log("Email attempting to signup: " + emailFromBodyRequest);
 
-        let user = await User.findOne({ user_email: email });
-        if (!user) {
-            console.log(
-                "User with email :" +
-                email +
-                " hasn't signed up yet → Beginning account creation"
-            );
-            let hashedPassword = await bcrypt.hash(password, 15);
-            if (hashedPassword === null || hashedPassword === password) {
-                return res.status(500).json({ message: "Server ERROR" });
+    let isEmailAlreadyInDatabaseCondition =
+        emailFromBodyRequest === User.user_email ?
+        {
+            user_email: {
+                [Operator.iLike]: `%${emailFromBodyRequest}%`,
+            },
+        } :
+        null;
+    Post.findAll({ where: isEmailAlreadyInDatabaseCondition })
+        .then((user) => {
+            if (!user) {
+                console.log(
+                    "User with email :" +
+                    emailFromBodyRequest +
+                    " hasn't signed up yet → Beginning account creation"
+                );
+                let hashedPassword = bcrypt.hash(password, 15);
+
+                hashingPasswordHasFailed =
+                    hashedPassword === null || hashedPassword === password;
+                if (hashingPasswordHasFailed) {
+                    console.log(
+                        "ERROR-SIGNUP: Password hashing failed! Value of hash: " +
+                        hashingPasswordHasFailed
+                    );
+                    res.status(500).json({ message: "Server ERROR, hashing failed" });
+                }
+                const newUser = new User({
+                    user_email: email,
+                    user_password: hashedPassword,
+                });
+
+                let saveNewUserInDatabase = newUser.create();
+                console.log("New user added to the database: " + saveNewUserInDatabase);
+
+                res.status(201).json({ message: "User SUCCESSFULLY signed up" });
+            } else {
+                console.log(
+                    "User with the email: " +
+                    req.email +
+                    " has already an account registered in the DB"
+                );
+                res.status(401).json({
+                    message: "User already signed up with this email" + email,
+                });
             }
-            const newUser = new User({
-                user_email: email,
-                user_password: hashedPassword,
-            });
-
-            let saveNewUserInDatabase = await newUser.create();
-            console.log("New user added to the database: " + saveNewUserInDatabase);
-
-            return res.status(201).json({ message: "User SUCCESSFULLY signed up" });
-        } else {
+        })
+        .catch((error) => {
             console.log(
-                "User with the email: " +
-                req.email +
-                " has already an account registered in the DB"
+                "ERROR-SIGNUP while attempting to find the email in the Database: " +
+                error
             );
-            return res.status(401).json({
-                message: "User already signed up with this email" + email,
-            });
-        }
-    } catch (error) {
-        return res.status(400).json({ error });
-    }
+            res.status(500).json({ error });
+        });
 };
 
-exports.login = async(req, res, next) => {
-    try {
-        let email = req.email;
-        let passwordFromBodyRequest = req.body.password;
+exports.login = (req, res, next) => {
+    let emailFromBodyRequest = req.body.email;
+    let passwordFromBodyRequest = req.body.password;
 
-        console.log("Email attempting to login: " + email);
+    console.log("Email attempting to login: " + emailFromBodyRequest);
 
-        /*
-             const postId = req.params.id;
-        Post.findByPk(postId)
-            */
-        //  let user = await User.findOne({ user_email: req.email });
-        let hashedPasswordInDatabase = user.password;
+    let isEmailAlreadyInDatabaseCondition =
+        emailFromBodyRequest === User.user_email ?
+        {
+            user_email: {
+                [Operator.iLike]: `%${emailFromBodyRequest}%`,
+            },
+        } :
+        null;
+    Post.findAll({ where: isEmailAlreadyInDatabaseCondition }).then((user) => {
         if (!user) {
             console.log(
                 "ERROR! User with email: " +
                 email +
                 " isn't registered in the Database! (Logging in is impossible)"
             );
-            return res.status(401).json({ error: "User isn't registered" });
+            res.status(401).json({ error: "User isn't registered" });
         }
-        let isPasswordValid = await bcrypt.compare(
+        let hashedPasswordInDatabase = user.password;
+        let isPasswordValid = bcrypt.compare(
             passwordFromBodyRequest,
             hashedPasswordInDatabase
         );
         if (!isPasswordValid) {
             console.log("The password is INCORRECT! BOOLEAN:" + isPasswordValid);
-            return res.status(401).json();
+            res.status(401).json();
         }
         console.log(
             "The password is correct! SUCCESSFUL AUTHENTIFICATION, BOOLEAN:" +
             isPasswordValid +
             " for user with email: " +
-            email
+            emailFromBodyRequest
         );
-        return res.status(200).json({
-            user_id: user.user_id, //← Ne va JAMAIS marcher
+        res.status(200).json({
+            user_id: user.user_id,
             token: jwt.sign({ user_id: user._id }, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: "24h",
             }),
         });
-    } catch (error) {
-        return res.status(400).json({ error });
-    }
+    });
 };
 
 /*
-Exemple commandes en SQL
-const db = require("../models");
-const Tutorial = db.tutorials;
-const Op = db.Sequelize.Op;
-// Create and Save a new Tutorial
-exports.create = (req, res) => {
-  
+
+// Delete all Posts from the database.
+exports.deleteAll = (req, res) => {};
+
+
+// Find all published Posts
+exports.findAllPublished = (req, res) => {};
+
+
+create a new Post: create(object)
+
+find a Post by id: findByPk(id)
+
+get all Posts: findAll()
+
+
+update a Post by id: update(data, where: { id: id })
+
+remove a Post: destroy(where: { id: id })
+
+remove all Posts: destroy(where: {})
+
+find all Posts by [condition]: findAll({ where: { condition: ... } }) → SELECT * FROM (table) WHERE [condition]
+
+
+WITH CONDITION
+exports.findAll = (req, res, next) => {
+    const post_id = req.query.post_id;
+    let condition = post_id ?
+        {
+            title: {
+                [Operator.iLike]: `%${post_id}%`,
+            },
+        } :
+        null;
+    Post.findAll({ where: condition })
+        .then((data) => {
+            console.log("Posts found!");
+            res.status(200).send(data);
+        })
+        .catch((error) => {
+            res.status(500).send({
+                message: error.message || "Some error occurred while retrieving posts.",
+            });
+        });
 };
-// Retrieve all Tutorials from the database.
-exports.findAll = (req, res) => {
-  
-};
-// Find a single Tutorial with an id
-exports.findOne = (req, res) => {
-  
-};
-// Update a Tutorial by the id in the request
-exports.update = (req, res) => {
-  
-};
-// Delete a Tutorial with the specified id in the request
-exports.delete = (req, res) => {
-  
-};
-// Delete all Tutorials from the database.
-exports.deleteAll = (req, res) => {
-  
-};
-// Find all published Tutorials
-exports.findAllPublished = (req, res) => {
-  
-};
+
 */
 
 /*
 Pour créer un nouvel objet dans le controleur:
 
 
-exports.create = async (req, res) => {
+exports.create =  (req, res) => {
     // Validate request
   if (!req.body.title) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
-    return;
+    ;
   }
 
    // Create a Tutorial
@@ -147,8 +186,8 @@ exports.create = async (req, res) => {
 
   // Save Tutorial in the database
   try{
-    let saveTutorial = await Tutorial.create(tutorial);
-    let response = await saveTutorial.json();
+    let saveTutorial =  Tutorial.create(tutorial);
+    let response =  saveTutorial.json();
     res.status(200).json({response});
   }catch(error){
     res.status(400).json({error});
