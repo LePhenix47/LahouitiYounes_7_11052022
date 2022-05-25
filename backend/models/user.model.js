@@ -4,6 +4,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             unique: true,
+            autoIncrement: true,
+            primaryKey: true,
         },
         user_email: {
             type: Sequelize.STRING,

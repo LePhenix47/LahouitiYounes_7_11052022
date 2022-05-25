@@ -4,11 +4,13 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             unique: true,
+            autoIncrement: true,
+            primaryKey: true,
         },
         user_id: {
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
             allowNull: false,
-            unique: true,
+            foreignKey: true,
         },
         title: {
             type: Sequelize.STRING,

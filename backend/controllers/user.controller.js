@@ -1,59 +1,66 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { user } = require("../models");
 const database = require("../models");
 const User = database.user;
 const Operator = database.Sequelize.Op;
 
 exports.signup = (req, res, next) => {
+    console.log("++++++++++++++++++++++++++Body request: " + req.body);
     let emailFromBodyRequest = req.body.email;
     let password = req.body.password;
     console.log("Email attempting to signup: " + emailFromBodyRequest);
 
-    let isEmailAlreadyInDatabaseCondition =
-        emailFromBodyRequest === User.user_email ?
-        {
-            user_email: {
-                [Operator.iLike]: `%${emailFromBodyRequest}%`,
-            },
-        } :
-        null;
-    Post.findAll({ where: isEmailAlreadyInDatabaseCondition })
+    // let isEmailAlreadyInDatabaseCondition =
+    //     emailFromBodyRequest === User.user_email ?
+    //     {
+    //         user_email: {
+    //             [Operator.eq]: `${emailFromBodyRequest}`, //SELECT * FROM public.user u WHERE u.user_email = '@email'
+    //         },
+    //     } :
+    //     null;
+    let condition = {
+        user_email: {
+            [Operator.eq]: `${emailFromBodyRequest}`,
+        },
+    };
+
+    User.findAll({ where: condition })
         .then((user) => {
-            if (!user) {
+            console.log("*******************USER*******:\n" + user);
+            console.log(typeof user.user_id);
+            if (user ? !user.user_id : true) {
                 console.log(
                     "User with email :" +
                     emailFromBodyRequest +
                     " hasn't signed up yet → Beginning account creation"
                 );
-                let hashedPassword = bcrypt.hash(password, 15);
+                bcrypt
+                    .hash(password, 15)
+                    .then((hashedPassword) => {
+                        const newUser = {
+                            user_email: emailFromBodyRequest,
+                            user_password: hashedPassword,
+                        };
 
-                hashingPasswordHasFailed =
-                    hashedPassword === null || hashedPassword === password;
-                if (hashingPasswordHasFailed) {
-                    console.log(
-                        "ERROR-SIGNUP: Password hashing failed! Value of hash: " +
-                        hashingPasswordHasFailed
-                    );
-                    res.status(500).json({ message: "Server ERROR, hashing failed" });
-                }
-                const newUser = new User({
-                    user_email: email,
-                    user_password: hashedPassword,
-                });
+                        let saveNewUserInDatabase = User.create(newUser);
+                        console.log(
+                            "New user added to the database: " + saveNewUserInDatabase
+                        );
 
-                let saveNewUserInDatabase = newUser.create();
-                console.log("New user added to the database: " + saveNewUserInDatabase);
-
-                res.status(201).json({ message: "User SUCCESSFULLY signed up" });
+                        res.status(201).json({ message: "User SUCCESSFULLY signed up" });
+                    })
+                    .catch((error) => {
+                        console.log("ERROR while HASHING → " + error);
+                        res.status(500).json({ error });
+                    });
             } else {
                 console.log(
-                    "User with the email: " +
-                    req.email +
+                    "--ERROR User with the email: " +
+                    emailFromBodyRequest +
                     " has already an account registered in the DB"
                 );
                 res.status(401).json({
-                    message: "User already signed up with this email" + email,
+                    message: "User already signed up with this email" + emailFromBodyRequest,
                 });
             }
         })
