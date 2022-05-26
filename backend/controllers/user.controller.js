@@ -85,10 +85,15 @@ exports.signup = (req, res, next) => {
 };
 
 exports.login = (req, res, next) => {
-    let emailFromBodyRequest = req.body.email;
-    let passwordFromBodyRequest = req.body.password;
+    let emailFromBodyRequest = req.body.user_email;
+    let passwordFromBodyRequest = req.body.user_password;
 
-    console.log("Email attempting to login: " + emailFromBodyRequest);
+    console.log(
+        "Email attempting to login: " +
+        emailFromBodyRequest +
+        " with the PW: " +
+        passwordFromBodyRequest
+    );
 
     let condition = {
         user_email: {
@@ -96,8 +101,20 @@ exports.login = (req, res, next) => {
         },
     };
     User.findAll({ where: condition }).then((user) => {
-        console.log("USER +++++++++++++++++++++++++++++++++==========" + user);
-        if (user ? !user.user_id : true) {
+        let parsedUser = JSON.stringify(user);
+        console.log("xxxxxxxxxxxxxxUSER logging in: " + parsedUser);
+        if (user.length < 1) {
+            console.log(
+                "User with email: " + emailFromBodyRequest + " does not exist"
+            );
+            return res.status(400).json({ message: "User does not exist" });
+        }
+        let emailFromDatabase = user[0].user_email;
+        let hashedPasswordInDatabase = user[0].user_password;
+        console.log(
+            "LOGIN user +++++++++++++++++++++++++++++++++==========" + parsedUser
+        );
+        if (user ? user.length < 1 : true) {
             //The email isn't registered in the database → logging error, unexsiting
             console.log(
                 "ERROR! User with email: " +
@@ -106,14 +123,17 @@ exports.login = (req, res, next) => {
             );
             res.status(401).json({ error: "User isn't registered" });
         }
-        console.log("Value of user: " + user);
-        let hashedPasswordInDatabase = user.user_password;
+        console.log(
+            `User with email: ${emailFromBodyRequest} has been found in the database → ${emailFromDatabase} Comparing the passwords`
+        );
         bcrypt
             .compare(passwordFromBodyRequest, hashedPasswordInDatabase)
             .then((isPasswordValid) => {
                 if (!isPasswordValid) {
                     console.log("The password is INCORRECT! BOOLEAN:" + isPasswordValid);
-                    res.status(401).json();
+                    res.status(401).json({
+                        message: "The password is incorrect → Access unauthorized",
+                    });
                 }
                 console.log(
                     "The password is correct! SUCCESSFUL AUTHENTIFICATION, BOOLEAN:" +
@@ -130,13 +150,14 @@ exports.login = (req, res, next) => {
                     ),
                 });
             })
-            .catch((passwordError) => {
+            .catch((passwordComparisonError) => {
                 console.log(
-                    "The BOOLEAN value of the password is: " +
-                    isPasswordValid +
-                    " error: " +
-                    passwordError
+                    "The BOOLEAN value of the password is false error: " +
+                    passwordComparisonError
                 );
+                res.status(500).json({
+                    passwordComparisonError: "Either the data OR the hash is missing or at least one of these 2 values is undefined",
+                });
             });
     });
 };
