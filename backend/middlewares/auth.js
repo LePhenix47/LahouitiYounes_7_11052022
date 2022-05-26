@@ -8,12 +8,14 @@ module.exports = (req, res, next) => {
         const verifiedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
         const userId = verifiedToken.userId;
         req.auth = { userId };
-        if (req.body.userId && req.body.userId !== userId) {
+        if (req.body.user_id && req.body.useri_d !== userId) {
             throw "Invalid User ID";
         } else {
             next();
         }
-    } catch (error) {
-        res.status(401).json({ error } | "Unathentificated request");
+    } catch (authError) {
+        res
+            .status(401)
+            .json({ authError: "Unauthorized request, user is not logged in" });
     }
 };

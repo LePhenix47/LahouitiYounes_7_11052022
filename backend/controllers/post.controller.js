@@ -157,13 +157,6 @@ exports.likePost = (req, res, next) => {
 
 /*
 
-// Delete all Posts from the database.
-exports.deleteAll = (req, res) => {};
-
-
-// Find all published Posts
-exports.findAllPublished = (req, res) => {};
-
 
 create a new Post: create(object)
 

@@ -4,6 +4,10 @@ const database = require("../models");
 const User = database.user;
 const Operator = database.Sequelize.Op;
 
+/*
+REMINDER: the findAll function from Sequelize return an array of objects
+*/
+
 exports.signup = (req, res, next) => {
     console.log("++++++++++++++++++++++++++Body request: " + req.body);
     let emailFromBodyRequest = req.body.user_email;
@@ -19,13 +23,10 @@ exports.signup = (req, res, next) => {
 
     User.findAll({ where: condition })
         .then((user) => {
-            let emailFromDatabase = JSON.stringify(user.user_email);
-            let userIdFromDatabase = user.user_id;
+            let emailFromDatabase = user[0].user_email;
+            let userIdFromDatabase = user[0].user_id;
             console.log("Type of the user_email: " + typeof emailFromDatabase);
-            console.log(
-                "USER +++++++++++++++++++++++++++++++++==========" +
-                JSON.stringify(user)
-            ); //findAll returns an ARRAY of Objects corresponding to the tuples in the table we did a query on
+            console.log("USER: " + JSON.stringify(user)); //findAll returns an ARRAY of Objects corresponding to the tuples in the table we did a query on
             console.log(
                 "Value of email from DB = " +
                 emailFromDatabase +
@@ -64,7 +65,7 @@ exports.signup = (req, res, next) => {
                     });
             } else {
                 console.log(
-                    "~~~~~~~~~~~~~~~~~~~~~~~~~~ERROR User with the email: " +
+                    "ERROR User with the email: " +
                     emailFromBodyRequest +
                     " has already an account registered in the DB"
                 );
@@ -102,18 +103,17 @@ exports.login = (req, res, next) => {
     };
     User.findAll({ where: condition }).then((user) => {
         let parsedUser = JSON.stringify(user);
-        console.log("xxxxxxxxxxxxxxUSER logging in: " + parsedUser);
+        console.log("USER logging in: " + parsedUser);
         if (user.length < 1) {
             console.log(
                 "User with email: " + emailFromBodyRequest + " does not exist"
             );
             return res.status(400).json({ message: "User does not exist" });
         }
+        let userIdFromDatabase = user[0].user_id;
         let emailFromDatabase = user[0].user_email;
         let hashedPasswordInDatabase = user[0].user_password;
-        console.log(
-            "LOGIN user +++++++++++++++++++++++++++++++++==========" + parsedUser
-        );
+        console.log("LOGIN user: " + parsedUser);
         if (user ? user.length < 1 : true) {
             //The email isn't registered in the database → logging error, unexsiting
             console.log(
@@ -142,7 +142,7 @@ exports.login = (req, res, next) => {
                     emailFromBodyRequest
                 );
                 res.status(200).json({
-                    user_id: user.user_id,
+                    user_id: userIdFromDatabase,
                     token: jwt.sign({ user_id: user.user_id },
                         process.env.ACCESS_TOKEN_SECRET, {
                             expiresIn: "24h",
