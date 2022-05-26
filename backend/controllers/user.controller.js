@@ -19,10 +19,13 @@ exports.signup = (req, res, next) => {
 
     User.findAll({ where: condition })
         .then((user) => {
-            let emailFromDatabase = user.user_email;
+            let emailFromDatabase = JSON.stringify(user.user_email);
             let userIdFromDatabase = user.user_id;
             console.log("Type of the user_email: " + typeof emailFromDatabase);
-            console.log("USER +++++++++++++++++++++++++++++++++==========" + user);
+            console.log(
+                "USER +++++++++++++++++++++++++++++++++==========" +
+                JSON.stringify(user)
+            ); //findAll returns an ARRAY of Objects corresponding to the tuples in the table we did a query on
             console.log(
                 "Value of email from DB = " +
                 emailFromDatabase +
@@ -31,8 +34,8 @@ exports.signup = (req, res, next) => {
                 " of user ID = " +
                 userIdFromDatabase
             );
-            if (user ? !userIdFromDatabase : true) {
-                //The email isn't registered in the database → creating new account
+            if (user ? user.length < 1 : true) {
+                //SIGNUP: The email isn't registered in the database → creating new account
                 console.log(
                     "User with email :" +
                     emailFromBodyRequest +
@@ -57,7 +60,7 @@ exports.signup = (req, res, next) => {
                         console.log("ERROR while HASHING → " + hashingError);
                         res
                             .status(500)
-                            .json({ hashingError: "Error while attempting to hash" });
+                            .json({ hashingError: "Error while attempting to hash:" });
                     });
             } else {
                 console.log(
