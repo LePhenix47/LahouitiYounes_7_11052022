@@ -6,36 +6,40 @@ const Operator = database.Sequelize.Op;
 
 exports.signup = (req, res, next) => {
     console.log("++++++++++++++++++++++++++Body request: " + req.body);
-    let emailFromBodyRequest = req.body.email;
-    let password = req.body.password;
-    console.log("Email attempting to signup: " + emailFromBodyRequest);
-
-    // let isEmailAlreadyInDatabaseCondition =
-    //     emailFromBodyRequest === User.user_email ?
-    //     {
-    //         user_email: {
-    //             [Operator.eq]: `${emailFromBodyRequest}`, //SELECT * FROM public.user u WHERE u.user_email = '@email'
-    //         },
-    //     } :
-    //     null;
+    let emailFromBodyRequest = req.body.user_email;
+    let passwordFromBodyRequest = req.body.user_password;
+    console.log(
+        "-------------Email attempting to signup: " + emailFromBodyRequest
+    );
     let condition = {
         user_email: {
-            [Operator.eq]: `${emailFromBodyRequest}`,
+            [Operator.eq]: `${emailFromBodyRequest}`, //SELECT * FROM public.user u WHERE u.user_email = 'email@frombody.req'
         },
     };
 
     User.findAll({ where: condition })
         .then((user) => {
-            console.log("*******************USER*******:\n" + user);
-            console.log(typeof user.user_id);
-            if (user ? !user.user_id : true) {
+            let emailFromDatabase = user.user_email;
+            let userIdFromDatabase = user.user_id;
+            console.log("Type of the user_email: " + typeof emailFromDatabase);
+            console.log("USER +++++++++++++++++++++++++++++++++==========" + user);
+            console.log(
+                "Value of email from DB = " +
+                emailFromDatabase +
+                " with a type of: " +
+                typeof emailFromDatabase +
+                " of user ID = " +
+                userIdFromDatabase
+            );
+            if (user ? !userIdFromDatabase : true) {
+                //The email isn't registered in the database → creating new account
                 console.log(
                     "User with email :" +
                     emailFromBodyRequest +
                     " hasn't signed up yet → Beginning account creation"
                 );
                 bcrypt
-                    .hash(password, 15)
+                    .hash(passwordFromBodyRequest, 15)
                     .then((hashedPassword) => {
                         const newUser = {
                             user_email: emailFromBodyRequest,
@@ -49,13 +53,15 @@ exports.signup = (req, res, next) => {
 
                         res.status(201).json({ message: "User SUCCESSFULLY signed up" });
                     })
-                    .catch((error) => {
-                        console.log("ERROR while HASHING → " + error);
-                        res.status(500).json({ error });
+                    .catch((hashingError) => {
+                        console.log("ERROR while HASHING → " + hashingError);
+                        res
+                            .status(500)
+                            .json({ hashingError: "Error while attempting to hash" });
                     });
             } else {
                 console.log(
-                    "--ERROR User with the email: " +
+                    "~~~~~~~~~~~~~~~~~~~~~~~~~~ERROR User with the email: " +
                     emailFromBodyRequest +
                     " has already an account registered in the DB"
                 );
@@ -64,12 +70,14 @@ exports.signup = (req, res, next) => {
                 });
             }
         })
-        .catch((error) => {
+        .catch((emailSearchError) => {
             console.log(
                 "ERROR-SIGNUP while attempting to find the email in the Database: " +
-                error
+                emailSearchError
             );
-            res.status(500).json({ error });
+            res.status(500).json({
+                emailSearchError: "Error found while attempting to search the email in the database",
+            });
         });
 };
 
@@ -79,16 +87,15 @@ exports.login = (req, res, next) => {
 
     console.log("Email attempting to login: " + emailFromBodyRequest);
 
-    let isEmailAlreadyInDatabaseCondition =
-        emailFromBodyRequest === User.user_email ?
-        {
-            user_email: {
-                [Operator.iLike]: `%${emailFromBodyRequest}%`,
-            },
-        } :
-        null;
-    Post.findAll({ where: isEmailAlreadyInDatabaseCondition }).then((user) => {
-        if (!user) {
+    let condition = {
+        user_email: {
+            [Operator.eq]: `${emailFromBodyRequest}`, //SELECT * FROM public.user u WHERE u.user_email = 'email@frombody.req'
+        },
+    };
+    User.findAll({ where: condition }).then((user) => {
+        console.log("USER +++++++++++++++++++++++++++++++++==========" + user);
+        if (user ? !user.user_id : true) {
+            //The email isn't registered in the database → logging error, unexsiting
             console.log(
                 "ERROR! User with email: " +
                 email +
@@ -96,27 +103,38 @@ exports.login = (req, res, next) => {
             );
             res.status(401).json({ error: "User isn't registered" });
         }
-        let hashedPasswordInDatabase = user.password;
-        let isPasswordValid = bcrypt.compare(
-            passwordFromBodyRequest,
-            hashedPasswordInDatabase
-        );
-        if (!isPasswordValid) {
-            console.log("The password is INCORRECT! BOOLEAN:" + isPasswordValid);
-            res.status(401).json();
-        }
-        console.log(
-            "The password is correct! SUCCESSFUL AUTHENTIFICATION, BOOLEAN:" +
-            isPasswordValid +
-            " for user with email: " +
-            emailFromBodyRequest
-        );
-        res.status(200).json({
-            user_id: user.user_id,
-            token: jwt.sign({ user_id: user._id }, process.env.ACCESS_TOKEN_SECRET, {
-                expiresIn: "24h",
-            }),
-        });
+        console.log("Value of user: " + user);
+        let hashedPasswordInDatabase = user.user_password;
+        bcrypt
+            .compare(passwordFromBodyRequest, hashedPasswordInDatabase)
+            .then((isPasswordValid) => {
+                if (!isPasswordValid) {
+                    console.log("The password is INCORRECT! BOOLEAN:" + isPasswordValid);
+                    res.status(401).json();
+                }
+                console.log(
+                    "The password is correct! SUCCESSFUL AUTHENTIFICATION, BOOLEAN:" +
+                    isPasswordValid +
+                    " for user with email: " +
+                    emailFromBodyRequest
+                );
+                res.status(200).json({
+                    user_id: user.user_id,
+                    token: jwt.sign({ user_id: user.user_id },
+                        process.env.ACCESS_TOKEN_SECRET, {
+                            expiresIn: "24h",
+                        }
+                    ),
+                });
+            })
+            .catch((passwordError) => {
+                console.log(
+                    "The BOOLEAN value of the password is: " +
+                    isPasswordValid +
+                    " error: " +
+                    passwordError
+                );
+            });
     });
 };
 

@@ -7,7 +7,7 @@ const password = require("../middlewares/password-validator");
 
 const { signup, login } = userController;
 
-router.post("/signup", /*email, password,*/ signup);
+router.post("/signup", email, password, signup);
 router.post("/login", login);
 
 module.exports = router;

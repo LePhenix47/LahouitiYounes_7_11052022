@@ -34,13 +34,14 @@ exports.createPost = (req, res, next) => {
     };
     // Save Post in the PostgreSQL database
     Post.create(post)
-        .then((data) => {
+        .then((savedPost) => {
             console.log("Post created");
-            res.status(201).send(data);
+            res.status(201).send(savedPost);
         })
-        .catch((error) => {
+        .catch((postCreationError) => {
             res.status(500).send({
-                message: error.message || "Some error occurred while creating the Post.",
+                message: postCreationError.message ||
+                    "Some error occurred while creating the Post.",
             });
         });
 };
@@ -54,10 +55,11 @@ exports.getAllPosts = (req, res, next) => {
             console.log("Posts found: \n" + posts);
             res.status(200).send(posts);
         })
-        .catch((error) => {
-            console.log("Posts NOT found! ----ERROR : " + error);
+        .catch((getAllPostsError) => {
+            console.log("Posts NOT found! ----ERROR : " + getAllPostsError);
             res.status(500).send({
-                message: error.message || "Some error occurred while retrieving the posts.",
+                message: getAllPostsError.message ||
+                    "Some error occurred while retrieving the posts.",
             });
         });
 };
@@ -78,9 +80,12 @@ exports.getPostById = (req, res, next) => {
                 });
             }
         })
-        .catch((error) => {
+        .catch((getPostByIdError) => {
             res.status(500).send({
-                message: "Error retrieving Post with id of " + postId + ", error: " + error,
+                message: "Error retrieving Post with id of " +
+                    postId +
+                    ", error: " +
+                    getPostByIdError,
             });
         });
 };
@@ -93,8 +98,8 @@ exports.updatePost = (req, res, next) => {
     Post.update(req.body, {
             where: { post_id: postId },
         })
-        .then((num) => {
-            if (num == 1) {
+        .then((numberReturned) => {
+            if (numberReturned == 1) {
                 res.status(200).send({
                     message: "Post was updated successfully.",
                 });
@@ -104,9 +109,12 @@ exports.updatePost = (req, res, next) => {
                 });
             }
         })
-        .catch((error) => {
+        .catch((updatePostError) => {
             res.status(500).send({
-                message: "Error updating Post with id=" + postId + ", error: " + error,
+                message: "Error updating Post with id=" +
+                    postId +
+                    ", error: " +
+                    updatePostError,
             });
         });
 };
@@ -130,12 +138,12 @@ exports.deletePost = (req, res, next) => {
                 });
             }
         })
-        .catch((error) => {
+        .catch((deletePostError) => {
             res.status(500).send({
                 message: "Could not delete Post with id=" +
                     postId +
                     " beacuse of error: " +
-                    error,
+                    deletePostError,
             });
         });
 };

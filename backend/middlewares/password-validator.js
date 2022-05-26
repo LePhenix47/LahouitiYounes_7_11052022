@@ -23,18 +23,26 @@ passwordSchema
     .oneOf(["Passw0rd", "Password", "12345678", "azerty123"]); // Blacklist these values
 
 module.exports = (req, res, next) => {
-    let password = req.body.password;
+    let password = req.body.user_password;
     try {
         if (passwordSchema.validate(password)) {
             next(); //Validé
         } else {
+            console.log(
+                "ERROR while attempting to sign up → password: " +
+                password +
+                " format is invalid!"
+            );
+
             throw (
                 "The password isn't strong enough, list of criterias that weren't respected: " +
                 passwordSchema.validate("password", { list: true })
             ); //Pas assez fort
         }
-    } catch (error) {
-        console.log(error);
-        res.status(400).json({ error });
+    } catch (passwordValidationError) {
+        console.log(passwordValidationError);
+        res.status(400).json({
+            passwordValidationError: "Error while attempting to verify the password: Password must have: a length of character between 8-25 \n 1 uppercase letter \n 2 digits \n A symbol like '&$*' \n No spaces",
+        });
     }
 };

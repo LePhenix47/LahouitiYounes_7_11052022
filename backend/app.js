@@ -30,14 +30,14 @@ app.use(express.json());
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-//Library that protects the headers of the requests and from XSS attacks
+//Library that protects the headers of the requests (Protects from XSS attacks)
 app.use(helmet());
 
 //Synchroniser les modèles & la B2D POUR LES TESTS
-const database = require("./models");
-database.sequelize.sync({ force: false }).then(() => {
-    console.log("Drop and re-sync database.");
-});
+// const database = require("./models");
+// database.sequelize.sync({ force: false }).then(() => {
+//     console.log("Drop and re-sync database.");
+// });
 
 //Routes
 const userRoutes = require("./routes/user.route");
