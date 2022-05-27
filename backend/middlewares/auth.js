@@ -16,6 +16,6 @@ module.exports = (req, res, next) => {
     } catch (authError) {
         res
             .status(401)
-            .json({ authError: "Unauthorized request, user is not logged in" });
+            .json({ message: "Unauthorized request: user not logged in" });
     }
 };

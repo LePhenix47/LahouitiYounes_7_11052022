@@ -43,7 +43,9 @@ module.exports = (req, res, next) => {
         console.log(passwordValidationError);
         res.status(400).json({
             message: "Error while attempting to verify the password: " +
-                passwordValidationError,
+                passwordValidationError +
+                " list of criterias not respected: " +
+                passwordSchema.validate("password", { list: true }),
         });
     }
 };

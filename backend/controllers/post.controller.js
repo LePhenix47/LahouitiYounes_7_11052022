@@ -71,12 +71,11 @@ exports.createPost = (req, res, next) => {
             areTitleAndDescriptionFilled
         );
         return res.status(400).send({
-            message: "The tiitle or description of the post cannot be empty!",
+            message: "The title or description of the post cannot be empty!",
         });
     }
     // Create a Post
     const post = {
-        post_id: req.params.post_id,
         user_id: req.body.user_id,
         title: req.body.title,
         description: req.body.description,
@@ -101,6 +100,7 @@ exports.createPost = (req, res, next) => {
             });
         });
 };
+
 /*
 // Update a Post by the id in the request
 */
@@ -138,7 +138,7 @@ exports.deletePost = (req, res, next) => {
         })
         .then((num) => {
             if (num == 1) {
-                res.stauts(200).send({
+                res.status(200).send({
                     message: "Post was deleted successfully!",
                 });
             } else {
@@ -189,7 +189,7 @@ exports.findAll = (req, res, next) => {
     let condition = post_id ?
         {
             title: {
-                [Operator.iLike]: `%${post_id}%`,
+                [Operator.[SQL operator]]: `%${post_id}%`,
             },
         } :
         null;
@@ -205,4 +205,26 @@ exports.findAll = (req, res, next) => {
         });
 };
 
+
+
+*************LIST OF OPERATORS*****************************
+[Operator.eq] → = 
+[Operator.ne] → ≠
+[Operator. gte] → ≥
+[Operator. gt] →  >
+[Operator. lte] →  ≤
+[Operator. lt] →  <
+[Operator. and] → AND 
+[Operator. or] → OR 
+[Operator. join] → JOIN 
+
+
+On peut ajouter des fonction aggrégées avec:
+ sequelize.fn('[FONCTION SQL]', sequelize.col([ATTRIBUT]), '[ALIAS SQL]')
+
+ ex: exports.getMaxPrice = () => Item.findAll({
+    attributes: [[sequelize.fn('max', sequelize.col('price')), 'maxPrice']],
+    raw: true,
+    order: sequelize.literal('count DESC')
+  });
 */
