@@ -25,7 +25,7 @@ module.exports = (req, res, next) => {
     } catch (emailValidationError) {
         console.log(emailValidationError);
         res.status(400).json({
-            emailValidationError: "Email validation has failed, email format 'nickname@domain.extension' not respected",
+            message: "Email validation has failed: " + emailValidationError,
         });
     }
 };

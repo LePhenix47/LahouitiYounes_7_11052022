@@ -42,7 +42,8 @@ module.exports = (req, res, next) => {
     } catch (passwordValidationError) {
         console.log(passwordValidationError);
         res.status(400).json({
-            passwordValidationError: "Error while attempting to verify the password: Password must have: a length of character between 8-25 \n 1 uppercase letter \n 2 digits \n A symbol like '&$*' \n No spaces",
+            message: "Error while attempting to verify the password: " +
+                passwordValidationError,
         });
     }
 };
