@@ -21,7 +21,7 @@ router.get("/:id", auth, getPostById);
 
 router.post("/", auth, multer, createPost);
 
-router.put("/:id", auth, multer, updatePost);
+router.put("/:id", /*auth,*/ multer, updatePost);
 
 router.delete("/:id", auth, deletePost);
 

@@ -4,49 +4,6 @@ const Operator = database.Sequelize.Op;
 const fileSystem = require("fs");
 
 /*
-// Create and Save a new Post
-*/
-exports.createPost = (req, res, next) => {
-    // Validate request
-    let areTitleAndDescriptionFilled =
-        req.body.description !== null && req.body.title !== null ? true : false;
-    if (!areTitleAndDescriptionFilled) {
-        console.log(
-            "ERROR while attempting to create the post: Title or description is empty, BOOLEAN value = " +
-            areTitleAndDescriptionFilled
-        );
-        res.status(400).send({
-            message: "Content of title or description cannot be empty!",
-        });
-        return;
-    }
-    // Create a Post
-    const post = {
-        post_id: req.params.id,
-        user_id: req.body.userId,
-        title: req.body.title,
-        description: req.body.description,
-        image_url: req.file ?
-            `${req.protocol}://${req.get("host")}/images/${req.file.filename}` :
-            null,
-        likes: 0,
-        dislikes: 0,
-    };
-    // Save Post in the PostgreSQL database
-    Post.create(post)
-        .then((savedPost) => {
-            console.log("Post created");
-            res.status(201).send(savedPost);
-        })
-        .catch((postCreationError) => {
-            res.status(500).send({
-                message: postCreationError.message ||
-                    "Some error occurred while creating the Post.",
-            });
-        });
-};
-
-/*
 // Retrieve all Posts from the database.
 */
 exports.getAllPosts = (req, res, next) => {
@@ -91,10 +48,65 @@ exports.getPostById = (req, res, next) => {
 };
 
 /*
+// Create and Save a new Post
+*/
+exports.createPost = (req, res, next) => {
+    // Validate reques
+    let descriptionFromBodyRequest = req.body.description;
+    let titleFromBodyRequest = req.body.title;
+    let areTitleAndDescriptionFilled =
+        descriptionFromBodyRequest !== "" && titleFromBodyRequest !== "" ?
+        true :
+        false;
+
+    console.log(
+        "title: " +
+        titleFromBodyRequest +
+        "\n description: " +
+        descriptionFromBodyRequest
+    );
+    if (!areTitleAndDescriptionFilled) {
+        console.log(
+            "ERROR while attempting to create the post: Title or description is empty, BOOLEAN value = " +
+            areTitleAndDescriptionFilled
+        );
+        return res.status(400).send({
+            message: "The tiitle or description of the post cannot be empty!",
+        });
+    }
+    // Create a Post
+    const post = {
+        post_id: req.params.post_id,
+        user_id: req.body.user_id,
+        title: req.body.title,
+        description: req.body.description,
+        image_url: req.file ?
+            `${req.protocol}://${req.get("host")}/images/${req.file.filename}` :
+            null,
+        likes: 0,
+        dislikes: 0,
+    };
+
+    console.log(post + " has been created!");
+    // Save Post in the PostgreSQL database
+    Post.create(post)
+        .then((savedPost) => {
+            console.log("Post created");
+            res.status(201).send(savedPost);
+        })
+        .catch((postCreationError) => {
+            res.status(500).send({
+                message: postCreationError.message ||
+                    "Some error occurred while creating the Post.",
+            });
+        });
+};
+/*
 // Update a Post by the id in the request
 */
 exports.updatePost = (req, res, next) => {
-    const postId = req.params.id;
+    const postId = req.body.post_id;
+    console.log(`Post ID = ${postId}`);
     Post.update(req.body, {
             where: { post_id: postId },
         })
@@ -111,10 +123,7 @@ exports.updatePost = (req, res, next) => {
         })
         .catch((updatePostError) => {
             res.status(500).send({
-                message: "Error updating Post with id=" +
-                    postId +
-                    ", error: " +
-                    updatePostError,
+                message: "Error updating Post with id=" + postId + " " + updatePostError,
             });
         });
 };

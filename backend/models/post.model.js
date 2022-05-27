@@ -25,14 +25,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: true,
         },
-        likes: {
-            type: Sequelize.INTEGER,
-            allowNull: true,
-        },
-        dislikes: {
-            type: Sequelize.INTEGER,
-            allowNull: true,
-        },
     });
     return Post;
 };
