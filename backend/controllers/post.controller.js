@@ -136,13 +136,19 @@ exports.deletePost = (req, res, next) => {
     Post.destroy({
             where: { post_id: postId },
         })
-        .then((num) => {
-            if (num == 1) {
-                res.status(200).send({
+        .then((numberReturned) => {
+            if (numberReturned == 1) {
+                console.log(
+                    "Post DELETED successfully ! → Number returned = " + numberReturned
+                );
+                return res.status(200).send({
                     message: "Post was deleted successfully!",
                 });
             } else {
-                res.status(400).send({
+                console.log(
+                    "Post cannot be deleted! → Number returned = " + numberReturned
+                );
+                return res.status(400).send({
                     message: `Cannot delete Post with id = ${postId}. Post was not found!`,
                 });
             }
@@ -162,6 +168,18 @@ exports.deletePost = (req, res, next) => {
 */
 exports.likePost = (req, res, next) => {
     const postId = req.params.id;
+    console.log(postId);
+    Post.findByPk(postId)
+        .then((post) => {
+            console.log("Post found → " + post);
+            // res.status(200).json({ message: "Post successfully liked!" });
+        })
+        .catch((postNotFoundError) => {
+            console.log("Post NOT found → " + postNotFoundError);
+            res
+                .status(404)
+                .json({ message: "Post not found, error: " + postNotFoundError });
+        });
 };
 
 /*
@@ -217,6 +235,9 @@ exports.findAll = (req, res, next) => {
 [Operator. and] → AND 
 [Operator. or] → OR 
 [Operator. join] → JOIN 
+
+LIKE → Case sensitive
+ILIKE → NOT case sensitive
 
 
 On peut ajouter des fonction aggrégées avec:

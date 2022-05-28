@@ -20,5 +20,6 @@ Variables d'exportation des modèles
 */
 database.user = require("./user.model")(sequelize, Sequelize);
 database.post = require("./post.model")(sequelize, Sequelize);
+database.like = require("./like.model")(sequelize, Sequelize);
 
 module.exports = database;
