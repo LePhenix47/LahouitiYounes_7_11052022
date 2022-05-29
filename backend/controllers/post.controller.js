@@ -169,6 +169,7 @@ exports.deletePost = (req, res, next) => {
 exports.likePost = (req, res, next) => {
     const postId = req.params.id;
     console.log(postId);
+
     Post.findByPk(postId)
         .then((post) => {
             console.log("Post found → " + post);
@@ -228,13 +229,13 @@ exports.findAll = (req, res, next) => {
 *************LIST OF OPERATORS*****************************
 [Operator.eq] → = 
 [Operator.ne] → ≠
-[Operator. gte] → ≥
-[Operator. gt] →  >
-[Operator. lte] →  ≤
-[Operator. lt] →  <
-[Operator. and] → AND 
-[Operator. or] → OR 
-[Operator. join] → JOIN 
+[Operator.gte] → ≥
+[Operator.gt] →  >
+[Operator.lte] →  ≤
+[Operator.lt] →  <
+[Operator.and] → AND 
+[Operator.or] → OR 
+[Operator.join] → JOIN 
 
 LIKE → Case sensitive
 ILIKE → NOT case sensitive

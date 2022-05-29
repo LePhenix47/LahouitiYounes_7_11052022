@@ -8,16 +8,16 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
         },
         user_id: {
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
             allowNull: false,
-            //   references: "user", //Nom de notre table
-            //   referencesKey: "user_id", //L'attribut référencé de la PK ce cette table
+            // references: "user", //Nom de notre table
+            // referencesKey: "user_id", //L'attribut référencé de la PK ce cette table
         },
         post_id: {
-            type: Sequelize.STRING,
+            type: Sequelize.INTEGER,
             allowNull: false,
-            //   references: "post", //Nom de notre table
-            //   referencesKey: "post_id", //L'attribut référencé de la PK ce cette table
+            // references: "post", //Nom de notre table
+            // referencesKey: "post_id", //L'attribut référencé de la PK ce cette table
         },
     });
     return Like;
