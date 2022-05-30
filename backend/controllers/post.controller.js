@@ -1,7 +1,9 @@
 const database = require("../models");
 const Post = database.post;
+const Like = database.like;
 const Operator = database.Sequelize.Op;
 const fileSystem = require("fs");
+const { post } = require("../models");
 
 /*
 // Retrieve all Posts from the database.
@@ -82,8 +84,6 @@ exports.createPost = (req, res, next) => {
         image_url: req.file ?
             `${req.protocol}://${req.get("host")}/images/${req.file.filename}` :
             null,
-        likes: 0,
-        dislikes: 0,
     };
 
     console.log(post + " has been created!");
@@ -164,22 +164,128 @@ exports.deletePost = (req, res, next) => {
 };
 
 /*
-//Likes, dislikes, unlikes or undislikes the post (CANNOT like & dislike the same post) 
+//Likes or unlikes the post  
 */
 exports.likePost = (req, res, next) => {
-    const postId = req.params.id;
+    const postId = req.body.post_id;
+    const userId = req.body.user_id;
     console.log(postId);
 
-    Post.findByPk(postId)
-        .then((post) => {
-            console.log("Post found → " + post);
-            // res.status(200).json({ message: "Post successfully liked!" });
+    Like.findAll({
+            attributes: ["user_id", "post_id"],
+            where: {
+                [Operator.and]: [{ user_id: userId }, { post_id: postId }], //SELECT user_id, post_id FROM likes WHERE user_id = [req.body.user_id] AND post_id = [req.body.post_id]
+            },
         })
-        .catch((postNotFoundError) => {
-            console.log("Post NOT found → " + postNotFoundError);
-            res
-                .status(404)
-                .json({ message: "Post not found, error: " + postNotFoundError });
+        .then((likeTuple) => {
+            let likeTupleEmpty = likeTuple === [] ? true : false;
+            if (likeTupleEmpty) {
+                console.log(
+                    `Post with Id = ${postId} hasn't been found, creating a tuple on the Like table for the post...`
+                );
+                const liked = {
+                    user_id: userId,
+                    post_id: postId,
+                    likes: true,
+                };
+                Like.create(liked)
+                    .then((likedPost) => {
+                        console.log(
+                            `Like tuple successfully added to the table: ${likedPost}`
+                        );
+                    })
+                    .catch((addLikeTupleError) =>
+                        res.status(500).json({
+                            message: "Error while attempting to like" + addLikeTupleError,
+                        })
+                    );
+            }
+
+            if (!likeTupleEmpty) {
+                console.log(
+                    `Post with ID = ${postId} has been found in the table of likes → Verifying if it has already been liked`
+                );
+                Like.findAll({
+                        attributes: ["user_id", "post_id"],
+                        where: {
+                            [Operator.and]: [
+                                { user_id: userId },
+                                { post_id: postId },
+                                { likes: true },
+                            ], //SELECT user_id, post_id FROM likes WHERE user_id = [req.body.user_id] AND post_id = [req.body.post_id] AND likes = true
+                        },
+                    })
+                    .then((postLikesTuple) => {
+                        let postAlreadyLiked =
+                            postLikesTuple[0].liked === true ? "liked" : "notLiked";
+                        if (postAlreadyLiked === "liked") {
+                            console.log(
+                                "The post has already been liked → UNLIKE POST → set the liked = false in the DB"
+                            );
+                            Like.update({
+                                    liked: false,
+                                }, {
+                                    where: {
+                                        [Operator.and]: [{ user_id: userId }, { post_id: postId }],
+                                    },
+                                })
+                                .then(() => {
+                                    console.log(
+                                        "SUCCESS while updating the post by removing the like (liked = false)"
+                                    );
+                                    res
+                                        .status(200)
+                                        .json({ message: "The post has been unliked!" });
+                                })
+                                .catch((updatingPostLikeError) => {
+                                    console.log(
+                                        "ERROR while updating the post by removing the like (liked = false)"
+                                    );
+                                    res.status(500).json({
+                                        message: "Error" + updatingPostLikeError,
+                                    });
+                                });
+                        } else if (postAlreadyLiked === "notLiked") {
+                            console.log(
+                                "The post has been liked again → LIKED POST AGAIN → setting the liked = true in the DB"
+                            );
+                            Like.update({
+                                    liked: true,
+                                }, {
+                                    where: {
+                                        [Operator.and]: [{ user_id: userId }, { post_id: postId }],
+                                    },
+                                })
+                                .then(() => {
+                                    console.log(
+                                        "SUCCESS while updating the post by removing the like (liked = false)"
+                                    );
+                                    res.status(200).json({
+                                        message: "The post has been unliked!",
+                                    });
+                                })
+                                .catch((updatingPostLikeError) => {
+                                    console.log(
+                                        "ERROR while updating the post by adding back the like (liked = true)"
+                                    );
+                                    res.status(500).json({
+                                        message: "Error" + updatingPostLikeError,
+                                    });
+                                });
+                        }
+                    })
+                    .catch((retrievePostFromLikesError) => {
+                        res.status(500).json({
+                            message: "Error while attempting to retrieve the tuple " +
+                                retrievePostFromLikesError,
+                        });
+                    });
+            }
+        })
+        .catch((findingLikeError) => {
+            res.status(500).json({
+                message: "Error while attempting to find the tuple → " + findingLikeError,
+            });
         });
 };
 

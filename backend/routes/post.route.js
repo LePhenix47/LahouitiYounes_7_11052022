@@ -15,7 +15,7 @@ const {
 
 const multer = require("../middlewares/multer-config");
 
-router.get("/", /*auth,*/ getAllPosts);
+router.get("/", auth, getAllPosts);
 
 router.get("/:id", auth, getPostById);
 

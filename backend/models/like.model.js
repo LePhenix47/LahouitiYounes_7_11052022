@@ -19,6 +19,9 @@ module.exports = (sequelize, Sequelize) => {
             // references: "post", //Nom de notre table
             // referencesKey: "post_id", //L'attribut référencé de la PK ce cette table
         },
+        liked: {
+            type: Sequelize.BOOLEAN,
+        },
     });
     return Like;
 };
