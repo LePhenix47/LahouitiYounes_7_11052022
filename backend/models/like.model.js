@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const Like = sequelize.define("like", {
+    const Like = sequelize.define("likes", {
         like_id: {
             type: Sequelize.INTEGER,
             allowNull: false,

@@ -3,7 +3,8 @@ const Post = database.post;
 const Like = database.like;
 const Operator = database.Sequelize.Op;
 const fileSystem = require("fs");
-const { post } = require("../models");
+const { post, like } = require("../models");
+const { type } = require("os");
 
 /*
 // Retrieve all Posts from the database.
@@ -174,19 +175,31 @@ exports.likePost = (req, res, next) => {
     Like.findAll({
             attributes: ["user_id", "post_id"],
             where: {
-                [Operator.and]: [{ user_id: userId }, { post_id: postId }], //SELECT user_id, post_id FROM likes WHERE user_id = [req.body.user_id] AND post_id = [req.body.post_id]
+                [Operator.and]: [{ user_id: userId }, { post_id: postId }], //SELECT user_id, post_id FROM liked WHERE user_id = [req.body.user_id] AND post_id = [req.body.post_id]
             },
         })
         .then((likeTuple) => {
-            let likeTupleEmpty = likeTuple === [] ? true : false;
-            if (likeTupleEmpty) {
+            //Is the tuple empty? yes or no?
+            let isTupleEmpty = likeTuple.length === 0 ? true : false;
+
+            console.log(
+                "Tuple found by the DB = " +
+                JSON.stringify(likeTuple) +
+                " with a type of: " +
+                typeof likeTuple +
+                " test of isTupleEmpty = " +
+                JSON.stringify(isTupleEmpty)
+            );
+            console.assert(likeTuple.length === 0, "Error, likeTuple !== []");
+            console.assert(isTupleEmpty === true, "The isTupleEmpty isn't empty");
+            if (isTupleEmpty) {
                 console.log(
                     `Post with Id = ${postId} hasn't been found, creating a tuple on the Like table for the post...`
                 );
                 const liked = {
                     user_id: userId,
                     post_id: postId,
-                    likes: true,
+                    liked: true,
                 };
                 Like.create(liked)
                     .then((likedPost) => {
@@ -199,25 +212,34 @@ exports.likePost = (req, res, next) => {
                             message: "Error while attempting to like" + addLikeTupleError,
                         })
                     );
-            }
-
-            if (!likeTupleEmpty) {
+            } else if (!isTupleEmpty) {
                 console.log(
-                    `Post with ID = ${postId} has been found in the table of likes → Verifying if it has already been liked`
+                    `Post with ID = ${postId} has been found in the table of liked → Verifying if it has already been liked`
                 );
                 Like.findAll({
-                        attributes: ["user_id", "post_id"],
+                        attributes: ["user_id", "post_id", "liked"],
                         where: {
                             [Operator.and]: [
                                 { user_id: userId },
                                 { post_id: postId },
-                                { likes: true },
-                            ], //SELECT user_id, post_id FROM likes WHERE user_id = [req.body.user_id] AND post_id = [req.body.post_id] AND likes = true
+                                { liked: true },
+                            ], //SELECT user_id, post_id FROM liked WHERE user_id = [req.body.user_id] AND post_id = [req.body.post_id] AND liked = true
                         },
                     })
                     .then((postLikesTuple) => {
                         let postAlreadyLiked =
                             postLikesTuple[0].liked === true ? "liked" : "notLiked";
+                        console.log(
+                            "Result of postLikesTuple = " +
+                            JSON.stringify(postLikesTuple) +
+                            " " +
+                            typeof postLikesTuple
+                        );
+                        console.log(
+                            "++++++++++++ postLikesTuple[0].liked = " +
+                            JSON.stringify(postLikesTuple[0].liked)
+                        );
+                        console.log("postLikesTuple = " + JSON.stringify(postLikesTuple));
                         if (postAlreadyLiked === "liked") {
                             console.log(
                                 "The post has already been liked → UNLIKE POST → set the liked = false in the DB"
