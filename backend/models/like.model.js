@@ -7,18 +7,6 @@ module.exports = (sequelize, Sequelize) => {
             autoIncrement: true,
             primaryKey: true,
         },
-        user_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            // references: "user", //Nom de notre table
-            // referencesKey: "user_id", //L'attribut référencé de la PK ce cette table
-        },
-        post_id: {
-            type: Sequelize.INTEGER,
-            allowNull: false,
-            // references: "post", //Nom de notre table
-            // referencesKey: "post_id", //L'attribut référencé de la PK ce cette table
-        },
         liked: {
             type: Sequelize.BOOLEAN,
         },

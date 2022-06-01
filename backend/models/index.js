@@ -18,9 +18,37 @@ database.sequelize = sequelize; //Instance de la B2D
 /*
 Variables d'exportation des modèles
 */
-database.user = require("./user.model")(sequelize, Sequelize);
-database.post = require("./post.model")(sequelize, Sequelize);
-database.like = require("./like.model")(sequelize, Sequelize);
+
+/*
+Variables
+*/
+const User = require("./user.model")(sequelize, Sequelize);
+const Post = require("./post.model")(sequelize, Sequelize);
+const Like = require("./like.model")(sequelize, Sequelize);
+/* 
+Relations entre les tables
+*/
+//1-à-n
+User.hasMany(Like, {
+    foreignKey: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+});
+Like.belongsTo(User);
+
+//1-à-n
+Post.hasMany(Like, {
+    foreignKey: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+});
+Like.belongsTo(Post);
+
+database.user = User;
+database.post = Post;
+database.like = Like;
 
 /*
 //Tutorial as to how to create relations with tables in Sequelize
