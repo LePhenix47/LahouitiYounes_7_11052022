@@ -25,10 +25,17 @@ Variables
 const User = require("./user.model")(sequelize, Sequelize);
 const Post = require("./post.model")(sequelize, Sequelize);
 const Like = require("./like.model")(sequelize, Sequelize);
+const Comment = require("./comment.model")(sequelize, Sequelize);
+const Moderator = require("./moderator.model")(sequelize, Sequelize);
 /* 
 Relations entre les tables
 */
-//1-à-n
+
+//Un utilisateur peut créer plusieurs posts
+//Un post est créé par un utilisateur → 1-à-n
+
+//Un utilisateur peut liker plusieurs fois
+//Un like appartient à un seul utilisateur → 1-à-n
 User.hasMany(Like, {
     foreignKey: {
         type: Sequelize.INTEGER,
@@ -37,7 +44,8 @@ User.hasMany(Like, {
 });
 Like.belongsTo(User);
 
-//1-à-n
+//Un post peut avoir plusieurs likes
+//Un like appartient à seul post → 1-à-n
 Post.hasMany(Like, {
     foreignKey: {
         type: Sequelize.INTEGER,
@@ -46,9 +54,50 @@ Post.hasMany(Like, {
 });
 Like.belongsTo(Post);
 
+// Un utilisateur peut commenter plusieurs fois
+// Un commentaire appartient à un seul utilisateur → 1 à n
+User.hasMany(Comment, {
+    foreignKey: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+});
+Comment.belongsTo(User);
+
+//Un commentaire peut être liké plusieurs fois
+//Un like appartient à un commentaire
+Post.hasMany(Like, {
+    foreignKey: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+});
+Like.belongsTo(Post);
+
+//Un post peut avoir plusieurs commentaires
+//Un commentaire appartient à un post
+Post.hasMany(Comment, {
+    foreignKey: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+});
+Comment.belongsTo(Post);
+
+//Un modérateur peut être un utilisateur
+//Un utilisateur peut être un modérateur
+User.hasOne(Moderator, {
+    foreignKey: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+    },
+});
+Moderator.belongsTo(User);
+
 database.user = User;
 database.post = Post;
 database.like = Like;
+database.comment = Comment;
 
 /*
 //Tutorial as to how to create relations with tables in Sequelize

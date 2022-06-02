@@ -71,6 +71,7 @@ exports.login = (req, res, next) => {
                 .status(401)
                 .json({ message: "User does not exist → not registered" });
         }
+        //let { user_id, user_email, user_password} = user[0]
         let userIdFromDatabase = user[0].user_id;
         let emailFromDatabase = user[0].user_email;
         let hashedPasswordInDatabase = user[0].user_password;

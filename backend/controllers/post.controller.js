@@ -1,6 +1,7 @@
 const database = require("../models");
 const Post = database.post;
 const Like = database.like;
+const Comment = database.comment;
 const Operator = database.Sequelize.Op;
 const fileSystem = require("fs");
 
@@ -166,14 +167,14 @@ exports.deletePost = (req, res, next) => {
 //Likes or unlikes the post  
 */
 exports.likePost = (req, res, next) => {
-    const postIdFromBodyRequest = req.params.id;
+    const postIdFromURL = req.params.id;
     const userIdFromBodyRequest = req.body.user_id;
     Like.findAll({
             attributes: ["userUserId", "postPostId", "liked"],
             where: {
                 [Operator.and]: [
                     { userUserId: userIdFromBodyRequest },
-                    { postPostId: postIdFromBodyRequest },
+                    { postPostId: postIdFromURL },
                 ], //SELECT userUserId, postPostId FROM likes WHERE userUserId = [req.body.userUserId] AND postPostId = [req.body.post_id]
             },
         })
@@ -183,7 +184,7 @@ exports.likePost = (req, res, next) => {
             if (isTupleEmpty) {
                 const liked = {
                     userUserId: userIdFromBodyRequest,
-                    postPostId: postIdFromBodyRequest,
+                    postPostId: postIdFromURL,
                     liked: true,
                 };
                 Like.create(liked)
@@ -203,7 +204,7 @@ exports.likePost = (req, res, next) => {
                         where: {
                             [Operator.and]: [
                                 { userUserId: userIdFromBodyRequest },
-                                { postPostId: postIdFromBodyRequest },
+                                { postPostId: postIdFromURL },
                             ],
                         },
                     })
@@ -215,20 +216,65 @@ exports.likePost = (req, res, next) => {
                     })
                     .catch((updatingPostLikeError) => {
                         res.status(500).json({
-                            message: "Error" + updatingPostLikeError,
+                            message: "Error, couldn't update the post" + updatingPostLikeError,
                         });
                     });
             }
         })
         .catch((findingLikeError) => {
             res.status(500).json({
-                message: "Error while attempting to find the tuple → " + findingLikeError,
+                message: "Error while attempting to find the liked post because of an error in the DB → " +
+                    findingLikeError,
             });
         });
 };
 
 /*
+//Comment a post
+*/
+exports.commentPost = (req, res, next) => {
+    const postIdFromURL = req.params.id;
+    const userIdFromBodyRequest = req.body.user_id;
+    let commentFromBodyRequest = req.body.comment;
+    console.log(JSON.stringify(commentFromBodyRequest));
+    let isCommentEmpty = commentFromBodyRequest === "" ? true : false;
+    if (isCommentEmpty) {
+        res
+            .status(400)
+            .json({ message: "Error, the content of a comment cannot be empty" });
+    } else {
+        const commentObject = {
+            comment: commentFromBodyRequest,
+            userUserId: userIdFromBodyRequest,
+            postPostId: postIdFromURL,
+        };
+        Comment.create(commentObject)
+            .then((createdComment) => {
+                console.log("Commentaire crée!");
+                res.status(201).json(createdComment);
+            })
+            .catch((error) => {
+                console.log(
+                    "Erreur trouvée lors de la création du commentaire: " + error
+                );
+                res.status(500).json({
+                    message: "An error has occured while attempting to create a comment",
+                });
+            });
+    }
+};
 
+/*
+
+  // Create a Post
+    const post = {
+        user_id: req.body.user_id,
+        title: req.body.title,
+        description: req.body.description,
+        image_url: req.file ?
+            `${req.protocol}://${req.get("host")}/images/${req.file.filename}` :
+            null,
+    };
 
 create a new Post: create(object)
 
