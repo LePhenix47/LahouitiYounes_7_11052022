@@ -168,7 +168,6 @@ exports.deletePost = (req, res, next) => {
 exports.likePost = (req, res, next) => {
     const postIdFromBodyRequest = req.params.id;
     const userIdFromBodyRequest = req.body.user_id;
-    console.log(postIdFromBodyRequest);
     Like.findAll({
             attributes: ["userUserId", "postPostId", "liked"],
             where: {
@@ -181,31 +180,14 @@ exports.likePost = (req, res, next) => {
         .then((likeTuple) => {
             //Is the tuple empty? yes or no?
             let isTupleEmpty = likeTuple.length === 0 ? true : false;
-
-            console.log(
-                "Tuple found by the DB = " +
-                JSON.stringify(likeTuple) +
-                " with a type of: " +
-                typeof likeTuple +
-                " test of isTupleEmpty = " +
-                JSON.stringify(isTupleEmpty)
-            );
-            console.assert(likeTuple.length === 0, "Error, likeTuple !== []");
-            console.assert(isTupleEmpty === true, "The isTupleEmpty isn't empty");
             if (isTupleEmpty) {
-                console.log(
-                    `Post with Id = ${postIdFromBodyRequest} hasn't been found, creating a tuple on the Like table for the post...`
-                );
                 const liked = {
                     userUserId: userIdFromBodyRequest,
                     postPostId: postIdFromBodyRequest,
                     liked: true,
                 };
                 Like.create(liked)
-                    .then((likedPost) => {
-                        console.log(
-                            `Like tuple successfully added to the table: ${likedPost}`
-                        );
+                    .then(() => {
                         res.status(200).json({ message: "Liked!" });
                     })
                     .catch((addLikeTupleError) =>
@@ -214,29 +196,7 @@ exports.likePost = (req, res, next) => {
                         })
                     );
             } else if (!isTupleEmpty) {
-                console.log(
-                    `Post with ID = ${postIdFromBodyRequest} has been found in the table of liked → Verifying if it has already been liked`
-                );
                 let postAlreadyLiked = likeTuple[0].liked;
-                console.assert(
-                    typeof postAlreadyLiked === Boolean,
-                    "Fail, not a boolean"
-                );
-                console.log(
-                    "\nResult of likeTuple = " +
-                    JSON.stringify(likeTuple) +
-                    " " +
-                    typeof likeTuple +
-                    likeTuple
-                );
-                console.log(
-                    "++++++++++++ likeTuple[0].liked = " +
-                    JSON.stringify(likeTuple[0].liked)
-                );
-                console.log("likeTuple = " + JSON.stringify(likeTuple));
-                console.log(
-                    "The post has already been UNLIKED POST → set the liked = false in the DB"
-                );
                 Like.update({
                         liked: !postAlreadyLiked,
                     }, {
@@ -248,16 +208,12 @@ exports.likePost = (req, res, next) => {
                         },
                     })
                     .then(() => {
-                        console.log("SUCCESS while updating the post by removing the like");
                         res.status(200).json({
                             message: "The post has been " +
                                 (postAlreadyLiked ? "unliked (-1)" : "liked (+1)"),
                         });
                     })
                     .catch((updatingPostLikeError) => {
-                        console.log(
-                            "ERROR while updating the post by removing the like (liked = false)"
-                        );
                         res.status(500).json({
                             message: "Error" + updatingPostLikeError,
                         });
