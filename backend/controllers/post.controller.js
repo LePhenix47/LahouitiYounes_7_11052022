@@ -11,14 +11,14 @@ const fileSystem = require("fs");
 exports.getAllPosts = (req, res, next) => {
     Post.findAll()
         .then((posts) => {
-            console.log("Posts found: \n" + posts);
+            console.log("Posts truvés: \n" + posts);
             res.status(200).send(posts);
         })
         .catch((getAllPostsError) => {
-            console.log("Posts NOT found! ----ERROR : " + getAllPostsError);
+            console.log("Posts NON trouvés! ----ERREUR : " + getAllPostsError);
             res.status(500).send({
                 message: getAllPostsError.message ||
-                    "Some error occurred while retrieving the posts.",
+                    "Some unexpected error occurred while retrieving all the posts.",
             });
         });
 };
@@ -31,20 +31,25 @@ exports.getPostById = (req, res, next) => {
     Post.findByPk(postId)
         .then((post) => {
             if (post) {
-                console.log("Post found: " + post);
+                console.log("Post trouvé: " + post);
                 res.status(200).send(post);
             } else {
+                console.log("Post NON trouvé w/ id = " + postId);
                 res.status(404).send({
                     message: `Cannot find Post with id of ${postId}.`,
                 });
             }
         })
         .catch((getPostByIdError) => {
+            console.log(
+                "Une erreur est survenue en tentant de trouver le post w/ ID = " +
+                postId +
+                ", erreur: " +
+                getPostByIdError
+            );
             res.status(500).send({
-                message: "Error retrieving Post with id of " +
-                    postId +
-                    ", error: " +
-                    getPostByIdError,
+                message: "An unexpected error has occured while retrieving the post with id of " +
+                    postId,
             });
         });
 };
@@ -106,7 +111,7 @@ exports.createPost = (req, res, next) => {
 */
 exports.updatePost = (req, res, next) => {
     const postId = req.body.post_id;
-    console.log(`Post ID = ${postId}`);
+    console.log(`Mis à jour du post w/ ID = ${postId}`);
     Post.update(req.body, {
             where: { post_id: postId },
         })
@@ -139,7 +144,7 @@ exports.deletePost = (req, res, next) => {
         .then((numberReturned) => {
             if (numberReturned == 1) {
                 console.log(
-                    "Post DELETED successfully ! → Number returned = " + numberReturned
+                    "Post SUPPRIMÉ AVEC SUCCÈS ! → Nombre retourné = " + numberReturned
                 );
                 return res.status(200).send({
                     message: "Post was deleted successfully!",
@@ -148,17 +153,22 @@ exports.deletePost = (req, res, next) => {
                 console.log(
                     "Post cannot be deleted! → Number returned = " + numberReturned
                 );
-                return res.status(400).send({
+                return res.status(404).send({
                     message: `Cannot delete Post with id = ${postId}. Post was not found!`,
                 });
             }
         })
         .catch((deletePostError) => {
+            console.log(
+                "Tentative de suppresion du post w/ ID = " +
+                postId +
+                ", erreur: " +
+                deletePostError
+            );
             res.status(500).send({
                 message: "Could not delete Post with id=" +
                     postId +
-                    " beacuse of error: " +
-                    deletePostError,
+                    " due to an unexpected error",
             });
         });
 };
@@ -236,12 +246,19 @@ exports.commentPost = (req, res, next) => {
     const postIdFromURL = req.params.id;
     const userIdFromBodyRequest = req.body.user_id;
     let commentFromBodyRequest = req.body.comment;
-    console.log(JSON.stringify(commentFromBodyRequest));
+    console.log(
+        "Commentaire du corps de la requête: " +
+        JSON.stringify(commentFromBodyRequest)
+    );
     let isCommentEmpty = commentFromBodyRequest === "" ? true : false;
-    if (isCommentEmpty) {
-        res
-            .status(400)
-            .json({ message: "Error, the content of a comment cannot be empty" });
+    let isCommentTooLong =
+        commentFromBodyRequest.split("").length > 180 ? true : false;
+    if (isCommentEmpty || isCommentTooLong) {
+        res.status(400).json({
+            message: `Error, the content of a comment cannot be
+      ${isCommentEmpty ? " empty" : ""}
+      ${isCommentTooLong ? " over 180 characters long" : ""}`,
+        });
     } else {
         const commentObject = {
             comment: commentFromBodyRequest,
@@ -250,7 +267,7 @@ exports.commentPost = (req, res, next) => {
         };
         Comment.create(commentObject)
             .then((createdComment) => {
-                console.log("Commentaire crée!");
+                console.log("Commentaire crée! → " + createdComment);
                 res.status(201).json(createdComment);
             })
             .catch((error) => {
@@ -263,6 +280,10 @@ exports.commentPost = (req, res, next) => {
             });
     }
 };
+
+exports.modifyComment = (req, res, next) => {};
+
+exports.deleteComment = (req, res, next) => {};
 
 /*
 
@@ -332,7 +353,7 @@ ILIKE → NOT case sensitive
 
 
 On peut ajouter des fonction aggrégées avec:
- sequelize.fn('[FONCTION SQL]', sequelize.col([ATTRIBUT]), '[ALIAS SQL]')
+ sequelize.fn('[FONCTION SQL]', sequelize.col([ATTRIBUT]), '[NOM ALTERNATIF DU TUPLE RETOURNÉ]')
 
  ex: exports.getMaxPrice = () => Item.findAll({
     attributes: [[sequelize.fn('max', sequelize.col('price')), 'maxPrice']],

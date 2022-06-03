@@ -12,6 +12,8 @@ const {
     deletePost,
     likePost,
     commentPost,
+    modifyComment,
+    deleteComment,
 } = postController;
 
 const multer = require("../middlewares/multer-config");
@@ -29,5 +31,9 @@ router.delete("/:id", auth, deletePost);
 router.post("/:id/like", /*auth,*/ likePost);
 
 router.post("/:id/comment", /*auth,*/ commentPost);
+
+router.put("/:id/comment/modify", /*auth,*/ modifyComment);
+
+router.delete("/:id/comment/delete", /*auth,*/ deleteComment);
 
 module.exports = router;
