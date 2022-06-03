@@ -139,7 +139,7 @@ exports.updatePost = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     const postId = req.params.id;
     Post.destroy({
-            where: { post_id: postId },
+            where: { post_id: postId }, //DELETE FROM posts WHERE post_id = [ID du post du corps de la requête]
         })
         .then((numberReturned) => {
             if (numberReturned == 1) {
@@ -240,7 +240,7 @@ exports.likePost = (req, res, next) => {
 };
 
 /*
-//Comment a post
+//Create a comment in a post
 */
 exports.commentPost = (req, res, next) => {
     const postIdFromURL = req.params.id;
@@ -260,10 +260,10 @@ exports.commentPost = (req, res, next) => {
       }${isCommentTooLong ? " over 180 characters long" : ""}`,
         });
         /*
-                 message: `Error, the content of a comment cannot be
-                 ${isCommentEmpty ? " empty" : ""}
-                 ${isCommentTooLong ? " over 180 characters long" : ""}`,
-            */
+                                                                                                                                                                             message: `Error, the content of a comment cannot be
+                                                                                                                                                                             ${isCommentEmpty ? " empty" : ""}
+                                                                                                                                                                             ${isCommentTooLong ? " over 180 characters long" : ""}`,
+                                                                                                                                                                        */
     } else {
         const commentObject = {
             comment: commentFromBodyRequest,
@@ -286,10 +286,14 @@ exports.commentPost = (req, res, next) => {
     }
 };
 
+/*
+//Modify the comment of a post 
+*/
 exports.modifyComment = (req, res, next) => {
+    let userIdFromBodyRequest = req.body.user_id;
     let modifiedCommentFromBodyRequest = req.body.comment;
-    let commentIdFromBodyRequest = req.body.comment_id;
     let postIdFromURL = req.params.id;
+    let commentIdFromURL = req.params.comment;
 
     console.log(
         "MODIFICATION Commentaire corps de la requête: " + JSON.stringify(req.body)
@@ -297,7 +301,7 @@ exports.modifyComment = (req, res, next) => {
 
     console.log(
         "Comment Id + commentaire + postID: " +
-        commentIdFromBodyRequest +
+        commentIdFromURL +
         " " +
         modifiedCommentFromBodyRequest +
         " " +
@@ -306,7 +310,8 @@ exports.modifyComment = (req, res, next) => {
 
     Comment.update({ comment: modifiedCommentFromBodyRequest }, {
             where: {
-                comment_id: commentIdFromBodyRequest,
+                comment_id: commentIdFromURL,
+                userUserId: userIdFromBodyRequest,
             },
             //UPDATE comments SET comment = [req.body.comment] (commentaire modifié) WHERE comment_id = [req.body.id]
         })
@@ -329,21 +334,29 @@ exports.modifyComment = (req, res, next) => {
         });
 };
 
+/*
+//Delete a comment of a post → NE MARCHE PAS
+*/
 exports.deleteComment = (req, res, next) => {
     let userIdFromBodyRequest = req.body.user_id;
-    let commentIdFromBodyRequest = req.body.comment_id;
+    let commentIdFromURL = req.params.comment;
+    let postIdFromURL = req.params.id;
+
+    console.log("ID du commentaire du post à supprimer = " + commentIdFromURL);
 
     Comment.destroy({
-            where: { comment_id: commentIdFromBodyRequest },
+            where: { comment_id: commentIdFromURL },
         })
         .then((numberReturned) => {
-            if (numberReturned >= 1) {
+            if (numberReturned === 1) {
                 console.log("Nombre retourné ≥ 1");
-                res.status(200).json({ message: "" });
+                res.status(200).json({
+                    message: `The comment with the commentId of ${commentIdFromURL} for the post with ID = ${postIdFromURL} as successfully deleted!`,
+                });
             } else {
                 console.log("Nombre retourné = " + numberReturned);
-                res.status(400).json({
-                    message: "Comment couldn't be deleted because of an unknown error",
+                res.status(404).json({
+                    message: "Comment can't be deleted because it doesn't exist this in post",
                 });
             }
         })
@@ -354,6 +367,39 @@ exports.deleteComment = (req, res, next) => {
             );
             res.status(500).json({
                 message: "An unexpected error has occured while attempting to delete the comment",
+            });
+        });
+};
+
+exports.getAllCommentsInOnePost = (req, res, next) => {
+    // let commentIdFromURL = req.params.comment;
+    let postIdFromURL = req.params.id;
+    Comment.findAll({
+            attributes: ["comment"],
+            where: {
+                postPostId: postIdFromURL,
+            },
+        })
+        .then((commentsFromPost) => {
+            console.log(
+                "Tous les commentaires du post avec l'id " +
+                postIdFromURL +
+                " sont ici: " +
+                JSON.stringify(commentsFromPost)
+            );
+            let isCommentSectionEmpty = commentsFromPost.length < 1 ? true : false;
+            if (isCommentSectionEmpty) {
+                throw "This post has no comments yet!";
+            }
+            res.status(200).json(commentsFromPost);
+        })
+        .catch((commentInOnePostError) => {
+            console.log(
+                "Une ERREUR est survenue lors du retrait des commentaires du post: " +
+                commentInOnePostError
+            );
+            res.status(404).json({
+                message: "Couldn't retrieve comments due to an unexpected error",
             });
         });
 };

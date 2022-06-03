@@ -14,6 +14,7 @@ const {
     commentPost,
     modifyComment,
     deleteComment,
+    getAllCommentsInOnePost,
 } = postController;
 
 const multer = require("../middlewares/multer-config");
@@ -28,12 +29,14 @@ router.put("/:id", auth, multer, updatePost);
 
 router.delete("/:id", auth, deletePost);
 
-router.post("/:id/like", /*auth,*/ likePost);
+router.post("/:id/like", auth, likePost);
 
-router.post("/:id/comment", /*auth,*/ commentPost);
+router.post("/:id/comment/", /*auth,*/ commentPost);
 
-router.put("/:id/comment/modify", /*auth,*/ modifyComment);
+router.get("/:id/comment/:comment", /*auth*/ getAllCommentsInOnePost);
 
-router.delete("/:id/comment/delete", /*auth,*/ deleteComment);
+router.put("/:id/comment/:comment", /*auth,*/ modifyComment);
+
+router.delete("/:id/comment/:comment", /*auth,*/ deleteComment);
 
 module.exports = router;
