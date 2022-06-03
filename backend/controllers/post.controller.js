@@ -255,10 +255,15 @@ exports.commentPost = (req, res, next) => {
         commentFromBodyRequest.split("").length > 180 ? true : false;
     if (isCommentEmpty || isCommentTooLong) {
         res.status(400).json({
-            message: `Error, the content of a comment cannot be
-      ${isCommentEmpty ? " empty" : ""}
-      ${isCommentTooLong ? " over 180 characters long" : ""}`,
+            message: `Error, the content of a comment cannot be${
+        isCommentEmpty ? " empty" : ""
+      }${isCommentTooLong ? " over 180 characters long" : ""}`,
         });
+        /*
+                 message: `Error, the content of a comment cannot be
+                 ${isCommentEmpty ? " empty" : ""}
+                 ${isCommentTooLong ? " over 180 characters long" : ""}`,
+            */
     } else {
         const commentObject = {
             comment: commentFromBodyRequest,
@@ -281,9 +286,77 @@ exports.commentPost = (req, res, next) => {
     }
 };
 
-exports.modifyComment = (req, res, next) => {};
+exports.modifyComment = (req, res, next) => {
+    let modifiedCommentFromBodyRequest = req.body.comment;
+    let commentIdFromBodyRequest = req.body.comment_id;
+    let postIdFromURL = req.params.id;
 
-exports.deleteComment = (req, res, next) => {};
+    console.log(
+        "MODIFICATION Commentaire corps de la requête: " + JSON.stringify(req.body)
+    );
+
+    console.log(
+        "Comment Id + commentaire + postID: " +
+        commentIdFromBodyRequest +
+        " " +
+        modifiedCommentFromBodyRequest +
+        " " +
+        postIdFromURL
+    );
+
+    Comment.update({ comment: modifiedCommentFromBodyRequest }, {
+            where: {
+                comment_id: commentIdFromBodyRequest,
+            },
+            //UPDATE comments SET comment = [req.body.comment] (commentaire modifié) WHERE comment_id = [req.body.id]
+        })
+        .then((modifiedComment) => {
+            console.log(
+                'Commentaire modifié = "' + JSON.stringify(modifiedComment) + '"'
+            );
+            res.status(200).json({
+                message: "Comment has been successfully modified",
+            });
+        })
+        .catch((updateCommentError) => {
+            console.log(
+                "Une erreur est survenue lors de la mise à jour d'un commentaire: " +
+                updateCommentError
+            );
+            res.status(500).json({
+                message: "An unexpected error has occured while attempting to update the comment",
+            });
+        });
+};
+
+exports.deleteComment = (req, res, next) => {
+    let userIdFromBodyRequest = req.body.user_id;
+    let commentIdFromBodyRequest = req.body.comment_id;
+
+    Comment.destroy({
+            where: { comment_id: commentIdFromBodyRequest },
+        })
+        .then((numberReturned) => {
+            if (numberReturned >= 1) {
+                console.log("Nombre retourné ≥ 1");
+                res.status(200).json({ message: "" });
+            } else {
+                console.log("Nombre retourné = " + numberReturned);
+                res.status(400).json({
+                    message: "Comment couldn't be deleted because of an unknown error",
+                });
+            }
+        })
+        .catch((commentDeletionError) => {
+            console.log(
+                "Erreur trouvée lors de la suppression du commentaire: " +
+                commentDeletionError
+            );
+            res.status(500).json({
+                message: "An unexpected error has occured while attempting to delete the comment",
+            });
+        });
+};
 
 /*
 
