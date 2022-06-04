@@ -102,6 +102,8 @@ exports.login = (req, res, next) => {
     });
 };
 
+exports.loginAdministrator = (res, req, next) => {};
+
 /*
 
 // Delete all Posts from the database.

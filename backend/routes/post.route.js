@@ -33,7 +33,7 @@ router.post("/:postId/like", /*auth,*/ likePost);
 
 router.post("/:postId/comment/", /*auth,*/ commentPost);
 
-router.get("/:postId/comment/:commentId", /*auth,*/ getAllCommentsInOnePost);
+router.get("/:postId", /*auth,*/ getAllCommentsInOnePost); //←←←←←←
 
 router.put("/:postId/comment/:commentId", /*auth,*/ modifyComment);
 

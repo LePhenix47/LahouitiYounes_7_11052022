@@ -64,8 +64,8 @@ User.hasMany(Comment, {
 });
 Comment.belongsTo(User);
 
-//Un commentaire peut être liké plusieurs fois
-//Un like appartient à un commentaire
+//Un post peut être liké plusieurs fois
+//Un like appartient à un post
 Post.hasMany(Like, {
     foreignKey: {
         type: Sequelize.INTEGER,
