@@ -3,6 +3,7 @@ const helmet = require("helmet");
 const dotEnv = require("dotenv");
 const path = require("path");
 const bodyParser = require("body-parser");
+// const rateLimit = require("express-rate-limit");
 
 //Configures the environment variables to avoid getting sensible data stolen from GitHub
 dotEnv.config();
@@ -28,10 +29,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/images", express.static(path.join(__dirname, "images")));
+//To differentiate the images for the posts and the images for the PfP
+app.use(
+    "/images/post-images",
+    express.static(path.join(__dirname, "post-images"))
+);
+app.use(
+    "/images/profile-pictures",
+    express.static(path.join(__dirname, "profile-pictures"))
+);
 
 //Library that protects the headers of the requests (Protects from XSS attacks)
 app.use(helmet());
+
+//Rate limiter is a library that limits the amount of requests an user can do to avoid: spam + potential DDoS
+// const limiter = rateLimit({
+//   max: 100,
+//   windowMs: 60 * 60 * 1000, //1h
+//   message: "Trop de requêtes en provenance de cet IP",
+// });
 
 //Synchroniser les modèles & la B2D POUR LES TESTS
 const database = require("./models");

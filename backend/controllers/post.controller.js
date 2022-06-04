@@ -27,7 +27,7 @@ exports.getAllPosts = (req, res, next) => {
 // Find a single Post with an id
 */
 exports.getPostById = (req, res, next) => {
-    const postId = req.params.id;
+    const postId = req.params.postId;
     Post.findByPk(postId)
         .then((post) => {
             if (post) {
@@ -91,7 +91,7 @@ exports.createPost = (req, res, next) => {
             null,
     };
 
-    console.log(post + " has been created!");
+    console.log(post + " a été crée!");
     // Save Post in the PostgreSQL database
     Post.create(post)
         .then((savedPost) => {
@@ -99,10 +99,12 @@ exports.createPost = (req, res, next) => {
             res.status(201).send(savedPost);
         })
         .catch((postCreationError) => {
-            res.status(500).send({
-                message: postCreationError.message ||
-                    "Some error occurred while creating the Post.",
-            });
+            console.log(
+                "Erreur trouvée lors de la création du post: " + postCreationError
+            );
+            res
+                .status(500)
+                .send({ message: "Some error occurred while creating the Post." });
         });
 };
 
@@ -110,7 +112,7 @@ exports.createPost = (req, res, next) => {
 // Update a Post by the id in the request
 */
 exports.updatePost = (req, res, next) => {
-    const postId = req.body.post_id;
+    const postId = req.params.postId;
     console.log(`Mis à jour du post w/ ID = ${postId}`);
     Post.update(req.body, {
             where: { post_id: postId },
@@ -127,8 +129,12 @@ exports.updatePost = (req, res, next) => {
             }
         })
         .catch((updatePostError) => {
+            console.log(
+                "Une erreur est survenue lors de la mise à jour du titre ou description d'un post" +
+                updatePostError
+            );
             res.status(500).send({
-                message: "Error updating Post with id=" + postId + " " + updatePostError,
+                message: "Error updating Post with id=" + postId,
             });
         });
 };
@@ -137,7 +143,7 @@ exports.updatePost = (req, res, next) => {
 // Delete a Post with the specified id in the request
 */
 exports.deletePost = (req, res, next) => {
-    const postId = req.params.id;
+    const postId = req.params.postId;
     Post.destroy({
             where: { post_id: postId }, //DELETE FROM posts WHERE post_id = [ID du post du corps de la requête]
         })
@@ -177,7 +183,7 @@ exports.deletePost = (req, res, next) => {
 //Likes or unlikes the post  
 */
 exports.likePost = (req, res, next) => {
-    const postIdFromURL = req.params.id;
+    const postIdFromURL = req.params.postId;
     const userIdFromBodyRequest = req.body.user_id;
     Like.findAll({
             attributes: ["userUserId", "postPostId", "liked"],
@@ -232,9 +238,12 @@ exports.likePost = (req, res, next) => {
             }
         })
         .catch((findingLikeError) => {
+            console.log(
+                "Erreur trouvée lors de l'ajout de like pour le post: " +
+                findingLikeError
+            );
             res.status(500).json({
-                message: "Error while attempting to find the liked post because of an error in the DB → " +
-                    findingLikeError,
+                message: "Error while attempting to like the post because of an unexpected error",
             });
         });
 };
@@ -243,7 +252,7 @@ exports.likePost = (req, res, next) => {
 //Create a comment in a post
 */
 exports.commentPost = (req, res, next) => {
-    const postIdFromURL = req.params.id;
+    const postIdFromURL = req.params.postId;
     const userIdFromBodyRequest = req.body.user_id;
     let commentFromBodyRequest = req.body.comment;
     console.log(
@@ -259,11 +268,7 @@ exports.commentPost = (req, res, next) => {
         isCommentEmpty ? " empty" : ""
       }${isCommentTooLong ? " over 180 characters long" : ""}`,
         });
-        /*
-                                                                                                                                                                             message: `Error, the content of a comment cannot be
-                                                                                                                                                                             ${isCommentEmpty ? " empty" : ""}
-                                                                                                                                                                             ${isCommentTooLong ? " over 180 characters long" : ""}`,
-                                                                                                                                                                        */
+        //  message: `Error, the content of a comment cannot be  ${isCommentEmpty ? " empty" : ""} ${isCommentTooLong ? " over 180 characters long" : ""}`,
     } else {
         const commentObject = {
             comment: commentFromBodyRequest,
@@ -292,8 +297,8 @@ exports.commentPost = (req, res, next) => {
 exports.modifyComment = (req, res, next) => {
     let userIdFromBodyRequest = req.body.user_id;
     let modifiedCommentFromBodyRequest = req.body.comment;
-    let postIdFromURL = req.params.id;
-    let commentIdFromURL = req.params.comment;
+    let postIdFromURL = req.params.postId;
+    let commentIdFromURL = req.params.commentId;
 
     console.log(
         "MODIFICATION Commentaire corps de la requête: " + JSON.stringify(req.body)
@@ -339,8 +344,8 @@ exports.modifyComment = (req, res, next) => {
 */
 exports.deleteComment = (req, res, next) => {
     let userIdFromBodyRequest = req.body.user_id;
-    let commentIdFromURL = req.params.comment;
-    let postIdFromURL = req.params.id;
+    let commentIdFromURL = req.params.commentId;
+    let postIdFromURL = req.params.postId;
 
     console.log("ID du commentaire du post à supprimer = " + commentIdFromURL);
 
@@ -371,9 +376,11 @@ exports.deleteComment = (req, res, next) => {
         });
 };
 
+/*
+//Get all the comments of one post 
+*/
 exports.getAllCommentsInOnePost = (req, res, next) => {
-    // let commentIdFromURL = req.params.comment;
-    let postIdFromURL = req.params.id;
+    let postIdFromURL = req.params.postId;
     Comment.findAll({
             attributes: ["comment"],
             where: {
@@ -399,7 +406,8 @@ exports.getAllCommentsInOnePost = (req, res, next) => {
                 commentInOnePostError
             );
             res.status(404).json({
-                message: "Couldn't retrieve comments due to an unexpected error",
+                message: commentInOnePostError.message ||
+                    "Couldn't retrieve comments due to an error, the post has no comments",
             });
         });
 };

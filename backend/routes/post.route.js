@@ -19,24 +19,24 @@ const {
 
 const multer = require("../middlewares/multer-config");
 
-router.get("/", auth, getAllPosts);
+router.get("/", /*auth,*/ getAllPosts);
 
-router.get("/:id", auth, getPostById);
+router.get("/:postId", /*auth,*/ getPostById);
 
-router.post("/", auth, multer, createPost);
+router.post("/", /*auth,*/ multer, createPost);
 
-router.put("/:id", auth, multer, updatePost);
+router.put("/:postId", /*auth,*/ multer, updatePost);
 
-router.delete("/:id", auth, deletePost);
+router.delete("/:postId", /*auth,*/ deletePost);
 
-router.post("/:id/like", auth, likePost);
+router.post("/:postId/like", /*auth,*/ likePost);
 
-router.post("/:id/comment/", /*auth,*/ commentPost);
+router.post("/:postId/comment/", /*auth,*/ commentPost);
 
-router.get("/:id/comment/:comment", /*auth*/ getAllCommentsInOnePost);
+router.get("/:postId/comment/:commentId", /*auth,*/ getAllCommentsInOnePost);
 
-router.put("/:id/comment/:comment", /*auth,*/ modifyComment);
+router.put("/:postId/comment/:commentId", /*auth,*/ modifyComment);
 
-router.delete("/:id/comment/:comment", /*auth,*/ deleteComment);
+router.delete("/:postId/comment/:commentId", /*auth,*/ deleteComment);
 
 module.exports = router;
