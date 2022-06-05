@@ -403,7 +403,7 @@ exports.getAllCommentsInOnePost = (req, res, next) => {
         .catch((commentInOnePostError) => {
             console.log(
                 "Une ERREUR est survenue lors du retrait des commentaires du post: " +
-                commentInOnePostError
+                JSON.stringify(commentInOnePostError)
             );
             res.status(404).json({
                 message: commentInOnePostError.message ||

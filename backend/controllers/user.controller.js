@@ -8,6 +8,9 @@ const Operator = database.Sequelize.Op;
 REMINDER: the findAll function from Sequelize returns an array of objects
 */
 
+/*
+// Inscription des utilisateurs
+*/
 exports.signup = (req, res, next) => {
     let emailFromBodyRequest = req.body.user_email;
     let passwordFromBodyRequest = req.body.user_password;
@@ -19,9 +22,9 @@ exports.signup = (req, res, next) => {
 
     User.findAll({ where: condition })
         .then((user) => {
-            let emailFromDatabase = user[0].user_email;
-            let userIdFromDatabase = user[0].user_id;
-            if (user ? user.length < 1 : true) {
+            console.log(JSON.stringify(user) + typeof user + user.length);
+            let isUserNotRegistered = user.length === 0 ? true : false;
+            if (isUserNotRegistered) {
                 //SIGNUP: The email isn't registered in the database → creating new account
                 bcrypt
                     .hash(passwordFromBodyRequest, 15)
@@ -35,8 +38,11 @@ exports.signup = (req, res, next) => {
                         res.status(201).json({ message: "User SUCCESSFULLY signed up" });
                     })
                     .catch((hashingError) => {
+                        console.log(
+                            "Une erreur est survenue lors du hash du MDP: " + hashingError
+                        );
                         res.status(500).json({
-                            message: "Error while attempting to hash:" + hashingError,
+                            message: "An unexpected error has occured while attempting to register the password",
                         });
                     });
             } else {
@@ -46,26 +52,34 @@ exports.signup = (req, res, next) => {
             }
         })
         .catch((emailSearchError) => {
+            console.log(
+                "ERREUR lors de la recherche de l'email dans la B2D: " +
+                emailSearchError
+            );
             res.status(500).json({
-                message: "Error found while attempting to search the email in the database" +
-                    emailSearchError,
+                message: "Error found while attempting to search the email in the database",
             });
         });
 };
 
+/*
+//Authentification pour les utilisateurs
+*/
 exports.login = (req, res, next) => {
+    console.log("Corps de la requête du LOGIN : " + JSON.stringify(req.body));
     let emailFromBodyRequest = req.body.user_email;
     let passwordFromBodyRequest = req.body.user_password;
 
-    let condition = {
-        user_email: {
-            [Operator.eq]: `${emailFromBodyRequest}`, //SELECT * FROM public.user u WHERE u.user_email = 'email@frombody.req'
+    User.findAll({
+        where: {
+            //SELECT * FROM users WHERE user_email = [email]
+            user_email: emailFromBodyRequest,
         },
-    };
-    User.findAll({ where: condition }).then((user) => {
+    }).then((user) => {
         let parsedUser = JSON.stringify(user);
         console.log("USER logging in: " + parsedUser);
-        if (user.length < 1) {
+        let isUserRegistered = user.length >= 1 ? true : false;
+        if (!isUserRegistered) {
             //The email isn't registered in the database → logging error, unexsiting
             return res
                 .status(401)
@@ -94,15 +108,85 @@ exports.login = (req, res, next) => {
                 });
             })
             .catch((passwordComparisonError) => {
+                console.log(
+                    "Erreur lors de la comparaison des MDPs: " + passwordComparisonError
+                );
                 res.status(500).json({
-                    message: "Either the data OR the hash is missing or at least one of these 2 values is undefined, error:" +
-                        passwordComparisonError,
+                    message: "Either the data OR the hash is missing or at least one of these 2 values is undefined",
                 });
             });
     });
 };
 
-exports.loginAdministrator = (res, req, next) => {};
+/*
+//Authentification pour les modos
+*/
+exports.loginModerator = (req, res, next) => {
+    console.log(
+        "Corps de la requête des MODERATEURS: " + JSON.stringify(req.body)
+    );
+    console.assert(req.body !== undefined, "Le corps de la requête est indéfini");
+    let emailFromBodyRequest = req.body.user_email;
+    let passwordFromBodyRequest = req.body.user_password;
+
+    console.log(
+        "%cTentative de connexion en tant que modérateur: " +
+        JSON.stringify(emailFromBodyRequest) +
+        JSON.stringify(passwordFromBodyRequest),
+        "color: blue"
+    );
+    User.findAll({
+            where: {
+                //SELECT * FROM users WHERE user_email = [email] AND moderator = true
+                user_email: emailFromBodyRequest,
+                moderator: true,
+            },
+        })
+        .then((mod) => {
+            let stringifiedMod = JSON.stringify(mod);
+            console.log("USER logging in: " + stringifiedMod);
+            let isUserNotMod = mod.length === 0 ? true : false;
+            if (isUserNotMod) {
+                //The email isn't registered in the database → logging error, unexsiting
+                console.log("L'utilisateur n'est pas un modérateur!");
+                return res.status(403).json({ message: "User is not a moderator" });
+            }
+            //let { user_id, user_email, user_password} = mod[0]
+            let userIdFromDatabase = mod[0].user_id;
+            let emailFromDatabase = mod[0].user_email;
+            let hashedPasswordInDatabase = mod[0].user_password;
+            bcrypt
+                .compare(passwordFromBodyRequest, hashedPasswordInDatabase)
+                .then((isPasswordValid) => {
+                    if (!isPasswordValid) {
+                        res.status(401).json({
+                            message: "The password is incorrect → Access unauthorized",
+                        });
+                    }
+
+                    res.status(200).json({
+                        user_id: userIdFromDatabase,
+                        token: jwt.sign({ user_id: mod.user_id },
+                            process.env.ACCESS_TOKEN_SECRET, {
+                                expiresIn: "24h",
+                            }
+                        ),
+                    });
+                })
+                .catch((passwordComparisonError) => {
+                    console.log("ERREUR ROUTE MODÉRATEURS: " + passwordComparisonError);
+                    res.status(403).json({
+                        message: "Forbidden request, couldn't log in as a moderator",
+                    });
+                });
+        })
+        .catch((error) => {
+            console.log(error);
+            res
+                .status(500)
+                .json({ message: "Error while attempting to login as a moderator" });
+        });
+};
 
 /*
 

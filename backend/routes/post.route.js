@@ -19,9 +19,10 @@ const {
 
 const multer = require("../middlewares/multer-config");
 
+//Opérations CRUD pour les posts
 router.get("/", /*auth,*/ getAllPosts);
 
-router.get("/:postId", /*auth,*/ getPostById);
+router.get("/:postId", /*auth,*/ getPostById); //←←←←←←
 
 router.post("/", /*auth,*/ multer, createPost);
 
@@ -29,14 +30,16 @@ router.put("/:postId", /*auth,*/ multer, updatePost);
 
 router.delete("/:postId", /*auth,*/ deletePost);
 
+//Like d'un post
 router.post("/:postId/like", /*auth,*/ likePost);
 
-router.post("/:postId/comment/", /*auth,*/ commentPost);
+//Opérations CRUD d'un commentaire
+router.post("/:postId/comments/", /*auth,*/ commentPost);
 
-router.get("/:postId", /*auth,*/ getAllCommentsInOnePost); //←←←←←←
+router.get("/:postId/comments/", /*auth,*/ getAllCommentsInOnePost); //←←←←←←
 
-router.put("/:postId/comment/:commentId", /*auth,*/ modifyComment);
+router.put("/:postId/comments/:commentId", /*auth,*/ modifyComment);
 
-router.delete("/:postId/comment/:commentId", /*auth,*/ deleteComment);
+router.delete("/:postId/comments/:commentId", /*auth,*/ deleteComment);
 
 module.exports = router;

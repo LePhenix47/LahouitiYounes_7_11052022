@@ -16,6 +16,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
         },
+        moderator: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false,
+        },
     });
     return User;
 };
