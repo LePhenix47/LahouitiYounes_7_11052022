@@ -10,8 +10,6 @@ module.exports = (sequelize, Sequelize) => {
         user_id: {
             type: Sequelize.INTEGER,
             allowNull: false,
-            //   references: "user", //Nom de notre table
-            //   referencesKey: "user_id", //L'attribut référencé de la PK ce cette table
         },
         title: {
             type: Sequelize.STRING(50),

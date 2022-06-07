@@ -17,8 +17,7 @@ exports.getAllPosts = (req, res, next) => {
         .catch((getAllPostsError) => {
             console.log("Posts NON trouvés! ----ERREUR : " + getAllPostsError);
             res.status(500).send({
-                message: getAllPostsError.message ||
-                    "Some unexpected error occurred while retrieving all the posts.",
+                message: "Some unexpected error occurred while retrieving all the posts.",
             });
         });
 };
@@ -312,35 +311,47 @@ exports.modifyComment = (req, res, next) => {
         " " +
         postIdFromURL
     );
-
-    Comment.update({ comment: modifiedCommentFromBodyRequest }, {
-            where: {
-                comment_id: commentIdFromURL,
-                userUserId: userIdFromBodyRequest,
-            },
-            //UPDATE comments SET comment = [req.body.comment] (commentaire modifié) WHERE comment_id = [req.body.id]
+    Comment.findByPk(commentIdFromURL)
+        .then((comment) => {
+            if (comment === null) {
+                throw "An error has occured while attempting to retrieve the comment: Comment does not exist";
+            }
+            console.log("Commentaire trouvé: " + JSON.stringify(comment));
+            Comment.update({ comment: modifiedCommentFromBodyRequest }, {
+                    where: {
+                        comment_id: commentIdFromURL,
+                        userUserId: userIdFromBodyRequest,
+                    },
+                    //UPDATE comments SET comment = [req.body.comment] (commentaire modifié) WHERE comment_id = [req.body.id]
+                })
+                .then((modifiedComment) => {
+                    console.log(
+                        'Commentaire modifié = "' + JSON.stringify(modifiedComment) + '"'
+                    );
+                    res.status(200).json({
+                        message: "Comment has been successfully modified",
+                    });
+                })
+                .catch((updateCommentError) => {
+                    console.log(
+                        "Une erreur est survenue lors de la mise à jour d'un commentaire: " +
+                        updateCommentError
+                    );
+                    res.status(500).json({
+                        message: "An unexpected error has occured while attempting to update the comment",
+                    });
+                });
         })
-        .then((modifiedComment) => {
+        .catch((commentNotFoundError) => {
             console.log(
-                'Commentaire modifié = "' + JSON.stringify(modifiedComment) + '"'
+                "Le commentaire n'a pas été trouvé → " + commentNotFoundError
             );
-            res.status(200).json({
-                message: "Comment has been successfully modified",
-            });
-        })
-        .catch((updateCommentError) => {
-            console.log(
-                "Une erreur est survenue lors de la mise à jour d'un commentaire: " +
-                updateCommentError
-            );
-            res.status(500).json({
-                message: "An unexpected error has occured while attempting to update the comment",
-            });
+            return res.status(404).json({ message: commentNotFoundError });
         });
 };
 
 /*
-//Delete a comment of a post → NE MARCHE PAS
+//Delete a comment of a post
 */
 exports.deleteComment = (req, res, next) => {
     let userIdFromBodyRequest = req.body.user_id;

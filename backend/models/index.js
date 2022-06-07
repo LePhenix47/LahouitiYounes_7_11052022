@@ -52,13 +52,14 @@ Comment.belongsTo(User);
 
 // Un utilisateur peut avoir plusieurs post
 // Un post appartient à un seul utilisateur → 1 à n
-User.hasMany(Post, {
-    foreignKey: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-    },
-});
-Post.belongsTo(User);
+// User.hasMany(Post, {
+//     foreignKey: {
+//         as: "user_id",
+//         type: Sequelize.INTEGER,
+//         allowNull: false,
+//     },
+// });
+// Post.belongsTo(User);
 
 //Un post peut avoir plusieurs likes
 //Un like appartient à seul post → 1-à-n
