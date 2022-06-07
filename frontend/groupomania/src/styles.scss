@@ -3,6 +3,10 @@
 $color-primary: #FD2D01;
 $color-secondary: #FFD7D7;
 $color-tertiary: #4E5166;
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     box-sizing: border-box;
     margin: 0;
@@ -11,7 +15,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $color-primary;
 }
 
 *,
