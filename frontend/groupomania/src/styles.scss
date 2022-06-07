@@ -1,1 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
+
+$color-primary: #FD2D01;
+$color-secondary: #FFD7D7;
+$color-tertiary: #4E5166;
+body {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: 'Lato';
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $color-primary;
+}
+
+*,
+ ::before,
+ ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+    &:visited {
+        color: black;
+    }
+}
