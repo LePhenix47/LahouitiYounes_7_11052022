@@ -4,7 +4,8 @@
     "description": "Code Front-end du P7",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "ng-serve": "ng serve"
     },
     "keywords": [],
     "author": "Younes Lahouiti",
