@@ -60,6 +60,6 @@ const userRoutes = require("./routes/user.route");
 const postRoutes = require("./routes/post.route");
 
 app.use("/api/auth", userRoutes);
-app.use("/api/post", postRoutes);
+app.use("/api/posts", postRoutes);
 
 module.exports = app;
