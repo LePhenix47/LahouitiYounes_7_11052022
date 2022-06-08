@@ -2,7 +2,14 @@
 
 ## 1. Comment installer le projet sur votre ordinateur
 
-**Ce projet est séparé en 2 dossiers extrêmement importants:**
+Le projet utilise des paquets de Node et un serveur en HTTPS, il faudra installer 2 logiciels sur votre ordinateur pour pouvoir utiliser les commandes `npm...` et `openssl`
+
+1. [Node.js](https://nodejs.org/en/)
+   L'installation est simple, il suffit de cliquer sur "Download for Windows (x64)"
+
+2. [OpenSSL (Windows)]()
+
+**Ce projet est séparé en 2 dossiers extrêmement importants :**
 
 \-Front-end
 
@@ -14,28 +21,26 @@ Pour pouvoir utiliser la Base de données, il faudra installer un SGBD SQL, pré
 
 **Pour chacun de ces 2 dossiers il faudra installer des paquets npm:**
 
-\-Front-end: Angular:
-`npm -g @angular/cli`
+\-Front-end: Angular → `npm -g @angular/cli`
 
 \-Back-end:
 
-1.  _Express_ (Pour les routes de notre API)
-2.  _Sequelize_ (ORM SQL qui cache les requêtes faites à la base de données)
-3.  _Bcrypt_ (Paquet qui hache les mots de passe)
-4.  _CORS_ (Paquet qui évite les blocages de connexion entre front-end et back-end)
-5.  _dotEnv_ (Pour les fichiers d'extension `.env` pour cacher les données sensibles sur GitHub)
-6.  _helmet_ (Protège les en-têtes de requêtes du Front contre les attaques XSS)
-7.  _jsonwebtoken_ (Permet la génération des tokens)
-8.  _multer_ (Gère les images)
-9.  _nodemon_ (Permet le redémarrage du serveur à chaque changement du code back-end)
-10. _password-validator_ (S'assure que le Mot de passe est robuste)
-11. _validator_ (S'assure que le Front envoie des emails avec le bon format)
-12. _pg_ (Permet la connexion entre notre serveur et notre base de données PostgreSQL)
-13. _pg-hstore_ (Permet d'envoyer des données au format `.hstore` pour que notre base de données puisse la stocker)
-
-```powershell
-npm i -g express sequelize bcrypt CORS dotenv helmet jsonwebtoken multer password validator pg pg-hstore validator
-```
+| Paquet             | Fonctionnement/Utilité                                                                            | installation               |
+| ------------------ | ------------------------------------------------------------------------------------------------- | -------------------------- |
+| Express            | Framework Back-end pour les routes de notre API                                                   | `npm i express`            |
+| express-rate-limit | Permet le contrôle du nombre de requêtes d'une adresse IP particulière                            | `npm i express-rate-limit` |
+| Sequelize          | ORM SQL qui cache les requêtes faites à la base de données                                        | `npm i sequelize`          |
+| Bcrypt             | Paquet qui hache les mots de passe                                                                | `npm i bcrypt`             |
+| CORS               | Paquet qui évite les blocages de connexion entre front-end et back-end                            | `npm i cors`               |
+| dotEnv             | Pour les fichiers d'extension `.env` pour cacher les données sensibles sur GitHub                 | `npm i dotenv`             |
+| helmet             | Protège les en-têtes de requêtes du Front contre les attaques XSS                                 | `npm i helmet`             |
+| JWT                | Permet la génération des tokens à envoyer au Front                                                | `npm i jsonwebtoken`       |
+| password-validator | S'assure que le Mot de passe est robuste                                                          | `npm i password-validator` |
+| validator          | S'assure que le Front envoie des emails avec le bon format                                        | `npm i validator`          |
+| multer             | Gère les images                                                                                   | `npm i multer`             |
+| nodemon            | Permet le redémarrage du serveur à chaque changement du code back-end                             | `npm i nodemon`            |
+| pg                 | Permet la connexion entre notre serveur et notre base de données PostgreSQL                       | ` npm i pg`                |
+| pg-hstore          | Permet d'envoyer des données au format `.hstore` pour que notre base de données puisse la stocker | `npm i pg-hstore`          |
 
 ### b) Configuration des fichiers "ignorés"
 
@@ -101,4 +106,4 @@ PFDojrxj63rjrXrKBZC4lnrJBk6U
 2. **images (dossier)**
    Créez ce dossier dans le dossier backend
    À l'intérieur du dossier créez 2 sous-dossiers nommés: "post-images" et "profile-pictures"
-1. **.env (fichier)**
+3. **.env (fichier)**
