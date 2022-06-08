@@ -2,7 +2,7 @@
 
 ## 1. Comment installer le projet sur votre ordinateur
 
-Le projet utilise des paquets de Node et un serveur en HTTPS, il faudra installer 2 logiciels sur votre ordinateur pour pouvoir utiliser les commandes `npm...` et `openssl`
+Le projet utilise des paquets de Node et un serveur en HTTPS, il faudra installer 2 logiciels sur votre ordinateur pour pouvoir utiliser les commandes `npm...` et`openssl`
 
 > [Node.js](https://nodejs.org/en/)
 
@@ -22,19 +22,20 @@ L'installation est un peu plus complexe sur Windows :
   "Variables système"
 - Dans "Path" → Modifier → Nouveau → Coller le chemin d'OpenSSL avec un
   "\bin" à la fin
-  (ex: C:\ProgramFiles\OpenSSL\bin)
+  (ex : C:\ProgramFiles\OpenSSL\bin)
 - Pour vérifier que cela marche, ouvrez un terminal de commandes et
   vérifiez la version d'OpenSSL avec cette commande : `openssl version -a`
 
-**Ce projet est séparé en 2 dossiers extrêmement importants :**
-
+**Une fois l'installation faite, il faut exécuter la commande `npm install` dans les 2 dossiers suivants :**
 \-Front-end
 
 \-Back-end
 
-Pour pouvoir utiliser la Base de données, il faudra installer un SGBD SQL, préfèrablement [PostgreSQL](https://www.postgresql.org/download/).
+Pour pouvoir utiliser la Base de données, il faudra installer un SGBDR, préférablement [PostgreSQL](https://www.postgresql.org/download/)
 
-## a) Installation des paquets NPM de Node.js:
+La configuration est déjà faite dans l'app, vous n'avez pas besoin d'installer
+
+## a) Installation des paquets NPM de Node.js :
 
 **Pour chacun de ces 2 dossiers il faudra installer des paquets npm:**
 
@@ -65,7 +66,7 @@ Ce projet contient 3 fichiers ou dossiers indispensables qui n'ont pas été env
 
 1.  **Certificate (dossier)**
     Créez ce dossier dans le dossier backend
-    Dans le terminal de commandes, allez dans le dossier: backend/certificate
+    Dans le terminal de commandes, allez dans le dossier _backend/certificate_
     Et exécutez ces 3 commandes :
 
 ```powershell
@@ -78,10 +79,10 @@ openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
 
 2. **images (dossier)**
    Créez ce dossier dans le dossier backend
-   À l'intérieur du dossier créez 2 sous-dossiers nommés: "post-images" et "profile-pictures"
+   À l'intérieur du dossier, créez 2 sous-dossiers nommés : "post-images" et "profile-pictures"
 3. **.env (fichier)**
 
-Créez un fichier sans nom avec uniquement le format ".env" et copiez le texte ci-dessous:
+Créez un fichier sans nom avec uniquement le format ".env" et copiez le texte ci-dessous :
 
 ```
 ACCESS_TOKEN_SECRET =
@@ -111,3 +112,30 @@ DB_NAME =  "groupmania-openclassrooms-db"
 
 DB_DIALECT =  "postgres"
 ```
+
+## c) Fonctionnement de l'API
+
+L'API est séparée en 2 routes :
+
+- -Une route `auth/` pour l'inscription et connexion:
+
+| Verbe HTTP | Point d'accès      | Corps de la requête                                        | Type de réponse attendue                | Fonction                                                                     |
+| ---------- | ------------------ | ---------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------- |
+| POST       | /api/auth/signup   | {<br>user_email: [string],<br>user_password: [string]<br>} | {<br>message: [string]<br>}             | Inscrit l'utilisateur dans le base de données <br>avec un mot de passe haché |
+| POST       | /api/auth/login    | { user_email: [string], user_password: [string] }          | { user_id: [integer], token: [string] } | Connecte l'utilisateur                                                       |
+| POST       | /api/auth/loginMod | { user_email: [string], user_password: [string] }          | { user_id: [integer], token: [string] } | Connecte l'administrateur avec les droits CRUD                               |
+
+- Une autre `post/` route pour les posts
+
+| Verbe HTTP | Point d'accès                          | Corps de la requête                                              | Type de réponse attendue | Fonction                                              |
+| ---------- | -------------------------------------- | ---------------------------------------------------------------- | ------------------------ | ----------------------------------------------------- |
+| GET        | /api/posts/                            | -                                                                | Tableau de posts         | Renvoit le tableau d'objets avec tous les posts       |
+| GET        | /api/posts/:postId                     | -                                                                | Post unique              | Renvoit le post sous forme d'objet                    |
+| POST       | /api/posts/                            | { title: [string], description: [string], image_url?: [fichier]} | {message: [string]}      | Crée le post et la sauvegarde dans la base de données |
+| PUT        | /api/posts/:postId                     | { title: [string], description: [string], image_url?: [fichier]} | {message: [string]}      | Met à jour le post et sauvegarde les modifications    |
+| DELETE     | /api/posts/:postId                     | -                                                                | {message: [string]}      | Supprime le post de (manière "douce")                 |
+| POST       | /api/posts/:postId/like                | { user_id: [integer]}                                            | {message: [string]}      | Ajoute un like à un post                              |
+| POST       | /api/posts/:postId/comments            | { user_id: [integer], comment: [string]}                         | {message: [string]}      | Crée un commentaire dans un post                      |
+| GET        | /api/posts/:postId/comments            | -                                                                | {message: [string]}      | Récupère tous les commentaires d'un post              |
+| PUT        | /api/posts/:postId/comments/:commentId | { user_id: [integer], comment: [string]}                         | {message: [string]}      | Met à jour le commentaire d'un post                   |
+| DELETE     | /api/posts/:postId/comments/:commentId | -                                                                | {message: [string]}      | Supprime le commentaire d'un post                     |
