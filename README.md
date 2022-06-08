@@ -20,8 +20,7 @@ L'installation est un peu plus complexe sur Windows :
   système
 - Cliquer sur "variables d'environnement" et allez dans la partie
   "Variables système"
-- Dans "Path" → Modifier → Nouveau → Coller le chemin d'OpenSSL avec un
-  "\bin" à la fin
+- Dans "Path" → Cliquer sur Modifier → Nouveau → Coller le chemin d'OpenSSL avec un "\bin" à la fin
   (ex : C:\ProgramFiles\OpenSSL\bin)
 - Pour vérifier que cela marche, ouvrez un terminal de commandes et
   vérifiez la version d'OpenSSL avec cette commande : `openssl version -a`
@@ -33,13 +32,13 @@ L'installation est un peu plus complexe sur Windows :
 
 Pour pouvoir utiliser la Base de données, il faudra installer un SGBDR, préférablement [PostgreSQL](https://www.postgresql.org/download/)
 
-La configuration est déjà faite dans l'app, vous n'avez pas besoin d'installer
+La configuration entre le serveur et le base de données est déjà faite dans l'app
 
 ## a) Installation des paquets NPM de Node.js :
 
 **Pour chacun de ces 2 dossiers il faudra installer des paquets npm:**
 
-\-Front-end: Angular → `npm -g @angular/cli`
+\-Front-end: Le CLI d'Angular → `npm -g @angular/cli`
 
 \-Back-end:
 
@@ -104,20 +103,20 @@ c7bcd838cc32c14ab6d5e0b15fc321dedb83092e99333fe97c29ae53c55aff32
 
 DB_HOST =  "localhost"
 
-DB_USER =  "postgres"
+DB_USER =  "[Nom d'utilisateur de votre base de donnée]"
 
-DB_PASSWORD =  "720569"
+DB_PASSWORD =  "[Mot de passe de votre base de données]"
 
 DB_NAME =  "groupmania-openclassrooms-db"
 
-DB_DIALECT =  "postgres"
+DB_DIALECT =  "[Votre SGBDR, ex: MySQL, PostgreSQL, MariaDB...]"
 ```
 
 ## c) Fonctionnement de l'API
 
 L'API est séparée en 2 routes :
 
-- -Une route `auth/` pour l'inscription et connexion:
+- -Une route `auth/` pour l'inscription et connexion :
 
 | Verbe HTTP | Point d'accès      | Corps de la requête                                        | Type de réponse attendue                | Fonction                                                                     |
 | ---------- | ------------------ | ---------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------- |
@@ -139,3 +138,5 @@ L'API est séparée en 2 routes :
 | GET        | /api/posts/:postId/comments            | -                                                                | {message: [string]}      | Récupère tous les commentaires d'un post              |
 | PUT        | /api/posts/:postId/comments/:commentId | { user_id: [integer], comment: [string]}                         | {message: [string]}      | Met à jour le commentaire d'un post                   |
 | DELETE     | /api/posts/:postId/comments/:commentId | -                                                                | {message: [string]}      | Supprime le commentaire d'un post                     |
+
+## 2. Comment compiler le Front-end et allumer le serveur Back-end
