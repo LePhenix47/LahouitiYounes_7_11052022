@@ -26,6 +26,7 @@ L'installation est un peu plus complexe sur Windows :
   vérifiez la version d'OpenSSL avec cette commande : `openssl version -a`
 
 **Une fois l'installation faite, il faut exécuter la commande `npm install` dans les 2 dossiers suivants :**
+
 \-Front-end
 
 \-Back-end
@@ -44,7 +45,7 @@ La configuration entre le serveur et le base de données est déjà faite dans l
 
 | Paquet             | Fonctionnement/Utilité                                                                            | installation               |
 | ------------------ | ------------------------------------------------------------------------------------------------- | -------------------------- |
-| Express            | Framework Back-end pour les routes de notre API                                                   | `npm i express`            |
+| Express            | Framework Back-end pour les routes de notre API et constuire notre app web                        | `npm i express`            |
 | express-rate-limit | Permet le contrôle du nombre de requêtes d'une adresse IP particulière                            | `npm i express-rate-limit` |
 | Sequelize          | ORM SQL qui cache les requêtes faites à la base de données                                        | `npm i sequelize`          |
 | Bcrypt             | Paquet qui hache les mots de passe                                                                | `npm i bcrypt`             |
