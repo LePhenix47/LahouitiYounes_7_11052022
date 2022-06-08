@@ -12,7 +12,7 @@ L'installation est simple, il suffit de cliquer sur "Download for Windows (x64)"
 
 L'installation est un peu plus complexe sur Windows :
 
-- Installer "Win 64 OpenSSL v.3.0.2"
+- Installer "Win 64 OpenSSL v.3.0.3" (datant du Mercredi 8 juin 2022 à 12:46)
 
 - Copier le chemin d'OpenSSL où vous l'avez installé (ex : C:\Program
   Files\OpenSSL)
