@@ -3,7 +3,6 @@ const helmet = require("helmet");
 const dotEnv = require("dotenv");
 const path = require("path");
 const bodyParser = require("body-parser");
-// const rateLimit = require("express-rate-limit");
 
 //Configures the environment variables to avoid getting sensible data stolen from GitHub
 dotEnv.config();
@@ -43,11 +42,12 @@ app.use(
 app.use(helmet());
 
 //Rate limiter is a library that limits the amount of requests an user can do to avoid: spam + potential DDoS
-// const limiter = rateLimit({
-//   max: 100,
-//   windowMs: 60 * 60 * 1000, //1h
-//   message: "Trop de requêtes en provenance de cet IP",
-// });
+const rateLimit = require("express-rate-limit");
+const limiter = rateLimit({
+    max: 100,
+    windowMs: 60 * 60 * 1000, //MAX = 100 requêtes/h
+    message: "Too many requests were sent",
+});
 
 //Synchroniser les modèles & la B2D POUR LES TESTS
 const database = require("./models");
