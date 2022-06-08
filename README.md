@@ -79,7 +79,7 @@ openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
 2. **images (dossier)**
    Créez ce dossier dans le dossier backend
    À l'intérieur du dossier, créez 2 sous-dossiers nommés : "post-images" et "profile-pictures"
-3. **.env (fichier)**
+3. **dotEnv (fichier)**
 
 Créez un fichier sans nom avec uniquement le format ".env" et copiez le texte ci-dessous :
 
@@ -139,4 +139,17 @@ L'API est séparée en 2 routes :
 | PUT        | /api/posts/:postId/comments/:commentId | { user_id: [integer], comment: [string]}                         | {message: [string]}      | Met à jour le commentaire d'un post                   |
 | DELETE     | /api/posts/:postId/comments/:commentId | -                                                                | {message: [string]}      | Supprime le commentaire d'un post                     |
 
-## 2. Comment compiler le Front-end et allumer le serveur Back-end
+## 2. Comment compiler le Front-end et démarrer le serveur Back-end
+
+Pour le Front-end, il faudra compiler l'application Angular avec la commande :
+`ng serve`
+
+Pour le Back-end, il faudra démarrer le serveur avec nodemon en exécutant la commande :
+`nodemon server`
+
+**Si aucune de ces 2 commandes ne marche,** 2 solutions:
+
+1. Utilisez-le "Command Prompt" ou "Terminal GitBash" au lieu du Powershell
+2. Exécutez à la place:
+   `npm run ng-serve` → Front-end
+   `npm run nodemon` → Back-end
