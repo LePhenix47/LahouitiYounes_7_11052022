@@ -1,0 +1,6 @@
+@import "../SASS-utils/variables";
+.header {
+    &__heading2 {
+        color: $color-tertiary;
+    }
+}
