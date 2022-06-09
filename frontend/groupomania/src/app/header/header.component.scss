@@ -1,6 +1,13 @@
 @import "../SASS-utils/variables";
 .header {
-    &__heading2 {
-        color: $color-tertiary;
+    background-color: green;
+    width: 100vw;
+    height: 100px;
+    overflow: hidden;
+    &__image {
+        aspect-ratio: 1;
+        height: 200px;
+        margin-left: 20px;
+        object-position: -25px -50px;
     }
 }
