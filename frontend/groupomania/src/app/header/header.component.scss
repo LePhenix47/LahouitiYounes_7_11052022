@@ -1,7 +1,6 @@
 @import "../SASS-utils/utils";
 .header {
     background-color: green;
-    width: 100vw;
     height: 100px;
     overflow: hidden;
     @include mobile-only {

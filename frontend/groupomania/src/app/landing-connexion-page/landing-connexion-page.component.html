@@ -12,11 +12,14 @@
             </p>
         </div>
         <form action="#" class="container__form">
-            <input type="text" class="container__input" placeholder="Email" />
-            <p class="container__input__placeholder">Email</p>
-            <input type="text" class="container__input" placeholder="Mot de passe" />
-            <p class="container__input__placeholder">Password</p>
-            <button type="button" class="container__button">S'inscrire</button>
+            <fieldset class="container__fieldset">
+                <input type="text" class="container__input" placeholder="Email" required />
+                <input type="text" class="container__input" placeholder="Mot de passe" required />
+
+                <button type="button" class="container__button">S'inscrire</button>
+            </fieldset>
         </form>
+        <a class="container__already-signed-up">Êtes-vous déjà inscrit?</a>
+        <!--On mettra un routerLink plus tard-->
     </div>
 </div>
