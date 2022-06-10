@@ -1,8 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
-$color-primary: #FD2D01;
-$color-secondary: #FFD7D7;
-$color-tertiary: #4E5166;
+$color-primary: #fd2d01;
+$color-secondary: #ffd7d7;
+$color-tertiary: #4e5166;
 html {
     scroll-behavior: smooth;
 }
@@ -10,16 +10,16 @@ html {
 body {
     box-sizing: border-box;
     margin: 0;
-    font-family: 'Lato';
+    font-family: "Lato";
     font-weight: 400;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
 }
 
 *,
- ::before,
- ::after {
+::before,
+::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;

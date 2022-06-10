@@ -1,9 +1,13 @@
-@import "../SASS-utils/variables";
+@import "../SASS-utils/utils";
 .header {
     background-color: green;
     width: 100vw;
     height: 100px;
     overflow: hidden;
+    @include mobile-only {
+        display: flex;
+        justify-content: center;
+    }
     &__image {
         aspect-ratio: 1;
         height: 200px;

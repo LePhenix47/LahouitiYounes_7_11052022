@@ -1,0 +1,74 @@
+/*
+---------------------VARIABLES----------------------- $[nom varaible]: [valeur];
+*/
+
+$color-primary: #fe2b01;
+$color-secondary: #FFD7D7;
+$color-tertiary: #4E5166;
+$color-white: #fff;
+$color-black: #000;
+$color-invalid: #acabab;
+
+/*
+-------------------------MAPS------------------- $[map]: ([key]: [value], [key]:([other map]));
+*/
+
+//maps pour les breakpoints
+$breakpoints: ( mobile: 768px, tablet: 992px, laptop: 993px, desktop: 1150px, );
+//
+//maps pour automatiser les inputs en fonction de leur état
+$text-input-palette:( //Cette map contient 3 autres maps
+active:( bg: $color-secondary, borderOfInput: $color-primary, txt: $color-tertiary), //Si l'user clique → change 3 props
+focus:( bg: $color-primary, borderOfInput: $color-secondary, txt: $color-tertiary), //Si l'user tape sur son clavier sun un input
+invalid:( bg: $color-invalid, borderOfInput: $color-primary, txt: $color-primary), //Si l'user a rentré des infos invalides
+);
+
+/*
+----------------MIXINS-------------------------------- @mixin [nom-ensemble-règles] { règles };
+*/
+
+@mixin rounded-inputs {
+    border-radius: 25px;
+    border: none;
+    margin: 5px 5px;
+    height: 30px;
+}
+
+//This mixin goes with the text-input-palette
+@mixin text-input-palette($state) {
+    $palette: map-get($text-input-palette, $state);
+    border: map-get($palette, borderOfInput);
+    background-color: map-get($palette, bg);
+    color: map-get($palette, txt);
+}
+
+@mixin center-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+//Mixin pour les Media queries
+@mixin mobile-only {
+    @media screen and (max-width: map-get($breakpoints, mobile)) {
+        @content;
+    }
+}
+
+@mixin tablet-only {
+    @media screen and (min-width: map-get($breakpoints, mobile)) and (max-width: map-get($breakpoints, tablet)) {
+        @content;
+    }
+}
+
+@mixin laptop-only {
+    @media screen and (min-width: map-get($breakpoints, laptop)) and (max-width: map-get($breakpoints, desktop)) {
+        @content;
+    }
+}
+
+@mixin desktop-only {
+    @media screen and (min-width: map-get($breakpoints, desktop)) {
+        @content;
+    }
+}
