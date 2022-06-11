@@ -46,7 +46,7 @@
         width: 150px;
         border-radius: 250px;
         border: 2px solid $color-white;
-        transition: background-color 50ms ease-in;
+        transition: background-color 125ms ease-in;
         &:hover {
             background-color: lighten($color-primary, 15%);
         }

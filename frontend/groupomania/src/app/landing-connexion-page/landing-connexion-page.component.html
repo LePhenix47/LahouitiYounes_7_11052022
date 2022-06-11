@@ -1,23 +1,30 @@
 <div class="container container--rounded">
     <div class="container__card container__card--rounded">
         <div class="container__image-container">
-            <img src="https://i.imgur.com/kMNcd5h_d.webp?maxwidth=760&fidelity=grand" alt="Icone de Groupomania" class="container__image" />
+            <img src="../../assets/icon.webp" alt="Icone de Groupomania" class="container__image" />
         </div>
         <div class="container__text">
             <h2 class="container__heading2">Bienvenue sur Groupomania</h2>
-            <p class="container__paragraph">
-                Veuillez renseigner un email ainsi qu'un mot de passe
-            </p>
         </div>
-        <form action="#" class="container__form">
-            <fieldset class="container__fieldset">
+        <form class="container__form">
+            <!---#emailForm="ngForm" (ngSubmit)="onSubmit(emailForm) pour les TEMPLATE FORMS-->
+            <fieldset class="container__fieldset fieldset">
+                <legend class="fieldset__legend">
+                    Veuillez renseigner ces champs:
+                </legend>
                 <input type="text" class="container__input" placeholder="Email" required />
-                <input type="text" class="container__input" placeholder="Mot de passe" required />
+                <!-- 
+                <input type="text" class="container__input" placeholder="Email" required [(ngModel)]="userEmail" name="userEmail" />
+                <input type="password" class="container__input" placeholder="Mot de passe" required [(ngModel)]="userPassword" name="userPassword" id="password" />
+            -->
+                <input type="password" class="container__input password__input" placeholder="Mot de passe" required id="password" />
 
-                <button type="button" class="container__button">S'inscrire</button>
+                <button type="submit" class="container__button">S'inscrire</button>
             </fieldset>
         </form>
-        <a class="container__already-signed-up">Êtes-vous déjà inscrit?</a>
+        <div class="already-signed-up-container">
+            <a class="container__already-signed-up"> Êtes-vous déjà inscrit? </a>
+        </div>
         <!--On mettra un routerLink plus tard-->
     </div>
 </div>
