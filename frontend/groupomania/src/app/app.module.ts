@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import{HttpClientModule} from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { LandingConnexionPageComponent } from './landing-connexion-page/landing-connexion-page.component';
+import {LandingConnexionPageService} from './landing-connexion-page/landing-connexion-page.service';
 
 @NgModule({
   declarations: [
@@ -17,9 +19,10 @@ import { LandingConnexionPageComponent } from './landing-connexion-page/landing-
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [LandingConnexionPageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

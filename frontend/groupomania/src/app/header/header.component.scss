@@ -24,6 +24,7 @@
         align-items: center;
     }
     &__signup-button {
+        font-family: "Lato";
         background-color: $color-white;
         color: $color-primary;
         height: 50px;
@@ -40,6 +41,7 @@
         }
     }
     &__login-button {
+        font-family: "Lato";
         background-color: $color-primary;
         color: $color-white;
         height: 50px;

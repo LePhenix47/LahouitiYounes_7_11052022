@@ -44,6 +44,7 @@
         margin: 10px 0;
     }
     &__input {
+        font-family: "Lato";
         height: 40px;
         width: 80%;
         position: relative;
@@ -78,9 +79,10 @@
         font-size: 30px;
     }
     &__button {
+        font-family: "Lato";
         font-size: 16px;
         @include rounded-inputs;
-        height: 40px;
+        height: 35px;
         width: 80%;
         background-color: $color-primary;
         color: #fff;
@@ -92,6 +94,16 @@
         }
         &:active {
             background-color: lighten($color-primary, 10%);
+        }
+        &--disabled {
+            background-color: $color-invalid;
+            &:hover {
+                background-color: $color-invalid;
+                cursor: not-allowed;
+            }
+            &:active {
+                background-color: $color-invalid;
+            }
         }
     }
     &__already-signed-up {
