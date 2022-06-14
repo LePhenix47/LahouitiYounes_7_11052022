@@ -152,4 +152,8 @@ Pour le Back-end, il faudra démarrer le serveur avec nodemon en exécutant la c
 
 1. Utilisez-le "Command Prompt" ou "Terminal GitBash" au lieu du Powershell
 
-2. Exécutez à la place: -`npm run ng-serve` → Front-end -`npm run nodemon` → Back-end
+2. Exécutez à la place:
+
+-`npm run ng-serve` → Front-end
+
+-`npm run nodemon` → Back-end
