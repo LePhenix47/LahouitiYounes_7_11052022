@@ -2,7 +2,7 @@
 
 ## 1. Comment installer le projet sur votre ordinateur
 
-Le projet utilise des paquets de Node et un serveur en HTTPS, il faudra installer 2 logiciels sur votre ordinateur pour pouvoir utiliser les commandes `npm...` et`openssl`
+Le projet utilise des paquets de Node et un serveur en HTTPS, il faudra installer 2 logiciels sur votre ordinateur pour pouvoir utiliser les commandes `npm` et`openssl`
 
 > [Node.js](https://nodejs.org/en/)
 
@@ -151,6 +151,5 @@ Pour le Back-end, il faudra démarrer le serveur avec nodemon en exécutant la c
 **Si aucune de ces 2 commandes ne marche,** 2 solutions:
 
 1. Utilisez-le "Command Prompt" ou "Terminal GitBash" au lieu du Powershell
-2. Exécutez à la place:
-   `npm run ng-serve` → Front-end
-   `npm run nodemon` → Back-end
+
+2. Exécutez à la place: -`npm run ng-serve` → Front-end -`npm run nodemon` → Back-end
