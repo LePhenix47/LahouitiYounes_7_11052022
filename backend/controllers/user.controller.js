@@ -19,7 +19,7 @@ exports.signup = (req, res, next) => {
             [Operator.eq]: `${emailFromBodyRequest}`, //SELECT * FROM public.user u WHERE u.user_email = 'email@frombody.req'
         },
     };
-
+    console.log("Signing up → " + req.body);
     User.findAll({ where: condition })
         .then((user) => {
             console.log(JSON.stringify(user) + typeof user + user.length);

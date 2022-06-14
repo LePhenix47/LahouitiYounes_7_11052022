@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { LandingConnexionPageComponent } from './landing-connexion-page/landing-connexion-page.component';
 import {LandingConnexionPageService} from './landing-connexion-page/landing-connexion-page.service';
+import { HttpClient } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -22,7 +24,7 @@ import {LandingConnexionPageService} from './landing-connexion-page/landing-conn
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [LandingConnexionPageService],
+  providers: [HttpClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

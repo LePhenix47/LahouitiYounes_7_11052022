@@ -9,9 +9,11 @@ export class LandingConnexionPageService {
 
   constructor(private http :HttpClient) { } //On a une varaible locale qui peut être utilisée pour créer une nouvelle instancde de HttpClient
 
-  private urlAuthAPI = "https://localhost:3000/api/auth";
+urlAuthAPI: string = "https://localhost:3000/api/auth";
 
   sendSignupFormToBackend(bodyRequest: object): Observable<object>{
+    console.log("Tentative d'envoi du formulaire avec le body request: " + JSON.stringify(bodyRequest));
+    console.log("URL du http → " + JSON.stringify(this.http));
     return this.http.post(this.urlAuthAPI+"/signup", bodyRequest);
   }
 }
