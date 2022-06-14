@@ -13,6 +13,8 @@ export class LandingConnexionPageComponent implements OnInit {
   signupForm!: FormGroup;
   emailRegex!: RegExp;
 
+  backendResponse?: any;
+
   constructor(private formBuilder: FormBuilder, private signupResponse: LandingConnexionPageService) { 
      console.log('signupResponse: ', signupResponse);
   }
@@ -29,7 +31,15 @@ export class LandingConnexionPageComponent implements OnInit {
   
   //Function onSubmit that will show in the console the value of the email and password inputted by the user
   onSubmitForm(): void{ 
-    this.signupResponse.sendSignupFormToBackend(this.signupForm.value);
+    this.signupResponse.sendSignupFormToBackend(this.signupForm.value).subscribe(
+      (result)=>{
+        console.log("Résultat: ", result)
+      }, (error)=>{
+        this.backendResponse = error;
+        console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
+        console.log("\n CODE: ", error)
+      }
+    );
     console.log("Bouton cliqué, valeur du formulaire: \n", this.signupForm.value)
   }
 

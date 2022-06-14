@@ -14,7 +14,6 @@
                 </legend>
                 <input type="text" class="container__input" placeholder="Email" required formControlName="user_email" title="Champ de saisie d'email" />
                 <input type="password" class="container__input password__input" placeholder="Mot de passe" required id="password" formControlName="user_password" title="Champ de saisie de mot de passe" />
-
                 <button type="submit" class="container__button" (click)="onSubmitForm()" [disabled]="signupForm.invalid" [ngClass]="{ 'container__button--disabled': signupForm.invalid }">
           S'inscrire
         </button>
