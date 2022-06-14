@@ -67,6 +67,7 @@ Ce projet contient 3 fichiers ou dossiers indispensables qui n'ont pas été env
 1.  **Certificate (dossier)**
     Créez ce dossier dans le dossier backend
     Dans le terminal de commandes, allez dans le dossier _backend/certificate_
+
     Et exécutez ces 3 commandes :
 
 ```powershell
