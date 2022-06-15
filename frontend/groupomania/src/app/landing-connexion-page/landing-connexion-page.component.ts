@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import {LandingConnexionPageService} from './landing-connexion-page.service';
 
 @Component({
@@ -12,19 +13,17 @@ import {LandingConnexionPageService} from './landing-connexion-page.service';
 export class LandingConnexionPageComponent implements OnInit {
   signupForm!: FormGroup;
   emailRegex!: RegExp;
+  passwordRegex!: RegExp;
 
-  backendResponse?: any;
-
-  constructor(private formBuilder: FormBuilder, private signupResponse: LandingConnexionPageService) { 
-     console.log('signupResponse: ', signupResponse);
-  }
+  constructor(private formBuilder: FormBuilder, private signupResponse: LandingConnexionPageService, private router: Router) {}
 
   ngOnInit(): void {
     this.emailRegex = /^([a-z A-Z 0-9\.-]+)@([a-z A-Z 0-9]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/;
+    this.passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/;
 
     this.signupForm = this.formBuilder.group({
       user_email: [null, [Validators.required, Validators.pattern(this.emailRegex)]],
-      user_password:[null, [Validators.required]],
+      user_password:[null, [Validators.required, Validators.pattern(this.passwordRegex)]],
     });
 
   }
@@ -33,14 +32,17 @@ export class LandingConnexionPageComponent implements OnInit {
   onSubmitForm(): void{ 
     this.signupResponse.sendSignupFormToBackend(this.signupForm.value).subscribe(
       (result)=>{
-        console.log("Résultat: ", result)
+        console.log("Résultat: ", result);
+        this.router.navigateByUrl('posts');
+
       }, (error)=>{
-        this.backendResponse = error;
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
         console.log("\n CODE: ", error)
       }
     );
     console.log("Bouton cliqué, valeur du formulaire: \n", this.signupForm.value)
   }
+
+
 
 }

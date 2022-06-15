@@ -9,13 +9,17 @@ import { HeaderComponent } from './header/header.component';
 import { LandingConnexionPageComponent } from './landing-connexion-page/landing-connexion-page.component';
 import {LandingConnexionPageService} from './landing-connexion-page/landing-connexion-page.service';
 import { HttpClient } from '@angular/common/http';
+import { LoginPageComponent } from './login-page-component/login-page-component.component';
+import { PostsPageComponent } from './posts-page-component/posts-page-component.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    LandingConnexionPageComponent
+    LandingConnexionPageComponent,
+    LoginPageComponent,
+    PostsPageComponent
   ],
   imports: [
     BrowserModule,

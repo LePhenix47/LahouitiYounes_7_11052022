@@ -12,7 +12,16 @@
                 <legend class="fieldset__legend">
                     Veuillez renseigner ces champs:
                 </legend>
+                <p *ngIf="
+            emailRegex.test(signupForm.value.user_email) === false &&
+            signupForm.value.user_email !== ''
+          ">
+                    Email pas au bon format!
+                </p>
                 <input type="text" class="container__input" placeholder="Email" required formControlName="user_email" title="Champ de saisie d'email" />
+                <p *ngIf="passwordRegex.test(signupForm.value.user_password) === false">
+                    Mot pas assez robuste!
+                </p>
                 <input type="password" class="container__input password__input" placeholder="Mot de passe" required id="password" formControlName="user_password" title="Champ de saisie de mot de passe" />
                 <button type="submit" class="container__button" (click)="onSubmitForm()" [disabled]="signupForm.invalid" [ngClass]="{ 'container__button--disabled': signupForm.invalid }">
           S'inscrire
@@ -21,7 +30,9 @@
         </form>
 
         <div class="already-signed-up-container">
-            <a class="container__already-signed-up"> Êtes-vous déjà inscrit? </a>
+            <a class="container__already-signed-up" routerLink="/login">
+        Êtes-vous déjà inscrit?
+      </a>
         </div>
         <!--On mettra un routerLink plus tard-->
     </div>

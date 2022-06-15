@@ -13,6 +13,6 @@ urlAuthAPI: string = "https://localhost:3000/api/auth";
 
   sendSignupFormToBackend(bodyRequest: object): Observable<object>{
     console.log("Tentative d'envoi du formulaire avec le body request: " + JSON.stringify(bodyRequest));
-    return this.http.post(this.urlAuthAPI+"/signup", bodyRequest);
+    return this.http.post(this.urlAuthAPI + "/signup", bodyRequest);
   }
 }

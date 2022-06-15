@@ -10,6 +10,9 @@
         display: flex;
         justify-content: center;
     }
+    &__link:hover {
+        cursor: pointer;
+    }
     &__image {
         aspect-ratio: 1;
         height: 200px;
@@ -35,6 +38,7 @@
         transition-property: border background-color;
         &:hover {
             border: 4px solid $color-primary;
+            cursor: pointer;
         }
         &:active {
             background-color: darken($color-white, 7%);
@@ -51,6 +55,7 @@
         transition: background-color 125ms ease-in;
         &:hover {
             background-color: lighten($color-primary, 15%);
+            cursor: pointer;
         }
         &:active {
             background-color: darken($color-primary, 10%);

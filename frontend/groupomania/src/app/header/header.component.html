@@ -1,9 +1,15 @@
 <header class="header--flex header">
-    <img src="../../assets/icon-left-font.webp" alt="Logo Groupomania" class="header__image" />
+    <a class="header__link">
+        <img src="../../assets/icon-left-font.webp" alt="Logo Groupomania" class="header__image" title="Retourner à la page d'accueil?" [routerLink]="" />
+    </a>
 
     <form action="#" class="header__form">
-        <button type="button" class="header__signup-button">Inscription</button>
+        <button type="button" class="header__signup-button" routerLink="">
+      Inscription
+    </button>
 
-        <button type="button" class="header__login-button">Connexion</button>
+        <button type="button" class="header__login-button" routerLink="/login">
+      Connexion
+    </button>
     </form>
 </header>
