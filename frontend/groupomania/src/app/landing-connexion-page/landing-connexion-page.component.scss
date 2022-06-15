@@ -10,9 +10,12 @@
     align-items: center;
     &__card {
         width: 50%;
-        height: 485px;
+        height: 550px;
         min-height: 180px;
         background-color: #fff;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
         &--rounded {
             border-radius: 25px;
         }
@@ -40,12 +43,11 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 25%;
+        height: 30%;
         margin: 10px 0;
     }
     &__input {
         font-family: "Lato";
-        height: 40px;
         width: 80%;
         position: relative;
         @include rounded-inputs;
@@ -62,6 +64,18 @@
             &::placeholder {
                 transform: translate(-50%, 0%);
             }
+        }
+        &--invalid-email {
+            border-radius: 50px;
+            outline: 2px dashed $color-primary;
+            padding: 2px 8px;
+            margin: 5px 0;
+        }
+        &--invalid-password {
+            border-radius: 50px;
+            outline: 2px dashed $color-primary;
+            padding: 2px 8px;
+            margin-top: 5px;
         }
     }
     &__text {
@@ -132,7 +146,7 @@
     border: 0;
     &__legend {
         padding: 1% 0;
-        margin: 0 12%;
+        margin: 2% 12%;
         @include center-flex;
     }
 }
@@ -140,4 +154,24 @@
 .already-signed-up-container {
     height: 25%;
     @include center-flex-column;
+}
+
+.error-form {
+    width: 100%;
+    height: 85px;
+    color: $color-white;
+    @include center-flex;
+    border-radius: 25px;
+    background-color: darken($color-secondary, 55%);
+    overflow: hidden;
+    &__icon {
+        margin: 1%;
+        color: $color-primary;
+        background-color: $color-white;
+        border-radius: 90px;
+    }
+    &__text {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 }

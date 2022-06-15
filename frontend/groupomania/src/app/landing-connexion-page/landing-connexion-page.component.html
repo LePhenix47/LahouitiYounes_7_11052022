@@ -12,15 +12,18 @@
                 <legend class="fieldset__legend">
                     Veuillez renseigner ces champs:
                 </legend>
-                <p *ngIf="
+                <p class="container__input--invalid-email" *ngIf="
             emailRegex.test(signupForm.value.user_email) === false &&
-            signupForm.value.user_email !== ''
+            signupForm.value.user_email != null
           ">
                     Email pas au bon format!
                 </p>
                 <input type="text" class="container__input" placeholder="Email" required formControlName="user_email" title="Champ de saisie d'email" />
-                <p *ngIf="passwordRegex.test(signupForm.value.user_password) === false">
-                    Mot pas assez robuste!
+                <p class="container__input--invalid-password" *ngIf="
+            passwordRegex.test(signupForm.value.user_password) === false &&
+            signupForm.value.user_password != null
+          ">
+                    Mot de passe pas assez robuste!
                 </p>
                 <input type="password" class="container__input password__input" placeholder="Mot de passe" required id="password" formControlName="user_password" title="Champ de saisie de mot de passe" />
                 <button type="submit" class="container__button" (click)="onSubmitForm()" [disabled]="signupForm.invalid" [ngClass]="{ 'container__button--disabled': signupForm.invalid }">
@@ -34,6 +37,12 @@
         Êtes-vous déjà inscrit?
       </a>
         </div>
-        <!--On mettra un routerLink plus tard-->
+
+        <div class="error-form" *ngIf="">
+            <i class="fas fa-times-circle error-form__icon"></i>
+            <p class="error-form__text">
+                L'email : {{ signupForm.value.user_email }} est déjà enregistrée
+            </p>
+        </div>
     </div>
 </main>

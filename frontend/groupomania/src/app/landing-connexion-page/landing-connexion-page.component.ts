@@ -30,17 +30,18 @@ export class LandingConnexionPageComponent implements OnInit {
   
   //Function onSubmit that will show in the console the value of the email and password inputted by the user
   onSubmitForm(): void{ 
+    console.log("Bouton cliqué, valeur du formulaire: \n", this.signupForm.value)
     this.signupResponse.sendSignupFormToBackend(this.signupForm.value).subscribe(
-      (result)=>{
+      (result: any)=>{
         console.log("Résultat: ", result);
         this.router.navigateByUrl('posts');
 
-      }, (error)=>{
+      }, (error: any)=>{
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
-        console.log("\n CODE: ", error)
+        console.log("\n CODE: ", error);
       }
     );
-    console.log("Bouton cliqué, valeur du formulaire: \n", this.signupForm.value)
+
   }
 
 
