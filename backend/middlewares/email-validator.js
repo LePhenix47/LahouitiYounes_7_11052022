@@ -24,7 +24,7 @@ module.exports = (req, res, next) => {
         }
     } catch (emailValidationError) {
         console.log(emailValidationError);
-        res.status(400).json({
+        return res.status(400).json({
             message: "Email validation has failed: " + emailValidationError,
         });
     }

@@ -46,7 +46,7 @@ exports.signup = (req, res, next) => {
                         });
                     });
             } else {
-                res.status(401).json({
+                return res.status(401).json({
                     message: "User already signed up with this email" + emailFromBodyRequest,
                 });
             }
@@ -56,7 +56,7 @@ exports.signup = (req, res, next) => {
                 "ERREUR lors de la recherche de l'email dans la B2D: " +
                 emailSearchError
             );
-            res.status(500).json({
+            return res.status(500).json({
                 message: "Error found while attempting to search the email in the database",
             });
         });
@@ -93,7 +93,7 @@ exports.login = (req, res, next) => {
             .compare(passwordFromBodyRequest, hashedPasswordInDatabase)
             .then((isPasswordValid) => {
                 if (!isPasswordValid) {
-                    res.status(401).json({
+                    return res.status(401).json({
                         message: "The password is incorrect → Access unauthorized",
                     });
                 }
@@ -111,7 +111,7 @@ exports.login = (req, res, next) => {
                 console.log(
                     "Erreur lors de la comparaison des MDPs: " + passwordComparisonError
                 );
-                res.status(500).json({
+                return res.status(500).json({
                     message: "Either the data OR the hash is missing or at least one of these 2 values is undefined",
                 });
             });
@@ -159,7 +159,7 @@ exports.loginModerator = (req, res, next) => {
                 .compare(passwordFromBodyRequest, hashedPasswordInDatabase)
                 .then((isPasswordValid) => {
                     if (!isPasswordValid) {
-                        res.status(401).json({
+                        return res.status(401).json({
                             message: "The password is incorrect → Access unauthorized",
                         });
                     }
@@ -175,7 +175,7 @@ exports.loginModerator = (req, res, next) => {
                 })
                 .catch((passwordComparisonError) => {
                     console.log("ERREUR ROUTE MODÉRATEURS: " + passwordComparisonError);
-                    res.status(403).json({
+                    return res.status(403).json({
                         message: "Forbidden request, couldn't log in as a moderator",
                     });
                 });

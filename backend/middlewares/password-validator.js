@@ -41,7 +41,7 @@ module.exports = (req, res, next) => {
         }
     } catch (passwordValidationError) {
         console.log(passwordValidationError);
-        res.status(400).json({
+        return res.status(400).json({
             message: "Error while attempting to verify the password: " +
                 passwordValidationError +
                 " list of criterias not respected: " +
