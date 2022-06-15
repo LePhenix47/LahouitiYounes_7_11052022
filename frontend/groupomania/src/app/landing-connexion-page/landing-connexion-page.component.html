@@ -32,6 +32,12 @@
             </fieldset>
         </form>
 
+        <!-- <ol class="">
+            <p>Le mot de passe doit comporter au moins:</p>
+            <li>Une lettre majuscule</li>
+            <li>Deux nombres</li>
+            <li>Un symbole</li>
+        </ol> -->
         <div class="already-signed-up-container">
             <a class="container__already-signed-up" routerLink="/login">
         Êtes-vous déjà inscrit?
@@ -40,7 +46,11 @@
 
         <div class="error-form" *ngIf="">
             <i class="fas fa-times-circle error-form__icon"></i>
-            <p class="error-form__text">
+            <p class="error-form__text" *ngIf="">
+                L'email : {{ signupForm.value.user_email }} n'est pas au format [pseudonyme]@[domaine].[extension]
+            </p>
+
+            <p class="error-form__text" *ngIf="">
                 L'email : {{ signupForm.value.user_email }} est déjà enregistrée
             </p>
         </div>

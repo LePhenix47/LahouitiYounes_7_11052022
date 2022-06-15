@@ -21,16 +21,16 @@
 
         <div class="already-signed-up-container">
             <a class="container__already-signed-up" routerLink="">
-        Voulez-vous vous inscrire
+        Voulez-vous vous inscrire?
       </a>
         </div>
 
         <div class="error-form" *ngIf="">
             <i class="fas fa-times-circle error-form__icon"></i>
-            <p class="error-form__text">
+            <p class="error-form__text" *ngIf="">
                 L'email : {{ loginForm.value.user_email }} est invalide
             </p>
-            <p class="error-form__text">Le mot de passe est incorrect</p>
+            <p class="error-form__text" *ngIf="">Le mot de passe est incorrect</p>
         </div>
     </div>
 </main>
