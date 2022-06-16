@@ -5,10 +5,11 @@ import { LoginPageComponent } from './login-page-component/login-page-component.
 import { PostsPageComponent} from './posts-page-component/posts-page-component.component';
 
 const routes: Routes = [
-  {path:'', component: LandingConnexionPageComponent},
   {path: 'login', component: LoginPageComponent},
-  {path: 'posts', component: PostsPageComponent}
+  {path: 'posts', component: PostsPageComponent},
+  {path:'', component: LandingConnexionPageComponent}
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

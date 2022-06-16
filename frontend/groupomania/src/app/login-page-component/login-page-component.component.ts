@@ -10,6 +10,9 @@ import { LoginPageServiceService } from './login-page-service.service';
 })
 export class LoginPageComponent implements OnInit {
   loginForm!: FormGroup;
+  isUserAlreadyRegistered: boolean = false;
+  errorMessage: string = "";
+
 
   constructor(private router: Router, private formBuilder: FormBuilder, private loginResponse: LoginPageServiceService) { }
 
@@ -32,8 +35,14 @@ export class LoginPageComponent implements OnInit {
       }, (error: any)=>{
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
         console.log("\n CODE: ", error);
+                this.isUserAlreadyRegistered = true;
+        this.errorMessage = error.error.message;
       }
     );
-    
+  }
+
+    restoreInput(): void{
+    this.isUserAlreadyRegistered = false;
+    this.errorMessage = "";
   }
 }

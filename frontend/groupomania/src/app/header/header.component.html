@@ -4,11 +4,11 @@
     </a>
 
     <form action="#" class="header__form">
-        <button type="button" class="header__signup-button" routerLink="">
+        <button type="button" class="header__signup-button" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       Inscription
     </button>
 
-        <button type="button" class="header__login-button" routerLink="/login">
+        <button type="button" class="header__login-button" routerLink="/login" routerLinkActive="active">
       Connexion
     </button>
     </form>

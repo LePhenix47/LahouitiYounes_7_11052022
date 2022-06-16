@@ -10,9 +10,9 @@
         <form class="container__form" [formGroup]="loginForm">
             <fieldset class="container__fieldset fieldset">
                 <legend class="fieldset__legend">Veuillez compléter ces champs:</legend>
-                <input type="text" class="container__input" placeholder="Email" required formControlName="user_email" title="Champ de saisie d'email" />
+                <input type="text" class="container__input" placeholder="Email" required formControlName="user_email" title="Champ de saisie d'email" (change)="restoreInput()" />
 
-                <input type="password" class="container__input password__input" placeholder="Mot de passe" required id="password" formControlName="user_password" title="Champ de saisie de mot de passe" />
+                <input type="password" class="container__input password__input" placeholder="Mot de passe" required id="password" formControlName="user_password" title="Champ de saisie de mot de passe" (change)="restoreInput()" />
                 <button type="submit" class="container__button" (click)="onSubmitLoginForm()" [disabled]="loginForm.invalid" [ngClass]="{ 'container__button--disabled': loginForm.invalid }">
           Se connecter
         </button>
@@ -25,12 +25,11 @@
       </a>
         </div>
 
-        <div class="error-form" *ngIf="">
+        <div class="error-form" *ngIf="isUserAlreadyRegistered">
             <i class="fas fa-times-circle error-form__icon"></i>
-            <p class="error-form__text" *ngIf="">
-                L'email : {{ loginForm.value.user_email }} est invalide
+            <p class="error-form__text">
+                {{ errorMessage }}
             </p>
-            <p class="error-form__text" *ngIf="">Le mot de passe est incorrect</p>
         </div>
     </div>
 </main>

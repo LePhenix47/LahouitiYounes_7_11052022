@@ -14,6 +14,8 @@ export class LandingConnexionPageComponent implements OnInit {
   signupForm!: FormGroup;
   emailRegex!: RegExp;
   passwordRegex!: RegExp;
+  isUserAlreadyRegistered: boolean = false;
+  errorMessage: string = "";
 
   constructor(private formBuilder: FormBuilder, private signupResponse: LandingConnexionPageService, private router: Router) {}
 
@@ -25,7 +27,6 @@ export class LandingConnexionPageComponent implements OnInit {
       user_email: [null, [Validators.required, Validators.pattern(this.emailRegex)]],
       user_password:[null, [Validators.required, Validators.pattern(this.passwordRegex)]],
     });
-
   }
   
   //Function onSubmit that will show in the console the value of the email and password inputted by the user
@@ -39,11 +40,16 @@ export class LandingConnexionPageComponent implements OnInit {
       }, (error: any)=>{
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
         console.log("\n CODE: ", error);
+        this.isUserAlreadyRegistered = true;
+        this.errorMessage = error.error.message;
       }
     );
-
   }
 
 
+  restoreInput(): void{
+    this.isUserAlreadyRegistered = false;
+    this.errorMessage = "";
+  }
 
 }
