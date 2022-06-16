@@ -1,15 +1,19 @@
 <header class="header--flex header">
     <a class="header__link">
-        <img src="../../assets/icon-left-font.webp" alt="Logo Groupomania" class="header__image" title="Retourner à la page d'accueil?" [routerLink]="" />
+        <img src="../../assets/icon-left-font.webp" alt="Logo Groupomania" class="header__image" title="Retourner à la page d'accueil?" routerLink="/" />
     </a>
 
     <form action="#" class="header__form">
-        <button type="button" class="header__signup-button" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <button type="button" class="header__signup-button" routerLink="/" *ngIf="this.router.url === '/login'">
       Inscription
     </button>
 
-        <button type="button" class="header__login-button" routerLink="/login" routerLinkActive="active">
+        <button type="button" class="header__login-button" routerLink="/login" *ngIf="this.router.url === '/'">
       Connexion
+    </button>
+
+        <button type="button" class="header__logout-button" routerLink="/posts" (click)="logout()" *ngIf="this.router.url === '/posts'">
+      Déconnexion
     </button>
     </form>
 </header>

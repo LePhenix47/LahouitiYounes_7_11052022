@@ -34,10 +34,11 @@ export class LandingConnexionPageComponent implements OnInit {
     console.log("Bouton cliqué, valeur du formulaire: \n", this.signupForm.value)
     this.signupResponse.sendSignupFormToBackend(this.signupForm.value).subscribe(
       (result: any)=>{
-        console.log("Résultat: ", result);
+        console.log("%c Résultat: " + JSON.stringify(result), "background-color: limegreen");
         this.router.navigateByUrl('posts');
-
-      }, (error: any)=>{
+      },
+      
+      (error: any)=>{
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
         console.log("\n CODE: ", error);
         this.isUserAlreadyRegistered = true;

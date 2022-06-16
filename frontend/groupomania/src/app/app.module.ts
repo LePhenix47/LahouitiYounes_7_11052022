@@ -12,6 +12,7 @@ import { HttpClient } from '@angular/common/http';
 import { LoginPageComponent } from './login-page-component/login-page-component.component';
 import { PostsPageComponent } from './posts-page-component/posts-page-component.component';
 
+import {CookieService} from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,7 @@ import { PostsPageComponent } from './posts-page-component/posts-page-component.
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [HttpClient],
+  providers: [HttpClient, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

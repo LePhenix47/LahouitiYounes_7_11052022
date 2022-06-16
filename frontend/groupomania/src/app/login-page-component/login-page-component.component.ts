@@ -25,17 +25,19 @@ export class LoginPageComponent implements OnInit {
 
 
   onSubmitLoginForm(): void{
+        console.log("%c URL: " + this.router.url, "background-color: crimson; font-size: 16px;");
+
     console.log("Bouton cliqué, valeur du formulaire: \n", this.loginForm.value);
     
     this.loginResponse.sendLoginFormToBackend(this.loginForm.value).subscribe(
       (result: any)=>{
-        console.log("Résultat: ", result);
+        console.log("%c Résultat: " + JSON.stringify(result), "background-color: green; font-size: 16px");
         this.router.navigateByUrl('posts');
 
       }, (error: any)=>{
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
         console.log("\n CODE: ", error);
-                this.isUserAlreadyRegistered = true;
+        this.isUserAlreadyRegistered = true;
         this.errorMessage = error.error.message;
       }
     );

@@ -61,8 +61,30 @@
             background-color: darken($color-primary, 10%);
         }
     }
+    &__logout-button {
+        display: none;
+        font-family: "Lato";
+        background-color: $color-primary;
+        color: $color-white;
+        height: 50px;
+        width: 150px;
+        border-radius: 250px;
+        border: 2px solid $color-white;
+        transition: background-color 125ms ease-in;
+        &:hover {
+            background-color: lighten($color-primary, 15%);
+            cursor: pointer;
+        }
+        &:active {
+            background-color: darken($color-primary, 10%);
+        }
+    }
+}
+
+.hide {
+    display: none;
 }
 
 .active {
-    display: none;
+    display: block;
 }
