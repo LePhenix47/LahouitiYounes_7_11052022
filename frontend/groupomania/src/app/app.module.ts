@@ -29,7 +29,7 @@ import {CookieService} from 'ngx-cookie-service';
     ReactiveFormsModule,
     HttpClientModule
   ],
-  providers: [HttpClient, CookieService],
+  providers: [HttpClient],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

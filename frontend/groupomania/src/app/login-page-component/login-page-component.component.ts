@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+
 import { LoginPageServiceService } from './login-page-service.service';
 
 @Component({
@@ -9,12 +11,15 @@ import { LoginPageServiceService } from './login-page-service.service';
   styleUrls: ['./login-page-component.component.scss']
 })
 export class LoginPageComponent implements OnInit {
-  loginForm!: FormGroup;
+  loginForm!: UntypedFormGroup;
   isUserAlreadyRegistered: boolean = false;
   errorMessage: string = "";
+  tokenInCookie: string = "";
 
-
-  constructor(private router: Router, private formBuilder: FormBuilder, private loginResponse: LoginPageServiceService) { }
+  constructor(private router: Router,
+    private formBuilder: UntypedFormBuilder,
+    private loginResponse: LoginPageServiceService,
+    private cookieService: CookieService) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -32,6 +37,8 @@ export class LoginPageComponent implements OnInit {
     this.loginResponse.sendLoginFormToBackend(this.loginForm.value).subscribe(
       (result: any)=>{
         console.log("%c Résultat: " + JSON.stringify(result), "background-color: green; font-size: 16px");
+        console.log("JWT → " + result.token);
+        this.cookieService.set('user-token', result.token)
         this.router.navigateByUrl('posts');
 
       }, (error: any)=>{
