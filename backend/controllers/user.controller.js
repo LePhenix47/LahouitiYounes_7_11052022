@@ -47,7 +47,7 @@ exports.signup = (req, res, next) => {
                     });
             } else {
                 return res.status(401).json({
-                    message: "User already signed up with this email" + emailFromBodyRequest,
+                    message: "User already signed up with this email: " + emailFromBodyRequest,
                 });
             }
         })
