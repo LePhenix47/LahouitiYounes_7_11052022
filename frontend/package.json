@@ -9,5 +9,8 @@
     },
     "keywords": [],
     "author": "Younes Lahouiti",
-    "license": "ISC"
+    "license": "ISC",
+    "dependencies": {
+        "ngx-cookie-service": "^14.0.0"
+    }
 }
