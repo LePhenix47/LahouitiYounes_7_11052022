@@ -39,7 +39,7 @@ La configuration entre le serveur et le base de données est déjà faite dans l
 
 **Pour chacun de ces 2 dossiers il faudra installer des paquets npm:**
 
-\-Front-end: Le CLI d'Angular → `npm -g @angular/cli`
+\-Front-end: Le CLI d'Angular → `npm -g @angular/cli` & `npm i ngx-cookie-service`
 
 \-Back-end:
 
