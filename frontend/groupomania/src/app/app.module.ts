@@ -13,6 +13,7 @@ import { LoginPageComponent } from './login-page-component/login-page-component.
 import { PostsPageComponent } from './posts-page-component/posts-page-component.component';
 
 import {CookieService} from 'ngx-cookie-service';
+import { AuthModule } from './auth/auth.module';
 
 @NgModule({
   declarations: [
@@ -27,9 +28,10 @@ import {CookieService} from 'ngx-cookie-service';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AuthModule
   ],
-  providers: [HttpClient],
+  providers: [HttpClient, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

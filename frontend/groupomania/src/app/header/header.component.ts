@@ -15,11 +15,11 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.interval$ = interval(1000);
-    this.interval$.subscribe(
-      (value)=>{  
-        console.log(value + "%c URL: " + this.router.url, "background-color: crimson; font-size: 16px;");
-      }
-    );
+    // this.interval$.subscribe(
+    //   (value)=>{  
+    //     console.log(value + "%c URL: " + this.router.url, "background-color: crimson; font-size: 16px;");
+    //   }
+    // );
   }
 
   logout(){

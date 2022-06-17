@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class LoginPageServiceService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http :HttpClient) { }
 
   urlAuthAPI: string = "https://localhost:3000/api/auth";
 
@@ -15,4 +15,6 @@ export class LoginPageServiceService {
     console.log("Tentative d'envoi du formulaire LOGIN avec le body request: " + JSON.stringify(bodyRequest));
     return this.http.post(this.urlAuthAPI + "/login", bodyRequest); 
   }
+
+
 }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import { AppComponent } from '../app.component';
+
 
 import { LoginPageServiceService } from './login-page-service.service';
 
@@ -14,12 +15,12 @@ export class LoginPageComponent implements OnInit {
   loginForm!: UntypedFormGroup;
   isUserAlreadyRegistered: boolean = false;
   errorMessage: string = "";
-  tokenInCookie: string = "";
 
   constructor(private router: Router,
     private formBuilder: UntypedFormBuilder,
-    private loginResponse: LoginPageServiceService,
-    private cookieService: CookieService) { }
+    private loginService: LoginPageServiceService,
+    private appComponent: AppComponent
+    ) { }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -34,12 +35,14 @@ export class LoginPageComponent implements OnInit {
 
     console.log("Bouton cliqué, valeur du formulaire: \n", this.loginForm.value);
     
-    this.loginResponse.sendLoginFormToBackend(this.loginForm.value).subscribe(
+    this.loginService.sendLoginFormToBackend(this.loginForm.value).subscribe(
       (result: any)=>{
         console.log("%c Résultat: " + JSON.stringify(result), "background-color: green; font-size: 16px");
         console.log("JWT → " + result.token);
-        this.cookieService.set('user-token', result.token)
-        this.router.navigateByUrl('posts');
+        let token = result.token;
+        // this.appComponent.setCookieToken(token);
+        // this.appComponent.getCookieToken();
+        this.router.navigateByUrl('/posts');
 
       }, (error: any)=>{
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
