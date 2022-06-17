@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AppComponent } from '../app.component';
-
-
-import { LoginPageServiceService } from './login-page-service.service';
 import {AppService} from "../app.service";
 
 @Component({
@@ -19,8 +15,7 @@ export class LoginPageComponent implements OnInit {
 
   constructor(private router: Router,
     private formBuilder: UntypedFormBuilder,
-    private AppService: LoginPageServiceService,
-
+    private loginService: AppService,
     ) { }
 
   ngOnInit(): void {
@@ -36,13 +31,13 @@ export class LoginPageComponent implements OnInit {
 
     console.log("Bouton cliqué, valeur du formulaire: \n", this.loginForm.value);
     
-    this.AppService.sendLoginFormToBackend(this.loginForm.value).subscribe(
+    this.loginService.sendLoginFormToBackend(this.loginForm.value).subscribe(
       (result: any)=>{
         console.log("%c Résultat: " + JSON.stringify(result), "background-color: green; font-size: 16px");
         console.log("JWT → " + result.token);
         let token = result.token;
-        this.AppService.setCookieToken(token);
-        this.AppService.getCookieToken();
+        this.loginService.setCookieToken(token);
+        this.loginService.getCookieToken();
         this.router.navigateByUrl('/posts');
 
       }, (error: any)=>{

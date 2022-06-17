@@ -15,13 +15,13 @@ export class AppService {
   urlPostAPI: string = "https://localhost:3000/api/posts";
 
   sendSignupFormToBackend(bodyRequest: object): Observable<object>{
-    console.log("Tentative d'envoi du formulaire SIGNUP avec le body request: " + JSON.stringify(bodyRequest));
+    console.log("Tentative d'envoi du formulaire SIGNUP avec le body request APP SERVICE: " + JSON.stringify(bodyRequest));
     return this.http.post(this.urlAuthAPI + "/signup", bodyRequest);
   }
 
 
   sendLoginFormToBackend(bodyRequest: object): Observable<object>{
-    console.log("Tentative d'envoi du formulaire LOGIN avec le body request: " + JSON.stringify(bodyRequest));
+    console.log("Tentative d'envoi du formulaire LOGIN avec le body request APP SERVICE: " + JSON.stringify(bodyRequest));
     return this.http.post(this.urlAuthAPI + "/login", bodyRequest); 
   }
 

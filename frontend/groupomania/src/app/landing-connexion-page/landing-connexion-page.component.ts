@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, NgForm, Validators } from '@angular/forms';
 import { UntypedFormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import {LandingConnexionPageService} from './landing-connexion-page.service';
 import {AppService} from "../app.service";
 
 @Component({

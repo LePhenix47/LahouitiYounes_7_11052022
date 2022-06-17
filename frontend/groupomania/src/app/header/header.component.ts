@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { interval, Observable } from 'rxjs';
 
-import { LoginPageServiceService } from '../login-page-component/login-page-service.service';
+import {AppService} from "../app.service";
 
 @Component({
   selector: 'app-header',
@@ -11,7 +11,7 @@ import { LoginPageServiceService } from '../login-page-component/login-page-serv
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  constructor(public router: Router, private loginService: LoginPageServiceService) { }
+  constructor(public router: Router, private loginService: AppService) { }
 
   interval$!: Observable<number>;
 
