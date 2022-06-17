@@ -12,7 +12,7 @@ export class AppService {
   constructor(private http :HttpClient, private cookieService:CookieService) { }
 
   urlAuthAPI: string = "https://localhost:3000/api/auth";
-  urlPostAPI: string = "https://localhost:3000/api/posts";
+  
 
   sendSignupFormToBackend(bodyRequest: object): Observable<object>{
     console.log("Tentative d'envoi du formulaire SIGNUP avec le body request APP SERVICE: " + JSON.stringify(bodyRequest));
@@ -37,6 +37,8 @@ deleteCookieToken():void{
   this.cookieService.delete("userToken")
 }
   
+urlPostAPI: string = "https://localhost:3000/api/posts";
+
 getAllPostsFromBackend(): Observable<any>{
  return this.http.get(this.urlPostAPI);
 }
