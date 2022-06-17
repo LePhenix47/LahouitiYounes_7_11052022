@@ -50,5 +50,12 @@
                 {{ errorMessage }}
             </p>
         </div>
+
+        <div class="success-form" *ngIf="isUserSuccessfullyRegistered">
+            <i class="fas fa-check-circle success-form__icon"></i>
+            <p class="success-form__text">
+                {{ successfulSignupMessage }}! Redirection...
+            </p>
+        </div>
     </div>
 </main>

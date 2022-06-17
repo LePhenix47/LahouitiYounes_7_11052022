@@ -175,3 +175,25 @@
         text-overflow: ellipsis;
     }
 }
+
+.success-form {
+    width: 100%;
+    height: 85px;
+    color: $color-white;
+    @include center-flex;
+    border-radius: 25px;
+    background-color: $color-valid;
+    color: $color-black;
+    overflow: hidden;
+    &__icon {
+        margin: 1%;
+        color: lighten($color-valid, 8%);
+        background-color: $color-white;
+        border-radius: 90px;
+    }
+    &__text {
+        color: black;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}

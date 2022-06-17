@@ -1,18 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root'
 })
-export class LoginPageServiceService {
+export class AppService {
 
   constructor(private http :HttpClient, private cookieService:CookieService) { }
 
   urlAuthAPI: string = "https://localhost:3000/api/auth";
+  urlPostAPI: string = "https://localhost:3000/api/posts";
 
-    sendLoginFormToBackend(bodyRequest: object): Observable<object>{
+  sendSignupFormToBackend(bodyRequest: object): Observable<object>{
+    console.log("Tentative d'envoi du formulaire SIGNUP avec le body request: " + JSON.stringify(bodyRequest));
+    return this.http.post(this.urlAuthAPI + "/signup", bodyRequest);
+  }
+
+
+  sendLoginFormToBackend(bodyRequest: object): Observable<object>{
     console.log("Tentative d'envoi du formulaire LOGIN avec le body request: " + JSON.stringify(bodyRequest));
     return this.http.post(this.urlAuthAPI + "/login", bodyRequest); 
   }
@@ -27,6 +35,10 @@ getCookieToken():string{
 
 deleteCookieToken():void{
   this.cookieService.delete("userToken")
+}
+  
+getAllPostsFromBackend(): Observable<any>{
+ return this.http.get(this.urlPostAPI);
 }
 
 }

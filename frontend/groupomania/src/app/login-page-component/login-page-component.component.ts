@@ -5,6 +5,7 @@ import { AppComponent } from '../app.component';
 
 
 import { LoginPageServiceService } from './login-page-service.service';
+import {AppService} from "../app.service";
 
 @Component({
   selector: 'app-login-page-component',
@@ -18,8 +19,8 @@ export class LoginPageComponent implements OnInit {
 
   constructor(private router: Router,
     private formBuilder: UntypedFormBuilder,
-    private loginService: LoginPageServiceService,
-    private appComponent: AppComponent
+    private AppService: LoginPageServiceService,
+
     ) { }
 
   ngOnInit(): void {
@@ -35,13 +36,13 @@ export class LoginPageComponent implements OnInit {
 
     console.log("Bouton cliqué, valeur du formulaire: \n", this.loginForm.value);
     
-    this.loginService.sendLoginFormToBackend(this.loginForm.value).subscribe(
+    this.AppService.sendLoginFormToBackend(this.loginForm.value).subscribe(
       (result: any)=>{
         console.log("%c Résultat: " + JSON.stringify(result), "background-color: green; font-size: 16px");
         console.log("JWT → " + result.token);
         let token = result.token;
-        // this.appComponent.setCookieToken(token);
-        // this.appComponent.getCookieToken();
+        this.AppService.setCookieToken(token);
+        this.AppService.getCookieToken();
         this.router.navigateByUrl('/posts');
 
       }, (error: any)=>{

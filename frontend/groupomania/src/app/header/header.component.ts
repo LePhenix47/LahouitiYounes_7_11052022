@@ -3,13 +3,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { interval, Observable } from 'rxjs';
 
+import { LoginPageServiceService } from '../login-page-component/login-page-service.service';
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  constructor(public router: Router) { }
+  constructor(public router: Router, private loginService: LoginPageServiceService) { }
 
   interval$!: Observable<number>;
 
@@ -23,7 +25,7 @@ export class HeaderComponent implements OnInit {
   }
 
   logout(){
-    //Ajouter code pour supprimer les cookies ici
+    this.loginService.deleteCookieToken();
     this.router.navigateByUrl('/')
   }
 

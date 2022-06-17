@@ -8,16 +8,14 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class AppComponent {
   title = 'groupomania';
-  private cookieTest!: CookieService;
 
 
 constructor(private cookieService: CookieService){}
 
 
 
+
 ngOnInit():void {
-  this.cookieService.set('cookie-name', 'value');
-  this.cookieService.get("cookie-name")
 
 }
 
