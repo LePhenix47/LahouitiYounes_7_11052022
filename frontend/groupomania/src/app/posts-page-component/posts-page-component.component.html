@@ -1,10 +1,29 @@
 <p>posts-page-component works!</p>
+
 <div class="groupomania__post">
     <div class="groupomania__pfp-container">
-        <img [src]="" [alt]="" />
+        <img src="https://i.imgur.com/h564JHS.jpg" [alt]="" class="groupomania__pfp" />
     </div>
-    <form class="groupomania__form">
-        <input type="text" placeholder="Cool title" />
-        <input type="text" placeholder="Insert description" />
-    </form>
+    <div class="groupomania__form-container">
+        <form class="groupomania__form" [formGroup]="postForm">
+            <fieldset class="groupomania__fieldset">
+                <legend class="groupomania__legend">Créez votre post:</legend>
+
+                <input type="text" placeholder="Cool title" class="groupomania__title-input" formControlName="title" title="Champ pour le titre du post" required id="title" />
+
+                <input type="text" placeholder="Insert description" class="groupomania__description-input" formControlName="description" title="Champ pour la description du post" required id="description" />
+
+                <input type="file" accept="image/*" formControlName="image_url" title="Champ pour l'image du post" id="image_url" />
+                <div class="input__image-file" *ngIf="imagePreview$ | async as postForm">
+                    <img [src]="postForm.image_url" alt="" />
+                </div>
+
+                <button type="submit" class="post__button" (click)="onSubmitPostForm()" [disabled]="postForm.invalid" [ngClass]="{ 'post__button--disabled': postForm.invalid }">
+          Se connecter
+        </button>
+            </fieldset>
+        </form>
+    </div>
 </div>
+
+<app-published-posts></app-published-posts>

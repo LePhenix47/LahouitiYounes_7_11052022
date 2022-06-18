@@ -88,6 +88,7 @@
     }
     &__heading2 {
         @include center-flex;
+        text-align: center;
         margin: 5px 0;
         padding: 5px;
         font-size: 30px;
@@ -120,7 +121,7 @@
             }
         }
     }
-    &__already-signed-up {
+    &__not-signed-up {
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -151,7 +152,7 @@
     }
 }
 
-.already-signed-up-container {
+.not-signed-up-container {
     height: 25%;
     @include center-flex-column;
 }
@@ -171,6 +172,28 @@
         border-radius: 90px;
     }
     &__text {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+}
+
+.success-form {
+    width: 100%;
+    height: 85px;
+    color: $color-white;
+    @include center-flex;
+    border-radius: 25px;
+    background-color: $color-valid;
+    color: $color-black;
+    overflow: hidden;
+    &__icon {
+        margin: 1%;
+        color: lighten($color-valid, 8%);
+        background-color: $color-white;
+        border-radius: 90px;
+    }
+    &__text {
+        color: black;
         white-space: nowrap;
         text-overflow: ellipsis;
     }

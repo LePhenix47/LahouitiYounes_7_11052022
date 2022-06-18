@@ -10,8 +10,11 @@ import {AppService} from "../app.service";
 })
 export class LoginPageComponent implements OnInit {
   loginForm!: UntypedFormGroup;
-  isUserAlreadyRegistered: boolean = false;
+
+  isUserAlreadyLoggedIn: boolean = false;
+  isUserSuccessfullyLoggedIn: boolean = false;
   errorMessage: string = "";
+    successfulLoginMessage: string = "";
 
   constructor(private router: Router,
     private formBuilder: UntypedFormBuilder,
@@ -38,19 +41,24 @@ export class LoginPageComponent implements OnInit {
         let token = result.token;
         this.loginService.setCookieToken(token);
         this.loginService.getCookieToken();
-        this.router.navigateByUrl('/posts');
-
+ this.isUserSuccessfullyLoggedIn = true;
+        this.successfulLoginMessage = result.message;
+        setTimeout(
+          ()=>{
+            this.router.navigateByUrl("/posts")
+          }, 1000
+        )
       }, (error: any)=>{
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);
         console.log("\n CODE: ", error);
-        this.isUserAlreadyRegistered = true;
+        this.isUserAlreadyLoggedIn = true;
         this.errorMessage = error.error.message;
       }
     );
   }
 
     restoreInput(): void{
-    this.isUserAlreadyRegistered = false;
+    this.isUserAlreadyLoggedIn = false;
     this.errorMessage = "";
   }
 }

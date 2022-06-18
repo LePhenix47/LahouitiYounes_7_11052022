@@ -19,17 +19,22 @@
             </fieldset>
         </form>
 
-        <div class="already-signed-up-container">
-            <a class="container__already-signed-up" routerLink="">
+        <div class="not-signed-up-container">
+            <a class="container__not-signed-up" routerLink="">
         Voulez-vous vous inscrire?
       </a>
         </div>
 
-        <div class="error-form" *ngIf="isUserAlreadyRegistered">
+        <div class="error-form" *ngIf="isUserAlreadyLoggedIn">
             <i class="fas fa-times-circle error-form__icon"></i>
             <p class="error-form__text">
                 {{ errorMessage }}
             </p>
+        </div>
+
+        <div class="success-form" *ngIf="isUserSuccessfullyLoggedIn">
+            <i class="fas fa-check-circle success-form__icon"></i>
+            <p class="success-form__text">Email et MDP corrects! Redirection...</p>
         </div>
     </div>
 </main>

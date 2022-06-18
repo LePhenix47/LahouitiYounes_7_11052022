@@ -88,6 +88,7 @@
     }
     &__heading2 {
         @include center-flex;
+        text-align: center;
         margin: 5px 0;
         padding: 5px;
         font-size: 30px;
