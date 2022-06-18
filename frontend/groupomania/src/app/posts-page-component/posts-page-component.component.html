@@ -13,17 +13,20 @@
 
                 <input type="text" placeholder="Insert description" class="groupomania__description-input" formControlName="description" title="Champ pour la description du post" required id="description" />
 
-                <input type="file" accept="image/*" formControlName="image_url" title="Champ pour l'image du post" id="image_url" />
-                <div class="input__image-file" *ngIf="imagePreview$ | async as postForm">
-                    <img [src]="postForm.image_url" alt="" />
-                </div>
+                <input type="file" accept="image/*" class="groupomania__image-input" formControlName="image_url" title="Champ pour l'image du post" id="image_url" />
+                <label for="image_url"></label>
 
                 <button type="submit" class="post__button" (click)="onSubmitPostForm()" [disabled]="postForm.invalid" [ngClass]="{ 'post__button--disabled': postForm.invalid }">
-          Se connecter
+          Poster
         </button>
             </fieldset>
         </form>
     </div>
 </div>
 
+<p>Test</p>
+
+<!----->
+
+<!----->
 <app-published-posts></app-published-posts>

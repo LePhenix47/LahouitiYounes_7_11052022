@@ -4,7 +4,8 @@
         @include center-flex;
         height: 250px;
         width: 100%;
-        background-color: blue;
+        outline: 1px solid yellowgreen;
+        background-color: $color-secondary;
     }
     &__pfp-container {
         background-color: yellow;
@@ -22,46 +23,108 @@
     }
     &__form-container {
         width: 100%;
-        height: 50%;
+        height: 85%;
     }
     &__form {
         width: 100%;
+        @include center-flex-column;
         height: 100%;
+        margin: 10px 0;
     }
     &__fieldset {
         background-color: cyan;
         height: 100%;
+        width: 100%;
+        @include center-flex-column;
     }
     &__title-input {
-        background-color: lime;
         height: 20%;
-        width: 100%;
+        font-family: "Lato";
+        width: 80%;
+        position: relative;
+        @include rounded-inputs;
+        padding: 16px;
+        background-color: $color-secondary;
     }
     &__description-input {
-        background-color: lime;
         height: 20%;
-        width: 100%;
+        font-family: "Lato";
+        width: 80%;
+        position: relative;
+        @include rounded-inputs;
+        padding: 16px;
+        background-color: $color-secondary;
+    }
+    &__image-input {
+        font-family: "Lato";
+        width: 80%;
+        @include rounded-inputs;
+        padding: 16px;
+        background-color: $color-primary;
+        @include center-flex;
+        &>input {
+            background-color: yellow;
+        }
     }
 }
 
 .post {
     &__button {
         background-color: $color-primary;
+        font-family: "Lato";
+        font-size: 16px;
+        @include rounded-inputs;
+        height: 35px;
+        width: 80%;
+        background-color: $color-primary;
+        color: #fff;
+        padding: 16px;
+        line-height: 0;
         &:hover {
             background-color: darken($color-primary, 10%);
+            cursor: pointer;
         }
         &:active {
             background-color: lighten($color-primary, 10%);
         }
         &--disabled {
             background-color: $color-invalid;
-            &:active {
-                background-color: $color-invalid;
-            }
             &:hover {
                 background-color: $color-invalid;
                 cursor: not-allowed;
             }
+            &:active {
+                background-color: $color-invalid;
+            }
+        }
+    }
+}
+
+#file-upload-button {
+    font-family: "Lato";
+    font-size: 16px;
+    @include rounded-inputs;
+    height: 35px;
+    width: 80%;
+    background-color: $color-primary;
+    color: #fff;
+    padding: 16px;
+    line-height: 0;
+    &:hover {
+        background-color: darken($color-primary, 10%);
+        cursor: pointer;
+    }
+    &:active {
+        background-color: lighten($color-primary, 10%);
+    }
+    &--disabled {
+        background-color: $color-invalid;
+        &:hover {
+            background-color: $color-invalid;
+            cursor: not-allowed;
+        }
+        &:active {
+            background-color: $color-invalid;
         }
     }
 }

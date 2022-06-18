@@ -11,7 +11,6 @@ import { Observable } from 'rxjs';
 export class PostsPageComponent implements OnInit {
 
   postForm! :FormGroup;
-  imagePreview$ !:Observable<any>;
 
   constructor(private router: Router, private formBuilder: FormBuilder) { }
 
@@ -22,11 +21,6 @@ export class PostsPageComponent implements OnInit {
       image_url: [null, [Validators.nullValidator]]
     })
 
-    this.imagePreview$ = this.postForm.valueChanges.pipe(
-      map(
-        (value: any)=>{console.log(value)}
-      )
-    );
   }
 
   onSubmitPostForm():void{
