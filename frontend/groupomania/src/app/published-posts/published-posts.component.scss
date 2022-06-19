@@ -1,0 +1,80 @@
+@import "../SASS-utils/utils";
+.post {
+    &__container {
+        @include center-flex-column;
+        flex-wrap: wrap;
+        border: 2px dashed orange;
+    }
+    &__header {
+        width: 500px;
+        border: 2px solid blue;
+        border-radius: $border-pill-shape-value * 0.05 $border-pill-shape-value * 0.05 0 0;
+        flex-wrap: wrap;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    &__heading2 {
+        padding: 12px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.container__interactions-row {
+    width: 500px;
+    border: 2px solid $color-tertiary;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    border-radius: 0 0 $border-pill-shape-value $border-pill-shape-value;
+    padding: 10px 0;
+    margin-top: -10px;
+    background-color: $color-secondary;
+    overflow: hidden;
+    i {
+        padding: 0 5px;
+    }
+}
+
+.interactions-row {
+    &__like {
+        &:hover {
+            cursor: pointer;
+            background-color: yellow;
+            height: 100%;
+        }
+        &:hover>i {
+            color: $color-valid;
+        }
+        &:active>i {
+            color: darken($color-valid, 10%);
+        }
+    }
+    &__comment {
+        &:hover {
+            cursor: pointer;
+            background-color: yellow;
+            height: 100%;
+        }
+        &:hover>i {
+            color: $color-blue;
+        }
+        &:active>i {
+            color: darken($color-blue, 10%);
+        }
+    }
+    &__share {
+        &:hover {
+            cursor: pointer;
+            background-color: yellow;
+            height: 100%;
+        }
+        &:hover>i {
+            color: $color-primary;
+        }
+        &:active>i {
+            color: darken($color-primary, 10%);
+        }
+    }
+}

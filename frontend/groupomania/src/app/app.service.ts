@@ -34,7 +34,7 @@ getCookieToken():string{
 }
 
 deleteCookieToken():void{
-  this.cookieService.delete("userToken")
+  this.cookieService.delete("userToken");
 }
   
 urlPostAPI: string = "https://localhost:3000/api/posts";
@@ -42,5 +42,14 @@ urlPostAPI: string = "https://localhost:3000/api/posts";
 getAllPostsFromBackend(): Observable<any>{
  return this.http.get(this.urlPostAPI);
 }
+
+sendPostToBackend(bodyRequest: object): Observable<object>{
+ return this.http.post(this.urlPostAPI ,bodyRequest);
+}
+
+getAllCommentsFromPost(postId: number): Observable<object>{
+  return this.http.get(`${this.urlPostAPI}/${postId}/comments`)
+}
+
 
 }

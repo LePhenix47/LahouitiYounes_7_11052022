@@ -1,20 +1,30 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-posts-page-component',
   templateUrl: './posts-page-component.component.html',
   styleUrls: ['./posts-page-component.component.scss']
 })
+
+
 export class PostsPageComponent implements OnInit {
 
-  postForm! :FormGroup;
 
-  constructor(private router: Router, private formBuilder: FormBuilder) { }
+  postForm! :FormGroup;
+  file: any;
+  postsArray: any;
+
+  imageUrl: string|undefined = "";
+
+
+  constructor(private router: Router, private formBuilder: FormBuilder, private appService:  AppService) { }
 
   ngOnInit(): void {
+    this.getPosts();
+
     this.postForm = this.formBuilder.group({
       title: [null, [Validators.required, Validators.maxLength(50)]],
       description: [null, [Validators.required, Validators.maxLength(180)]],
@@ -24,8 +34,49 @@ export class PostsPageComponent implements OnInit {
   }
 
   onSubmitPostForm():void{
-    console.log(this.postForm.value); 
+    
+    const postForm = this.postForm.value;
 
-    //Faudra envoyer: user_id, title, description & image?
+    let formData: FormData = new FormData();
+
+    formData.append("user_id", sessionStorage.getItem("userId") || "0")
+    formData.append("title", this.postForm.value.title)
+    formData.append("description", this.postForm.value.description)
+    formData.append("file", this.file)
+
+    console.log("Valer du formulaire: ", formData); 
+    this.appService.sendPostToBackend(formData).subscribe(
+      (result: any)=>{
+        console.log(result)
+      },
+      (error: any)=>{
+        console.log(error)
+      }
+    )
+    //Faudra envoyer: user_id, description, description & image?
   }
+
+  getFile(event: any): void{
+  console.log(event);
+  this.file = event.target.files[0];
+  console.log(this.file);
+  const reader = new FileReader();
+    reader.readAsDataURL(this.file);
+    reader.onload = () => {
+      this.imageUrl = reader.result?.toString();
+    };
+}
+
+
+getPosts():void{
+  this.appService.getAllPostsFromBackend().subscribe(
+      (result: any)=>{
+        this.postsArray = result;
+
+      },
+      (error: any)=>{
+        console.log(error)
+      }
+  )
+}
 }

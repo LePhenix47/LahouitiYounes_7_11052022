@@ -1,1 +1,19 @@
-<p>Ici iront tous les posts + commentaires</p>
+<section class="post__container">
+    <header class="post__header">
+        <h2 class="post__title">post title</h2>
+        <p class="post__description">post desc.</p>
+        <p class="post__date">post date</p>
+        <p class="post__number-of-likes">post likes =</p>
+    </header>
+    <div class="container__interactions-row">
+        <p class="interactions-row__like">Like <i class="far fa-thumbs-up"></i></p>
+        <p class="interactions-row__comment">
+            Commentaire<i class="far fa-comment-alt"></i>
+        </p>
+        <p class="interactions-row__share">
+            Partager<i class="fas fa-share-alt"></i>
+        </p>
+    </div>
+</section>
+
+<app-post-comments *ngFor="let commentElement of commentsArray" [comment]="commentElement"></app-post-comments>

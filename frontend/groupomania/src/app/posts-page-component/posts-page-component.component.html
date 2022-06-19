@@ -1,8 +1,7 @@
-<p>posts-page-component works!</p>
-
 <div class="groupomania__post">
     <div class="groupomania__pfp-container">
         <img src="https://i.imgur.com/h564JHS.jpg" [alt]="" class="groupomania__pfp" />
+        <p class="groupomania__pfp-name"></p>
     </div>
     <div class="groupomania__form-container">
         <form class="groupomania__form" [formGroup]="postForm">
@@ -13,8 +12,21 @@
 
                 <input type="text" placeholder="Insert description" class="groupomania__description-input" formControlName="description" title="Champ pour la description du post" required id="description" />
 
-                <input type="file" accept="image/*" class="groupomania__image-input" formControlName="image_url" title="Champ pour l'image du post" id="image_url" />
-                <label for="image_url"></label>
+                <label for="image_url" class="upload-label">
+          Ajouter une image?
+          <i class="fas fa-image"></i>
+          <input
+            type="file"
+            accept="image/*"
+            class="groupomania__image-input"
+            formControlName="image_url"
+            title="Champ pour l'image du post"
+            id="image_url"
+            class="upload-button"
+            [ngClass]="{}"
+            (change)="getFile($event)"
+          />
+        </label>
 
                 <button type="submit" class="post__button" (click)="onSubmitPostForm()" [disabled]="postForm.invalid" [ngClass]="{ 'post__button--disabled': postForm.invalid }">
           Poster
@@ -22,11 +34,14 @@
             </fieldset>
         </form>
     </div>
+    <div class="image__container" *ngIf="imageUrl">
+        <img [src]="imageUrl" [alt]="file" class="image-url" *ngIf="imageUrl" />
+    </div>
 </div>
 
-<p>Test</p>
+<p class="test">Test</p>
 
 <!----->
 
 <!----->
-<app-published-posts></app-published-posts>
+<app-published-posts *ngFor="let postElement of postsArray" [post]="postElement"></app-published-posts>

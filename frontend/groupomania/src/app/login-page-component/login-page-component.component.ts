@@ -39,14 +39,16 @@ export class LoginPageComponent implements OnInit {
         console.log("%c Résultat: " + JSON.stringify(result), "background-color: green; font-size: 16px");
         console.log("JWT → " + result.token);
         let token = result.token;
+        let userId = result.user_id;
         this.loginService.setCookieToken(token);
         this.loginService.getCookieToken();
- this.isUserSuccessfullyLoggedIn = true;
+        this.isUserSuccessfullyLoggedIn = true;
         this.successfulLoginMessage = result.message;
+        sessionStorage.setItem("userId", JSON.stringify(userId));
         setTimeout(
           ()=>{
             this.router.navigateByUrl("/posts")
-          }, 1000
+          }, 2500
         )
       }, (error: any)=>{
         console.log("Erreur: " + error.message + "\n STATUS: " +  error.status);

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-published-posts',
@@ -7,9 +8,27 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PublishedPostsComponent implements OnInit {
 
-  constructor() { }
+  @Input() post: any; 
+
+
+  commentsArray: any;
+
+  constructor(private appService: AppService) { }
 
   ngOnInit(): void {
+    this.getCommentsInPost();
+  }
+
+  getCommentsInPost(): void{
+    this.appService.getAllCommentsFromPost(11).subscribe(
+       (result: any)=>{
+        this.commentsArray = result;
+
+      },
+      (error: any)=>{
+        console.log(error)
+      }
+    )
   }
 
 }
