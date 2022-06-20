@@ -257,6 +257,7 @@ exports.likePost = (req, res, next) => {
 exports.getAmountOfLikesInPost = (req, res, next) => {
     const postIdFromURL = req.params.postId;
     console.log(req.body);
+
     Like.findAll({
             attributes: [
                 [sequelize.fn("COUNT", sequelize.col("liked")), "numberOfLikes"], //SELECT COUNT(liked) WHERE post_id = [req.params.postId] AND liked = true
@@ -267,15 +268,17 @@ exports.getAmountOfLikesInPost = (req, res, next) => {
             },
         })
         .then((amountOfLikes) => {
-            const likesInPost = amountOfLikes[0].dataValues.numberOfLikes;
+            const likesInPost = parseFloat(amountOfLikes[0].dataValues.numberOfLikes);
             console.log(`The post w/ ID → ${postIdFromURL} has ${likesInPost} likes`);
+            let doesPostHasOnelikeOrManyLikes =
+                likesInPost === 1 ? " like" : " likes";
             res.status(200).json({
                 message: "The post with ID of " +
                     postIdFromURL +
                     " has " +
                     likesInPost +
-                    " likes",
-                likes: parseFloat(likesInPost),
+                    doesPostHasOnelikeOrManyLikes,
+                likes: likesInPost,
             });
         })
         .catch((amountOfLikesError) => {
