@@ -55,5 +55,8 @@ likePost(postId: number): Observable<object>{
   return this.http.post(`${this.urlPostAPI}/${postId}/like`, postId)
 }
 
+sortArray(array: any):any{
+  
+}
 
 }

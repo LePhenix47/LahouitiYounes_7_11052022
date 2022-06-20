@@ -71,6 +71,8 @@ export class PostsPageComponent implements OnInit {
 getPosts():void{
   this.appService.getAllPostsFromBackend().subscribe(
       (result: any)=>{
+        let sortedByMostRecent = result.sort((a: any,b :any) => b.post_id - a.post_id);
+        console.log("%cSORTED ARRAY BY CREATION DATE" + JSON.stringify(sortedByMostRecent), "font-size: 14px; background: olive");
         this.postsArray = result;
         console.log("Posts: ", result)
 
