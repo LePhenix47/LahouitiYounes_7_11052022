@@ -44,7 +44,7 @@ export class PostsPageComponent implements OnInit {
     formData.append("description", this.postForm.value.description)
     formData.append("file", this.file)
 
-    console.log("Valer du formulaire: ", formData); 
+    console.log("Valeur du formulaire: ", formData); 
     this.appService.sendPostToBackend(formData).subscribe(
       (result: any)=>{
         console.log(result)
@@ -72,6 +72,7 @@ getPosts():void{
   this.appService.getAllPostsFromBackend().subscribe(
       (result: any)=>{
         this.postsArray = result;
+        console.log("Posts: ", result)
 
       },
       (error: any)=>{

@@ -1,9 +1,26 @@
-<section class="post__container">
+<section class="post__container" [attr.data-postId]="postPostId" [attr.data-userId]="postUserId">
     <header class="post__header">
-        <h2 class="post__title">post title</h2>
-        <p class="post__description">post desc.</p>
-        <p class="post__date">post date</p>
-        <p class="post__number-of-likes">post likes =</p>
+        <div class="post__info">
+            <p class="post__date">
+                Daté du: {{ postCreationDate | date: "dd/MM/yyyy" }}
+            </p>
+            <p class="post__number-of-likes">x Likes</p>
+        </div>
+        <div class="post__content">
+            <div class="post__text-container">
+                <!-- <h2 class="post__title">Dimension MAX des posts (w×h): 500×530</h2> -->
+                <h2 class="post__title" [title]="postTitle">
+                    {{ postTitle }}
+                </h2>
+                <p class="post__description">
+                    {{ postDescription }}
+                </p>
+            </div>
+            <div class="post__image-container" *ngIf="postImageUrl !== null">
+                <img [src]="postImageUrl" alt="Image de post" *ngIf="test === true" />
+                <!-- <img src="https://i.imgur.com/h564JHS.jpg" alt="bruh" *ngIf="test === true" /> -->
+            </div>
+        </div>
     </header>
     <div class="container__interactions-row">
         <p class="interactions-row__like">Like <i class="far fa-thumbs-up"></i></p>

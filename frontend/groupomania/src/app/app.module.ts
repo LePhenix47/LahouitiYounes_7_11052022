@@ -14,6 +14,7 @@ import { PostsPageComponent } from './posts-page-component/posts-page-component.
 import {CookieService} from 'ngx-cookie-service';
 import { PublishedPostsComponent } from './published-posts/published-posts.component';
 import { PostCommentsComponent } from './post-comments/post-comments.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { PostCommentsComponent } from './post-comments/post-comments.component';
     LoginPageComponent,
     PostsPageComponent,
     PublishedPostsComponent,
-    PostCommentsComponent
+    PostCommentsComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

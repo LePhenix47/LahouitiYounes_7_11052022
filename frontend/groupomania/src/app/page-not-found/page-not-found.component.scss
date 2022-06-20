@@ -1,0 +1,32 @@
+@import "../SASS-utils/utils";
+.emote-container {
+    width: 100%;
+    height: 87vh;
+    background-color: $color-secondary;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: space-between;
+}
+
+.emote {
+    &__emote {
+        width: 100%;
+        font-size: 10rem;
+        text-align: center;
+        &:hover {
+            cursor: vertical-text;
+        }
+    }
+    &__text {
+        font-size: 3rem;
+        text-align: center;
+    }
+    &__main-page-link {
+        font-size: 2rem;
+        &:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    }
+}

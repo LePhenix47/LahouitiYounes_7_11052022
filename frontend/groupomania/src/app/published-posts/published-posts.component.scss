@@ -4,34 +4,86 @@
         @include center-flex-column;
         flex-wrap: wrap;
         border: 2px dashed orange;
+        margin: 15px 0;
+        background-color: rgb(248, 236, 215);
     }
     &__header {
-        width: 500px;
-        border: 2px solid blue;
-        border-radius: $border-pill-shape-value * 0.05 $border-pill-shape-value * 0.05 0 0;
+        width: 50%;
+        border: 2px solid #4e5166;
+        border-bottom: none;
+        border-radius: 4vmax 4vmax 0 0;
+        background-color: $color-secondary;
+        max-height: 600px;
         flex-wrap: wrap;
         overflow: hidden;
+        overflow-wrap: break-word;
         display: flex;
-        flex-direction: column;
+        align-items: center;
+        flex-wrap: wrap;
     }
     &__heading2 {
         padding: 12px;
+    }
+    &__info {
+        background-color: $color-white;
+        border-radius: $border-pill-shape-value;
+        margin: 15px 15px;
+        display: flex;
+        justify-content: space-between;
+        max-height: 150px;
+        width: 100%;
+        white-space: nowrap;
+        // margin: 0 10px;
+    }
+    &__date {
+        margin-left: 5px;
+    }
+    &__number-of-likes {
+        margin-right: 5px;
+        text-align: right;
+    }
+    &__content {
+        max-height: 450px;
+        width: 100%;
+    }
+    &__text-container {
         overflow: hidden;
+        white-space: nowrap;
         text-overflow: ellipsis;
+        background-color: $color-white;
+    }
+    &__title {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        margin: 1px 15px;
+        padding: 5px;
+    }
+    &__description {
+        overflow-wrap: break-word;
+        white-space: initial;
+        margin-left: 15px;
+        padding: 5px;
+    }
+    &__image-container {
+        max-height: 330px;
+        overflow: hidden;
+        &>img {
+            max-width: 100%;
+            object-fit: cover;
+        }
     }
 }
 
 .container__interactions-row {
-    width: 500px;
+    width: 50%;
     border: 2px solid $color-tertiary;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
     border-radius: 0 0 $border-pill-shape-value $border-pill-shape-value;
     padding: 10px 0;
-    margin-top: -10px;
     background-color: $color-secondary;
-    overflow: hidden;
     i {
         padding: 0 5px;
     }

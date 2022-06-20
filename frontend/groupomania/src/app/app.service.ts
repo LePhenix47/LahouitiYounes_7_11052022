@@ -51,5 +51,9 @@ getAllCommentsFromPost(postId: number): Observable<object>{
   return this.http.get(`${this.urlPostAPI}/${postId}/comments`)
 }
 
+likePost(postId: number): Observable<object>{
+  return this.http.post(`${this.urlPostAPI}/${postId}/like`, postId)
+}
+
 
 }
