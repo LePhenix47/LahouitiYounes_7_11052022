@@ -10,6 +10,7 @@ const {
     getPostById,
     updatePost,
     deletePost,
+    getAmountOfLikesInPost,
     likePost,
     commentPost,
     modifyComment,
@@ -31,6 +32,7 @@ router.put("/:postId", /*auth,*/ multer, updatePost);
 router.delete("/:postId", /*auth,*/ deletePost);
 
 //Like d'un post
+router.get("/:postId/like", /*auth,*/ getAmountOfLikesInPost);
 router.post("/:postId/like", /*auth,*/ likePost);
 
 //Opérations CRUD d'un commentaire

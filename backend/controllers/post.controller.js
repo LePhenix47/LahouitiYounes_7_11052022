@@ -4,6 +4,7 @@ const Like = database.like;
 const Comment = database.comment;
 const Operator = database.Sequelize.Op;
 const fileSystem = require("fs");
+const { sequelize } = require("../models");
 
 /*
 // Retrieve all Posts from the database.
@@ -64,6 +65,7 @@ exports.createPost = (req, res, next) => {
         descriptionFromBodyRequest !== "" && titleFromBodyRequest !== "" ?
         true :
         false;
+    let imageFile = req.files ? req.files[0] : undefined;
 
     console.log(
         "title: " +
@@ -71,6 +73,8 @@ exports.createPost = (req, res, next) => {
         "\n description: " +
         descriptionFromBodyRequest
     );
+
+    console.log("Image file: ", imageFile);
     if (!areTitleAndDescriptionFilled) {
         console.log(
             "ERROR while attempting to create the post: Title or description is empty, BOOLEAN value = " +
@@ -85,8 +89,8 @@ exports.createPost = (req, res, next) => {
         user_id: req.body.user_id,
         title: req.body.title,
         description: req.body.description,
-        image_url: req.file ?
-            `${req.protocol}://${req.get("host")}/images/${req.file.filename}` :
+        image_url: imageFile ?
+            `${req.protocol}://${req.get("host")}/images/${imageFile.filename}` :
             null,
     };
 
@@ -247,6 +251,41 @@ exports.likePost = (req, res, next) => {
         });
 };
 
+/*
+//Get the amount of likes in a post
+*/
+exports.getAmountOfLikesInPost = (req, res, next) => {
+    const postIdFromURL = req.params.postId;
+    console.log(req.body);
+    Like.findAll({
+            attributes: [
+                [sequelize.fn("COUNT", sequelize.col("liked")), "numberOfLikes"], //SELECT COUNT(liked) WHERE post_id = [req.params.postId] AND liked = true
+            ],
+            where: {
+                postPostId: postIdFromURL,
+                liked: true,
+            },
+        })
+        .then((amountOfLikes) => {
+            const likesInPost = amountOfLikes[0].dataValues.numberOfLikes;
+            console.log(`The post w/ ID → ${postIdFromURL} has ${likesInPost} likes`);
+            res.status(200).json({
+                message: "The post with ID of " +
+                    postIdFromURL +
+                    " has " +
+                    likesInPost +
+                    " likes",
+                likes: parseFloat(likesInPost),
+            });
+        })
+        .catch((amountOfLikesError) => {
+            console.log("%cERREUR TROUVÉE" + amountOfLikesError, "color: red");
+            res.status(500).json({
+                message: "An unexpected error has occured while attempting to get the amount of likes in post with ID = " +
+                    postIdFromURL,
+            });
+        });
+};
 /*
 //Create a comment in a post
 */

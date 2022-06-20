@@ -15,6 +15,7 @@ const database = {};
 database.Sequelize = Sequelize; //Classe qui permet de donnaitre les types &  connecte B2D w/ librairie pour gérer les différentes requetes SQL
 database.sequelize = sequelize; //Instance de la B2D
 
+module.exports = database;
 /*
 Variables d'exportation des modèles
 */
