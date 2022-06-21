@@ -34,9 +34,7 @@ export class PostsPageComponent implements OnInit {
   }
 
   onSubmitPostForm():void{
-    
     const postForm = this.postForm.value;
-
     let formData: FormData = new FormData();
 
     formData.append("user_id", sessionStorage.getItem("userId") || "0")
@@ -78,7 +76,7 @@ getPosts():void{
 
       },
       (error: any)=>{
-        console.log(error)
+        console.log(error);
       }
   )
 }

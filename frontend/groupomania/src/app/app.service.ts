@@ -44,19 +44,27 @@ getAllPostsFromBackend(): Observable<any>{
 }
 
 sendPostToBackend(bodyRequest: object): Observable<object>{
+    console.log(`Requête en cours pour la création du post avec comme corps de requête  ${JSON.stringify(bodyRequest)}`)
+
  return this.http.post(this.urlPostAPI ,bodyRequest);
 }
 
 getAllCommentsFromPost(postId: number): Observable<object>{
+    console.log(`Requête en cours pour le post avec ID = ${postId} de l'utilisateur`)
+
   return this.http.get(`${this.urlPostAPI}/${postId}/comments`)
 }
 
-likePost(postId: number): Observable<object>{
-  return this.http.post(`${this.urlPostAPI}/${postId}/like`, postId)
+likePost(postId: number, userId: number): Observable<object>{
+  console.log(`Requête en cours pour le post avec ID = ${postId}  de type ${typeof postId} de l'utilisateur avec un ID = ${userId} de type ${typeof userId}`)
+  let bodyRequest={
+    user_id: userId,
+  }
+  return this.http.post(`${this.urlPostAPI}/${postId}/like`, bodyRequest)
 }
 
-sortArray(array: any):any{
-  
+getAmountOfLikesInPost(postId: number): Observable<object>{
+  return this.http.get(`${this.urlPostAPI}/${postId}/like`)
 }
 
 }

@@ -1,10 +1,12 @@
-<section class="post__container" [attr.data-postId]="postPostId" [attr.data-userId]="postUserId">
+<section class="post__container" [attr.data-postId]="postPostId" [attr.data-userId]="postUserId" tabindex="0">
     <header class="post__header">
         <div class="post__info">
             <p class="post__date">
                 Daté du: {{ postCreationDate | date: "dd/MM/yyyy" }}
             </p>
-            <p class="post__number-of-likes">x Likes</p>
+            <p class="post__number-of-likes">
+                {{ postAmountOfLikes }} {{ hasPostOneLikeOrManyLikes }}
+            </p>
         </div>
         <div class="post__content">
             <div class="post__text-container">
@@ -17,13 +19,15 @@
                 </p>
             </div>
             <div class="post__image-container" *ngIf="postImageUrl !== null">
-                <img [src]="postImageUrl" alt="Image de post" *ngIf="test === true" />
+                <img [src]="postImageUrl" alt="Image de post" *ngIf="postImageUrl !== null" />
                 <!-- <img src="https://i.imgur.com/h564JHS.jpg" alt="bruh" *ngIf="test === true" /> -->
             </div>
         </div>
     </header>
     <div class="container__interactions-row">
-        <p class="interactions-row__like">Like <i class="far fa-thumbs-up"></i></p>
+        <p class="interactions-row__like" (click)="sendLikeToPost(postPostId, userId)">
+            Like <i class="far fa-thumbs-up"></i>
+        </p>
         <p class="interactions-row__comment">
             Commentaire<i class="far fa-comment-alt"></i>
         </p>

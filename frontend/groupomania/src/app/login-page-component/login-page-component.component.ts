@@ -44,7 +44,7 @@ export class LoginPageComponent implements OnInit {
         this.loginService.getCookieToken();
         this.isUserSuccessfullyLoggedIn = true;
         this.successfulLoginMessage = result.message;
-        sessionStorage.setItem("userId", JSON.stringify(userId));
+        sessionStorage.setItem("userId", userId);
         setTimeout(
           ()=>{
             this.router.navigateByUrl("/posts")
