@@ -10,10 +10,13 @@ export class PostCommentsComponent implements OnInit {
   @Input() comment: any; 
 
 commentComment!:string;
-  constructor(private appService:AppService) { }
+commentUserId!:number;
+  constructor(private appService: AppService) { }
 
   ngOnInit(): void {
     this.commentComment = JSON.stringify(this.comment.comment);
+    this.commentUserId = this.comment.userUserId;
+    console.log(JSON.stringify  (this.comment))
   }
 
 }
