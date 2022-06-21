@@ -140,7 +140,6 @@ L'API est séparée en 2 routes :
 | GET        | /api/posts/:postId/comments            | -                                                                                    | {message: [string]}                  | Récupère tous les commentaires d'un post              |
 | PUT        | /api/posts/:postId/comments/:commentId | { user_id: [integer], comment: [string]}                                             | {message: [string]}                  | Met à jour le commentaire d'un post                   |
 | DELETE     | /api/posts/:postId/comments/:commentId | -                                                                                    | {message: [string]}                  | Supprime le commentaire d'un post                     |
-|  |
 
 ## 2. Comment compiler le Front-end et démarrer le serveur Back-end
 
