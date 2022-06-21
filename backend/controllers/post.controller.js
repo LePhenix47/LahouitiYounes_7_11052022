@@ -482,7 +482,7 @@ exports.deleteComment = (req, res, next) => {
 exports.getAllCommentsInOnePost = (req, res, next) => {
     let postIdFromURL = req.params.postId;
     Comment.findAll({
-            attributes: ["comment"],
+            attributes: ["comment", "userUserId"],
             where: {
                 postPostId: postIdFromURL,
             },
