@@ -126,20 +126,22 @@ L'API est séparée en 2 routes :
 | POST       | /api/auth/login    | { user_email: [string], user_password: [string] }          | { user_id: [integer], token: [string] } | Connecte l'utilisateur                                                       |
 | POST       | /api/auth/loginMod | { user_email: [string], user_password: [string] }          | { user_id: [integer], token: [string] } | Connecte l'administrateur avec les droits CRUD                               |
 
-- Une autre `post/` route pour les posts
+- Une autre `posts/` route pour les posts
 
-| Verbe HTTP | Point d'accès                          | Corps de la requête                                              | Type de réponse attendue | Fonction                                              |
-| ---------- | -------------------------------------- | ---------------------------------------------------------------- | ------------------------ | ----------------------------------------------------- |
-| GET        | /api/posts/                            | -                                                                | Tableau de posts         | Renvoit le tableau d'objets avec tous les posts       |
-| GET        | /api/posts/:postId                     | -                                                                | Post unique              | Renvoit le post sous forme d'objet                    |
-| POST       | /api/posts/                            | { title: [string], description: [string], image_url?: [fichier]} | {message: [string]}      | Crée le post et la sauvegarde dans la base de données |
-| PUT        | /api/posts/:postId                     | { title: [string], description: [string], image_url?: [fichier]} | {message: [string]}      | Met à jour le post et sauvegarde les modifications    |
-| DELETE     | /api/posts/:postId                     | -                                                                | {message: [string]}      | Supprime le post de (manière "douce")                 |
-| POST       | /api/posts/:postId/like                | { user_id: [integer]}                                            | {message: [string]}      | Ajoute un like à un post                              |
-| POST       | /api/posts/:postId/comments            | { user_id: [integer], comment: [string]}                         | {message: [string]}      | Crée un commentaire dans un post                      |
-| GET        | /api/posts/:postId/comments            | -                                                                | {message: [string]}      | Récupère tous les commentaires d'un post              |
-| PUT        | /api/posts/:postId/comments/:commentId | { user_id: [integer], comment: [string]}                         | {message: [string]}      | Met à jour le commentaire d'un post                   |
-| DELETE     | /api/posts/:postId/comments/:commentId | -                                                                | {message: [string]}      | Supprime le commentaire d'un post                     |
+| Verbe HTTP | Point d'accès                          | Corps de la requête                                              | Type de réponse attendue             | Fonction                                              |
+| ---------- | -------------------------------------- | ---------------------------------------------------------------- | ------------------------------------ | ----------------------------------------------------- |
+| GET        | /api/posts/                            | -                                                                | Tableau de posts                     | Renvoit le tableau d'objets avec tous les posts       |
+| GET        | /api/posts/:postId                     | -                                                                | Post unique                          | Renvoit le post sous forme d'objet                    |
+| POST       | /api/posts/                            | { title: [string], description: [string], image_url?: [fichier]} | {message: [string]}                  | Crée le post et la sauvegarde dans la base de données |
+| PUT        | /api/posts/:postId                     | { title: [string], description: [string], image_url?: [fichier]} | {message: [string]}                  | Met à jour le post et sauvegarde les modifications    |
+| DELETE     | /api/posts/:postId                     | -                                                                | {message: [string]}                  | Supprime le post de manière "douce"                   |
+| GET        | /api/posts/:postId/like                | -                                                                | {message: [string], likes: [integer} | Retourne le montant de likes à un post                |
+| POST       | /api/posts/:postId/like                | { user_id: [integer]}                                            | {message: [string]}                  | Ajoute un like à un post                              |
+| POST       | /api/posts/:postId/comments            | { user_id: [integer], comment: [string]}                         | {message: [string]}                  | Crée un commentaire dans un post                      |
+| GET        | /api/posts/:postId/comments            | -                                                                | {message: [string]}                  | Récupère tous les commentaires d'un post              |
+| PUT        | /api/posts/:postId/comments/:commentId | { user_id: [integer], comment: [string]}                         | {message: [string]}                  | Met à jour le commentaire d'un post                   |
+| DELETE     | /api/posts/:postId/comments/:commentId | -                                                                | {message: [string]}                  | Supprime le commentaire d'un post                     |
+|  |
 
 ## 2. Comment compiler le Front-end et démarrer le serveur Back-end
 
