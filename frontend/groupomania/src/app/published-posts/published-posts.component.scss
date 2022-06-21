@@ -3,16 +3,15 @@
     &__container {
         @include center-flex-column;
         flex-wrap: wrap;
-        border: 2px dashed orange;
-        margin: 15px 0;
-        background-color: rgb(248, 236, 215);
+        border-top: 2px dashed $color-primary;
+        padding: 15px 0;
+        background-color: $color-secondary;
     }
     &__header {
-        width: 50%;
-        border: 2px solid #4e5166;
+        width: 55%;
         border-bottom: none;
         border-radius: 4vmax 4vmax 0 0;
-        background-color: $color-secondary;
+        background-color: $color-primary;
         max-height: 600px;
         flex-wrap: wrap;
         overflow: hidden;
@@ -25,9 +24,9 @@
         padding: 12px;
     }
     &__info {
-        background-color: $color-white;
+        color: $color-white;
         border-radius: $border-pill-shape-value;
-        margin: 15px 15px;
+        margin: 3% 5%;
         display: flex;
         justify-content: space-between;
         max-height: 150px;
@@ -76,14 +75,14 @@
 }
 
 .container__interactions-row {
-    width: 50%;
-    border: 2px solid $color-tertiary;
+    width: 65%;
+    // border: 2px solid $color-tertiary;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    border-radius: 0 0 $border-pill-shape-value $border-pill-shape-value;
+    border-radius: $border-pill-shape-value;
     padding: 10px 0;
-    background-color: $color-secondary;
+    background-color: $color-primary;
     i {
         padding: 0 5px;
     }
@@ -91,6 +90,7 @@
 
 .interactions-row {
     &__like {
+        color: $color-white;
         &:hover {
             cursor: pointer;
             background-color: yellow;
@@ -104,6 +104,7 @@
         }
     }
     &__comment {
+        color: $color-white;
         &:hover {
             cursor: pointer;
             background-color: yellow;
@@ -117,6 +118,7 @@
         }
     }
     &__share {
+        color: $color-white;
         &:hover {
             cursor: pointer;
             background-color: yellow;

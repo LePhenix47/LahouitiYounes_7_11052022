@@ -1,0 +1,14 @@
+@import "../SASS-utils/utils";
+.comment {
+    display: flex;
+    justify-content: space-between;
+    &__username {
+        border: 2px dotted palevioletred;
+    }
+    &__comment {
+        white-space: initial;
+        text-align: right;
+        padding: 5px 0;
+        outline: 2px dashed cadetblue;
+    }
+}
