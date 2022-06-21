@@ -39,7 +39,7 @@ app.use(
 );
 
 //Library that protects the headers of the requests (Protects from XSS attacks)
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(helmet());
 
 //Rate limiter is a library that limits the amount of requests an user can do to avoid: spam + potential DDoS
 const rateLimit = require("express-rate-limit");

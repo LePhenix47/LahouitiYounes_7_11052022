@@ -97,10 +97,14 @@ exports.login = (req, res, next) => {
                         message: "The password is incorrect → Access unauthorized",
                     });
                 }
+                console.log(
+                    "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" + userIdFromDatabase
+                );
 
+                console.log(JSON.stringify({ user_id: userIdFromDatabase }));
                 res.status(200).json({
                     user_id: userIdFromDatabase,
-                    token: jwt.sign({ user_id: user.user_id },
+                    token: jwt.sign({ user_id: userIdFromDatabase },
                         process.env.ACCESS_TOKEN_SECRET, {
                             expiresIn: "24h",
                         }
