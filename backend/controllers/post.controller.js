@@ -1,10 +1,11 @@
 const database = require("../models");
+const User = database.user;
 const Post = database.post;
 const Like = database.like;
 const Comment = database.comment;
 const Operator = database.Sequelize.Op;
 const fileSystem = require("fs");
-const { sequelize } = require("../models");
+const { sequelize, user } = require("../models");
 
 /*
 // Retrieve all Posts from the database.
@@ -59,6 +60,7 @@ exports.getPostById = (req, res, next) => {
 */
 exports.createPost = (req, res, next) => {
     // Validate reques
+    let userIdFromBodyRequest = req.body.user_id;
     let descriptionFromBodyRequest = req.body.description;
     let titleFromBodyRequest = req.body.title;
     let areTitleAndDescriptionFilled =
@@ -74,40 +76,61 @@ exports.createPost = (req, res, next) => {
         descriptionFromBodyRequest
     );
 
-    console.log("Image file: ", imageFile);
-    if (!areTitleAndDescriptionFilled) {
-        console.log(
-            "ERROR while attempting to create the post: Title or description is empty, BOOLEAN value = " +
-            areTitleAndDescriptionFilled
-        );
-        return res.status(400).send({
-            message: "The title or description of the post cannot be empty!",
-        });
-    }
-    // Create a Post
-    const post = {
-        user_id: req.body.user_id,
-        title: req.body.title,
-        description: req.body.description,
-        image_url: imageFile ?
-            `${req.protocol}://${req.get("host")}/images/${imageFile.filename}` :
-            null,
-    };
-
-    console.log(post + " a été crée!");
-    // Save Post in the PostgreSQL database
-    Post.create(post)
-        .then((savedPost) => {
-            console.log("Post created");
-            res.status(201).send(savedPost);
+    User.findAll({
+            where: {
+                user_id: userIdFromBodyRequest,
+            },
         })
-        .catch((postCreationError) => {
+        .then((userInfos) => {
             console.log(
-                "Erreur trouvée lors de la création du post: " + postCreationError
+                "===================== userInfos = " + JSON.stringify(userInfos)
             );
-            res
-                .status(500)
-                .send({ message: "Some error occurred while creating the Post." });
+            if (userInfos.length < 1) {
+                return res.status(401).json({
+                    message: "User with ID of " + userIdFromBodyRequest + " doesn't exist",
+                });
+            }
+            console.log("Image file: ", imageFile);
+            if (!areTitleAndDescriptionFilled) {
+                console.log(
+                    "ERROR while attempting to create the post: Title or description is empty, BOOLEAN value = " +
+                    areTitleAndDescriptionFilled
+                );
+                return res.status(400).send({
+                    message: "The title or description of the post cannot be empty!",
+                });
+            }
+            // Create a Post
+            const post = {
+                user_id: req.body.user_id,
+                title: req.body.title,
+                description: req.body.description,
+                image_url: imageFile ?
+                    `${req.protocol}://${req.get("host")}/images/${imageFile.filename}` :
+                    null,
+            };
+
+            console.log(post + " a été crée!");
+            // Save Post in the PostgreSQL database
+            Post.create(post)
+                .then((savedPost) => {
+                    console.log("Post created");
+                    res.status(201).send(savedPost);
+                })
+                .catch((postCreationError) => {
+                    console.log(
+                        "Erreur trouvée lors de la création du post: " + postCreationError
+                    );
+                    res
+                        .status(500)
+                        .send({ message: "Some error occurred while creating the Post." });
+                });
+        })
+        .catch((findUserError) => {
+            console.log("ERREUR !!!!!!!!!!!!!!!!!!!!!!!!!!!!" + findUserError);
+            res.status(500).josn({
+                message: "An unexpected error has occrued while attempting to find the user",
+            });
         });
 };
 
@@ -258,33 +281,57 @@ exports.getAmountOfLikesInPost = (req, res, next) => {
     const postIdFromURL = req.params.postId;
     console.log(req.body);
 
-    Like.findAll({
-            attributes: [
-                [sequelize.fn("COUNT", sequelize.col("liked")), "numberOfLikes"], //SELECT COUNT(liked) WHERE post_id = [req.params.postId] AND liked = true
-            ],
-            where: {
-                postPostId: postIdFromURL,
-                liked: true,
-            },
+    Post.findByPk(postIdFromURL)
+        .then((postExists) => {
+            console.assert(
+                postExists === null,
+                "\n+++++++++++++++++++PostExists === null"
+            );
+            if (postExists === null) {
+                console.log(postExists + "n'existe pas");
+                return res.status(404).json({
+                    message: "Post with ID of " + postIdFromURL + " doesn't exist",
+                });
+            }
+            Like.findAll({
+                    attributes: [
+                        [sequelize.fn("COUNT", sequelize.col("liked")), "numberOfLikes"], //SELECT COUNT(liked) WHERE post_id = [req.params.postId] AND liked = true
+                    ],
+                    where: {
+                        postPostId: postIdFromURL,
+                        liked: true,
+                    },
+                })
+                .then((amountOfLikes) => {
+                    const likesInPost = parseFloat(
+                        amountOfLikes[0].dataValues.numberOfLikes
+                    );
+                    console.log(
+                        `The post w/ ID → ${postIdFromURL} has ${likesInPost} likes`
+                    );
+                    let doesPostHasOneLikeOrManyLikes =
+                        likesInPost === 1 ? " like" : " likes";
+                    res.status(200).json({
+                        message: "The post with ID of " +
+                            postIdFromURL +
+                            " has " +
+                            likesInPost +
+                            doesPostHasOneLikeOrManyLikes,
+                        likes: likesInPost,
+                    });
+                })
+                .catch((amountOfLikesError) => {
+                    console.log("%cERREUR TROUVÉE" + amountOfLikesError, "color: red");
+                    res.status(500).json({
+                        message: "An unexpected error has occured while attempting to get the amount of likes in post with ID = " +
+                            postIdFromURL,
+                    });
+                });
         })
-        .then((amountOfLikes) => {
-            const likesInPost = parseFloat(amountOfLikes[0].dataValues.numberOfLikes);
-            console.log(`The post w/ ID → ${postIdFromURL} has ${likesInPost} likes`);
-            let doesPostHasOnelikeOrManyLikes =
-                likesInPost === 1 ? " like" : " likes";
-            res.status(200).json({
-                message: "The post with ID of " +
-                    postIdFromURL +
-                    " has " +
-                    likesInPost +
-                    doesPostHasOnelikeOrManyLikes,
-                likes: likesInPost,
-            });
-        })
-        .catch((amountOfLikesError) => {
-            console.log("%cERREUR TROUVÉE" + amountOfLikesError, "color: red");
-            res.status(500).json({
-                message: "An unexpected error has occured while attempting to get the amount of likes in post with ID = " +
+        .catch((findingPostError) => {
+            console.log("%c ERREUR: " + findingPostError, "color: red");
+            return res.status(500).json({
+                message: "An unexpected error has occured while attempting to find the post with ID of " +
                     postIdFromURL,
             });
         });
