@@ -19,6 +19,7 @@ export class PublishedPostsComponent implements OnInit {
   hasPostOneLikeOrManyLikes!:string;
   unparsedUserId!: string;
   userId!:number;
+  token!:string;
 
   test: boolean = true;
 
@@ -42,6 +43,8 @@ export class PublishedPostsComponent implements OnInit {
     console.log(typeof this.postPostId);
     this.getCommentsInPost();
     this.getLikesInPost(this.postPostId);
+
+    this.token = this.appService.getCookieToken();
   }
 
   getCommentsInPost(): void{
@@ -74,10 +77,16 @@ export class PublishedPostsComponent implements OnInit {
   }
 
   sendLikeToPost(postId:number ,userId: number):void{
-    this.appService.likePost(postId, userId).subscribe(
+    this.appService.likePost(postId, userId, this.token).subscribe(
       (result: any)=>{
         console.log("GIVE LIKE TO POST",result);
-        this.postAmountOfLikes++;
+        if(result.message === "The post has been unliked (-1)"){
+          this.postAmountOfLikes--;
+          this.hasPostOneLikeOrManyLikes = this.postAmountOfLikes === 1 ? " Like": " Likes";
+        }else{
+          this.postAmountOfLikes++;
+          this.hasPostOneLikeOrManyLikes = this.postAmountOfLikes === 1 ? " Like": " Likes";
+        }
       },
 
       (error: any)=>{

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { AppService } from '../app.service';
 
 @Component({
   selector: 'app-post-comments',
@@ -8,9 +9,11 @@ import { Component, Input, OnInit } from '@angular/core';
 export class PostCommentsComponent implements OnInit {
   @Input() comment: any; 
 
-  constructor() { }
+commentComment!:string;
+  constructor(private appService:AppService) { }
 
   ngOnInit(): void {
+    this.commentComment = JSON.stringify(this.comment.comment);
   }
 
 }

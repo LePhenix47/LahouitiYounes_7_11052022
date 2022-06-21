@@ -26,7 +26,7 @@ export class HeaderComponent implements OnInit {
 
   logout(){
     this.loginService.deleteCookieToken();
-    if(sessionStorage.getItem("userId")){
+    if(sessionStorage.getItem("userId") !== null){
       sessionStorage.removeItem("userId");
     };
     this.router.navigateByUrl('/')
