@@ -1,6 +1,9 @@
 <div class="comment" [attr.data-userId]="commentUserId" tabindex="0">
-    <h3 class="comment__username">TEST:</h3>
+    <h3 class="comment__username">Nom utilisateur</h3>
     <p class="comment__comment">
         {{ commentComment }}
     </p>
+    <div class="comment_modify" *ngIf="1 === 1">
+        <i class="fa-solid fa-ellipsis-vertical"></i>
+    </div>
 </div>

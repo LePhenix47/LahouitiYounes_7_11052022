@@ -1,14 +1,21 @@
 @import "../SASS-utils/utils";
 .comment {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    border-radius: 25px;
+    margin-bottom: 10px;
+    background-color: $color-secondary;
+    color: $color-tertiary;
+    margin: 2% 5px;
     &__username {
-        border: 2px dotted palevioletred;
+        margin: 5px 0 2% 5%;
     }
     &__comment {
-        white-space: initial;
-        text-align: right;
+        white-space: break-spaces;
+        overflow: hidden;
+        text-overflow: ellipsis;
         padding: 5px 0;
-        outline: 2px dashed cadetblue;
+        margin: 0 0 2% 5px;
+        font-size: 1rem;
     }
 }

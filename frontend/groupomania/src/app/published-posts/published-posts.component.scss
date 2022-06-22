@@ -9,6 +9,9 @@
     }
     &__header {
         width: 55%;
+        @include mobile-only {
+            width: 85%;
+        }
         border-bottom: none;
         border-radius: 4vmax 4vmax 0 0;
         background-color: $color-primary;
@@ -76,6 +79,9 @@
 
 .container__interactions-row {
     width: 65%;
+    @include mobile-only {
+        width: 95%;
+    }
     // border: 2px solid $color-tertiary;
     display: flex;
     justify-content: space-around;
@@ -91,10 +97,23 @@
 .interactions-row {
     &__like {
         color: $color-white;
+        padding: 0.5% 10px;
+        &--active {
+            cursor: pointer;
+            height: 100%;
+            background-color: $color-white;
+            color: $color-tertiary;
+            border-radius: $border-pill-shape-value;
+            &>i {
+                color: $color-valid;
+            }
+        }
         &:hover {
             cursor: pointer;
-            background-color: yellow;
             height: 100%;
+            background-color: $color-white;
+            color: $color-tertiary;
+            border-radius: $border-pill-shape-value;
         }
         &:hover>i {
             color: $color-valid;
@@ -103,12 +122,15 @@
             color: darken($color-valid, 10%);
         }
     }
-    &__comment {
+    &__share {
         color: $color-white;
+        padding: 0.5% 10px;
         &:hover {
             cursor: pointer;
-            background-color: yellow;
             height: 100%;
+            background-color: $color-white;
+            color: $color-tertiary;
+            border-radius: $border-pill-shape-value;
         }
         &:hover>i {
             color: $color-blue;
@@ -117,18 +139,82 @@
             color: darken($color-blue, 10%);
         }
     }
-    &__share {
+}
+
+.comment {
+    background-color: $color-white;
+    width: 55%;
+    @include mobile-only {
+        width: 85%;
+    }
+    border-radius: 0 0 50px 50px;
+    overflow: hidden;
+    &__form {
+        background-color: $color-white;
+        height: 30%;
+        margin: 10px 0;
+        @include center-flex-column;
+        width: 100%;
+    }
+    &__fieldset {
+        @include center-flex-column;
+        flex-wrap: wrap;
+        width: 100%;
+        height: 100%;
+        border: 0;
+    }
+    &__legend {
+        border-radius: 100vmax;
+        padding: 2px 5px;
+        margin-left: 10%;
+        background-color: $color-primary;
         color: $color-white;
-        &:hover {
-            cursor: pointer;
-            background-color: yellow;
-            height: 100%;
-        }
-        &:hover>i {
-            color: $color-primary;
-        }
-        &:active>i {
-            color: darken($color-primary, 10%);
+    }
+    &__input {
+        font-family: "Lato";
+        width: 80%;
+        position: relative;
+        @include rounded-inputs;
+        padding: 16px;
+        background-color: $color-secondary;
+        &::placeholder {
+            font-size: 16px;
+            color: $color-tertiary;
+            opacity: 69%;
+            transition: transform 750ms;
         }
     }
+    &__button {
+        font-family: "Lato";
+        font-size: 16px;
+        @include rounded-inputs;
+        height: 35px;
+        width: 80%;
+        background-color: $color-primary;
+        color: #fff;
+        padding: 16px;
+        line-height: 0;
+        &:hover {
+            background-color: darken($color-primary, 10%);
+            cursor: pointer;
+        }
+        &:active {
+            background-color: lighten($color-primary, 10%);
+        }
+        &--disabled {
+            background-color: $color-invalid;
+            &:hover {
+                background-color: $color-invalid;
+                cursor: not-allowed;
+            }
+            &:active {
+                background-color: $color-invalid;
+            }
+        }
+    }
+}
+
+.comments {
+    margin-bottom: 40px;
+    border-radius: 5px 5px;
 }

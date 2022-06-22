@@ -19,22 +19,35 @@
                 </p>
             </div>
             <div class="post__image-container" *ngIf="postImageUrl !== null">
-                <!-- <img [src]="postImageUrl" alt="Image de post" *ngIf="postImageUrl !== null" /> -->
-                <img src="https://i.imgur.com/h564JHS.jpg" alt="bruh" />
+                <img [src]="postImageUrl" alt="Image de post" *ngIf="postImageUrl !== null" loading="lazy" />
+                <!-- <img src="https://i.imgur.com/h564JHS.jpg" alt="bruh" /> -->
             </div>
         </div>
     </header>
     <div class="container__interactions-row">
-        <p class="interactions-row__like" (click)="sendLikeToPost(postPostId, userId)">
+        <p class="interactions-row__like" (click)="sendLikeToPost(postPostId, userId)" [ngClass]="{
+        'interactions-row__like--active':
+          likedOrUnlikedMessage === 'The post has been liked (+1)'
+      }">
             Like <i class="far fa-thumbs-up"></i>
-        </p>
-        <p class="interactions-row__comment">
-            Commentaire<i class="far fa-comment-alt"></i>
         </p>
         <p class="interactions-row__share">
             Partager<i class="fas fa-share-alt"></i>
         </p>
     </div>
-</section>
 
-<app-post-comments *ngFor="let commentElement of commentsArray" [comment]="commentElement"></app-post-comments>
+    <div class="comment">
+        <form [formGroup]="commentForm" class="comment__form">
+            <fieldset class="comment__fieldset">
+                <legend class="comment__legend">Postez un commentaire</legend>
+                <input type="text" placeholder="Écrivez un commentaire" formControlName="comment" class="comment__input" />
+                <button type="submit" (click)="onSubmitComment()" [ngClass]="{ 'comment__button--disabled': commentForm.invalid }" [disabled]="commentForm.invalid" class="comment__button">
+          Envoyer
+        </button>
+            </fieldset>
+        </form>
+        <aside class="comments" *ngIf="1 === 1">
+            <app-post-comments *ngFor="let commentElement of commentsArray" [comment]="commentElement"></app-post-comments>
+        </aside>
+    </div>
+</section>

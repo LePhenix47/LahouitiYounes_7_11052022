@@ -1,4 +1,4 @@
-<div class="groupomania__post">
+<div class="groupomania__post" id="postFormCard">
     <!-- <div class="groupomania__pfp-container">
         <img src="https://i.imgur.com/h564JHS.jpg" [alt]="" class="groupomania__pfp" />
         <p class="groupomania__pfp-name"></p>
@@ -11,6 +11,7 @@
                 <input type="text" placeholder="Cool title" class="groupomania__title-input" formControlName="title" title="Champ pour le titre du post" required id="title" />
 
                 <input type="text" placeholder="Insert description" class="groupomania__description-input" formControlName="description" title="Champ pour la description du post" required id="description" />
+                <!--                 <textarea type="text" placeholder="Insert description" class="groupomania__description-input" formControlName="description" title="Champ pour la description du post" required id="description"></textarea> -->
 
                 <label for="image_url" class="upload-label">
           Ajouter une image?
@@ -23,7 +24,6 @@
             title="Champ pour l'image du post"
             id="image_url"
             class="upload-button"
-            [ngClass]="{}"
             (change)="getFile($event)"
           />
         </label>
@@ -38,6 +38,9 @@
         <img [src]="imageUrl" [alt]="file" class="image-url" *ngIf="imageUrl" />
     </div>
 </div>
+<a class="return-to-top-page" routerLink="/posts" fragment="postFormCard">
+    <i class="fas fa-chevron-up"></i>
+</a>
 
 <main>
     <app-published-posts *ngFor="let postElement of postsArray" [post]="postElement"></app-published-posts>

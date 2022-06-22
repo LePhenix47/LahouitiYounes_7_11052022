@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppService } from '../app.service';
 
 @Component({
@@ -7,6 +8,8 @@ import { AppService } from '../app.service';
   styleUrls: ['./published-posts.component.scss']
 })
 export class PublishedPostsComponent implements OnInit {
+
+  commentForm!:FormGroup;
 
   @Input() post: any; 
   postTitle!: string;
@@ -21,14 +24,20 @@ export class PublishedPostsComponent implements OnInit {
   userId!:number;
   token!:string;
 
+  likedOrUnlikedMessage!:string;
+
   test: boolean = true;
 
   commentsArray: any;
 
 
-  constructor(private appService: AppService) { }
+  constructor(private appService: AppService, private formBuilder: FormBuilder) { }
 
   ngOnInit(): void {
+    this.commentForm = this.formBuilder.group({
+      comment: [null, [Validators.required, Validators.maxLength(180)]]
+
+  })
     this.unparsedUserId = sessionStorage.getItem("userId") as string;
     this.userId = parseInt(this.unparsedUserId);
     console.log(typeof this.userId);
@@ -45,6 +54,20 @@ export class PublishedPostsComponent implements OnInit {
     this.getLikesInPost(this.postPostId);
 
     this.token = this.appService.getCookieToken();
+  }
+
+  onSubmitComment():void{
+    let comment: string = this.commentForm.value.comment;
+    console.log(this.commentForm.value);
+    this.appService.sendCommentFromPostToBackend(comment, this.postPostId).subscribe(
+       (result: any)=>{
+        console.log("Le commentaire a été créé avec succès: ", result)
+
+      },
+      (error: any)=>{
+        console.log(error)
+      }
+    );
   }
 
   getCommentsInPost(): void{
@@ -77,9 +100,10 @@ export class PublishedPostsComponent implements OnInit {
   }
 
   sendLikeToPost(postId:number ,userId: number):void{
-    this.appService.likePost(postId, userId, this.token).subscribe(
+    this.appService.likePost(postId, userId).subscribe(
       (result: any)=>{
         console.log("GIVE LIKE TO POST",result);
+        this.likedOrUnlikedMessage = result.message;
         if(result.message === "The post has been unliked (-1)"){
           this.postAmountOfLikes--;
           this.hasPostOneLikeOrManyLikes = this.postAmountOfLikes === 1 ? " Like": " Likes";

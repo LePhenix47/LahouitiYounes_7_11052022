@@ -11,10 +11,11 @@ export class PostCommentsComponent implements OnInit {
 
 commentComment!:string;
 commentUserId!:number;
+removeQuotesRegex: RegExp = /["]+/g;
   constructor(private appService: AppService) { }
 
   ngOnInit(): void {
-    this.commentComment = JSON.stringify(this.comment.comment);
+    this.commentComment = JSON.stringify(this.comment.comment).replace(this.removeQuotesRegex, '');
     this.commentUserId = this.comment.userUserId;
     console.log(JSON.stringify  (this.comment))
   }

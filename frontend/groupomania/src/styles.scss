@@ -11,15 +11,18 @@ body {
     font-family: "Lato";
     font-weight: 400;
     color: $color-tertiary;
+    overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {
     background-color: transparent;
+    border-radius: $border-pill-shape-value;
     width: 15px;
 }
 
 ::-webkit-scrollbar-button {
     background-color: $color-tertiary;
+    border-radius: $border-pill-shape-value;
     display: none;
 }
 
@@ -35,14 +38,13 @@ body {
     }
 }
 
-// ::-webkit-scrollbar-track {
-//     background-color: yellow;
-//     margin-block: 0.1em;
-//     border-radius: $border-pill-shape-value;
-// }
+::-webkit-scrollbar-track {
+    border-radius: $border-pill-shape-value;
+}
+
 ::-webkit-scrollbar-track-piece {
     background-color: $color-secondary;
-    border-left: 1px solid $color-tertiary;
+    border-left: 2px dashed $color-primary;
     &:hover {
         background-color: darken($color-secondary, 10%);
     }

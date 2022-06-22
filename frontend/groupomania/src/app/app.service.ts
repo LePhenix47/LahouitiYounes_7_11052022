@@ -61,7 +61,16 @@ getAllCommentsFromPost(postId: number): Observable<object>{
   return this.http.get(`${this.urlPostAPI}/${postId}/comments`,{"headers": this.headers})
 }
 
-likePost(postId: number, userId: number, token: string): Observable<object>{
+sendCommentFromPostToBackend(commentInPost: string, postId:number):Observable<object>{
+  let bodyRequest = {
+    user_id: parseInt(sessionStorage.getItem("userId") as string),
+    comment: commentInPost
+  } 
+  console.log()
+  return this.http.post(`${this.urlPostAPI}/${postId}/comments`, bodyRequest,{"headers": this.headers})
+}
+
+likePost(postId: number, userId: number): Observable<object>{
   console.log(`Requête en cours pour le post avec ID = ${postId}  de type ${typeof postId} de l'utilisateur avec un ID = ${userId} de type ${typeof userId}`)
   let bodyRequest={
     user_id: userId,

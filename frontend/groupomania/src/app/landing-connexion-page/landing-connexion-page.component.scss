@@ -160,6 +160,9 @@
 .error-form {
     width: 100%;
     height: 85px;
+    @include mobile-only {
+        height: 150px;
+    }
     color: $color-white;
     @include center-flex;
     border-radius: 25px;
@@ -174,12 +177,20 @@
     &__text {
         white-space: nowrap;
         text-overflow: ellipsis;
+        @include mobile-only {
+            white-space: break-spaces;
+            padding: 2%;
+            margin-left: 2%;
+        }
     }
 }
 
 .success-form {
     width: 100%;
     height: 85px;
+    @include mobile-only {
+        height: 150px;
+    }
     color: $color-white;
     @include center-flex;
     border-radius: 25px;
@@ -196,5 +207,10 @@
         color: black;
         white-space: nowrap;
         text-overflow: ellipsis;
+        @include mobile-only {
+            white-space: break-spaces;
+            padding: 2%;
+            margin-left: 2%;
+        }
     }
 }
