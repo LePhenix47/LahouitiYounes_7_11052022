@@ -28,7 +28,7 @@ export class PublishedPostsComponent implements OnInit {
 
   test: boolean = true;
 
-  commentsArray: any;
+  commentsArray: any[]= [];
 
 
   constructor(private appService: AppService, private formBuilder: FormBuilder) { }
@@ -61,8 +61,8 @@ export class PublishedPostsComponent implements OnInit {
     console.log(this.commentForm.value);
     this.appService.sendCommentFromPostToBackend(comment, this.postPostId).subscribe(
        (result: any)=>{
-        console.log("Le commentaire a été créé avec succès: ", result)
-
+        console.log("Le commentaire a été créé avec succès: ", result);
+                this.commentsArray.unshift(result);
       },
       (error: any)=>{
         console.log(error)

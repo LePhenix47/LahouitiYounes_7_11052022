@@ -12,7 +12,7 @@
       Connexion
     </button>
 
-        <button type="button" class="header__logout-button" routerLink="/posts" (click)="logout()" *ngIf="this.router.url === '/posts'">
+        <button type="button" class="header__logout-button" routerLink="/posts" (click)="logout()" *ngIf="this.router.url.includes('/posts')">
       Déconnexion
     </button>
     </form>

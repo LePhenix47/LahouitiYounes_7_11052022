@@ -45,7 +45,8 @@ export class PostsPageComponent implements OnInit {
     console.log("Valeur du formulaire: ", formData); 
     this.appService.sendPostToBackend(formData).subscribe(
       (result: any)=>{
-        console.log(result)
+        console.log(result);
+        this.postsArray.unshift(result);
       },
       (error: any)=>{
         console.log(error)
