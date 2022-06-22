@@ -29,15 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 //To differentiate the images for the posts and the images for the PfP
-app.use(
-    "/images/post-images",
-    express.static(path.join(__dirname, "post-images"))
-);
-app.use(
-    "/images/profile-pictures",
-    express.static(path.join(__dirname, "profile-pictures"))
-);
-
+app.use("/images", express.static(path.join(__dirname, "images")));
 //Library that protects the headers of the requests (Protects from XSS attacks)
 app.use(helmet());
 

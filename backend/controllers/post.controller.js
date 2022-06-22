@@ -482,6 +482,7 @@ exports.deleteComment = (req, res, next) => {
 exports.getAllCommentsInOnePost = (req, res, next) => {
     let postIdFromURL = req.params.postId;
     Comment.findAll({
+            include: User,
             attributes: ["comment", "userUserId"],
             where: {
                 postPostId: postIdFromURL,
@@ -498,6 +499,7 @@ exports.getAllCommentsInOnePost = (req, res, next) => {
             if (isCommentSectionEmpty) {
                 throw "This post has no comments yet!";
             }
+
             res.status(200).json(commentsFromPost);
         })
         .catch((commentInOnePostError) => {
