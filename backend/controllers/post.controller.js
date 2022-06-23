@@ -139,6 +139,7 @@ exports.createPost = (req, res, next) => {
 */
 exports.updatePost = (req, res, next) => {
     const postId = req.params.postId;
+    let imageFile = req.files ? req.files[0] : undefined;
     console.log(`Mis à jour du post w/ ID = ${postId}`);
     Post.update(req.body, {
             where: { post_id: postId },
@@ -146,7 +147,12 @@ exports.updatePost = (req, res, next) => {
         .then((numberReturned) => {
             if (numberReturned == 1) {
                 res.status(200).send({
-                    message: "Post was updated successfully.",
+                    ...req.body,
+                    image_url: imageFile ?
+                        `${req.protocol}://${req.get("host")}/images/${
+                imageFile.filename
+              }` :
+                        null,
                 });
             } else {
                 res.status(400).send({
