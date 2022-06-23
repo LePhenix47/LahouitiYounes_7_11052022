@@ -70,6 +70,18 @@ export class PublishedPostsComponent implements OnInit {
     );
   }
 
+showModal():void{
+  //.showModal 
+}
+
+modifyPost():void{
+
+}
+
+deletePost():void{
+
+}
+
   getCommentsInPost(): void{
     this.appService.getAllCommentsFromPost(this.postPostId).subscribe(
        (result: any)=>{

@@ -45,22 +45,50 @@ headers= new HttpHeaders().set('Authorization', `Bearer ${this.getCookieToken()}
   //Service des posts
 urlPostAPI: string = "https://localhost:3000/api/posts";
 
+
+
+/*
+// Recovers all the posts stocked in the DB
+*/
 getAllPostsFromBackend(): Observable<any>{
  return this.http.get(this.urlPostAPI,{"headers": this.headers});
 }
 
+/*
+// Sends a post and creates it in the DB
+*/
 sendPostToBackend(bodyRequest: object): Observable<object>{
     console.log(`Requête en cours pour la création du post avec comme corps de requête  ${JSON.stringify(bodyRequest)}`)
 
  return this.http.post(this.urlPostAPI ,bodyRequest,{"headers": this.headers});
 }
 
+/*
+// Updates the title, description or image of a post
+*/
+updatePostToBackend(bodyRequest:object, postId:number): Observable<object>{
+  return this.http.put(this.urlPostAPI+postId, bodyRequest,{"headers": this.headers})
+}
+
+/*
+// Deletes entirely a post
+*/
+deletePostToBackend(postId:number): Observable<object>{
+  return this.http.delete(this.urlPostAPI+postId, {"headers": this.headers})
+}
+
+/*
+// Recovers all the comments of a particular post
+*/
 getAllCommentsFromPost(postId: number): Observable<object>{
     console.log(`Requête en cours pour le post avec ID = ${postId} de l'utilisateur`)
 
   return this.http.get(`${this.urlPostAPI}/${postId}/comments`,{"headers": this.headers})
 }
 
+/*
+// Creates a new comment of a post
+*/
 sendCommentFromPostToBackend(commentInPost: string, postId:number):Observable<object>{
   let bodyRequest = {
     user_id: parseInt(sessionStorage.getItem("userId") as string),
@@ -70,6 +98,23 @@ sendCommentFromPostToBackend(commentInPost: string, postId:number):Observable<ob
   return this.http.post(`${this.urlPostAPI}/${postId}/comments`, bodyRequest,{"headers": this.headers})
 }
 
+/*
+//Updates the comment
+*/
+updateCommentToBackend(bodyRequest:object, postId:number, commentId:number): Observable<object>{
+  return this.http.put(this.urlPostAPI+postId, bodyRequest,{"headers": this.headers})
+}
+
+/*
+//Deletes the comment from the post
+*/
+deleteCommentToBackend(postId:number, commentId:number): Observable<object>{
+  return this.http.delete(this.urlPostAPI+postId, {"headers": this.headers})
+}
+
+/*
+//Likes or unlikes a post
+*/
 likePost(postId: number, userId: number): Observable<object>{
   console.log(`Requête en cours pour le post avec ID = ${postId}  de type ${typeof postId} de l'utilisateur avec un ID = ${userId} de type ${typeof userId}`)
   let bodyRequest={
@@ -79,6 +124,9 @@ likePost(postId: number, userId: number): Observable<object>{
   return this.http.post(`${this.urlPostAPI}/${postId}/like`, bodyRequest,{"headers": this.headers})
 }
 
+/*
+//Recovers the amount of likes in a post from the DB
+*/
 getAmountOfLikesInPost(postId: number): Observable<object>{
   return this.http.get(`${this.urlPostAPI}/${postId}/like`,{"headers": this.headers})
 }

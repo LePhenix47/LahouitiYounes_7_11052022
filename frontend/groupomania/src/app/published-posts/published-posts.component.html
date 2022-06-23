@@ -1,4 +1,4 @@
-<section class="post__container" [attr.data-postId]="postPostId" [attr.data-userId]="postUserId" tabindex="0">
+<section class="post__container" [attr.data-postId]="postPostId" [attr.data-userId]="postUserId" tabindex="0" role="region" aria-label="Section post">
     <header class="post__header">
         <div class="post__info">
             <p class="post__date">
@@ -7,6 +7,17 @@
             <p class="post__number-of-likes">
                 {{ postAmountOfLikes }} {{ hasPostOneLikeOrManyLikes }}
             </p>
+
+            <div class="dialog__parent" *ngIf="postUserId === userId">
+                <input type="button" value="Modifier" class="post__modify" />
+                <button title="Modifier le titre, description ou image" class="post__modify--mobile">
+          <i class="fas fa-edit"></i>
+        </button>
+                <button title="Supprimer le post" class="post__delete--mobile">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+                <input type="button" value="Supprimer" class="post__delete" />
+            </div>
         </div>
         <div class="post__content">
             <div class="post__text-container">
