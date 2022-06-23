@@ -80,7 +80,7 @@ openssl x509 -req -days 365 -in csr.pem -signkey key.pem -out cert.pem
 
 2. **images (dossier)**
    Créez ce dossier dans le dossier backend
-   À l'intérieur du dossier, créez 2 sous-dossiers nommés : "post-images" et "profile-pictures"
+
 3. **dotEnv (fichier)**
 
 Créez un fichier sans nom avec uniquement le format ".env" et copiez le texte ci-dessous :
