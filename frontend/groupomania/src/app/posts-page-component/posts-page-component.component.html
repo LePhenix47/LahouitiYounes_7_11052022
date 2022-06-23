@@ -4,31 +4,21 @@
         <p class="groupomania__pfp-name"></p>
     </div> -->
     <div class="groupomania__form-container">
-        <form class="groupomania__form" [formGroup]="postForm">
+        <form class="groupomania__form">
             <fieldset class="groupomania__fieldset">
                 <legend class="groupomania__legend">Créez votre post:</legend>
 
-                <input type="text" placeholder="Cool title" class="groupomania__title-input" formControlName="title" title="Champ pour le titre du post" required id="title" />
+                <input type="text" placeholder="Cool title" class="groupomania__title-input" name="title" [(ngModel)]="title" title="Champ pour le titre du post" required id="title" />
 
-                <input type="text" placeholder="Insert description" class="groupomania__description-input" formControlName="description" title="Champ pour la description du post" required id="description" />
-                <!--                 <textarea type="text" placeholder="Insert description" class="groupomania__description-input" formControlName="description" title="Champ pour la description du post" required id="description"></textarea> -->
+                <input type="text" placeholder="Insert description" class="groupomania__description-input" name="description" [(ngModel)]="description" title="Champ pour la description du post" required id="description" />
+                <!--                 <textarea type="text " placeholder="Insert description " class="groupomania__description-input " formControlName="description " title="Champ pour la description du post " required id="description "></textarea> -->
 
-                <label for="image_url" class="upload-label">
+                <label for="image_url " class="upload-label" (click)="labelFunction()">
           Ajouter une image?
           <i class="fas fa-image"></i>
-          <input
-            type="file"
-            accept="image/*"
-            class="groupomania__image-input"
-            formControlName="image_url"
-            title="Champ pour l'image du post"
-            id="image_url"
-            class="upload-button"
-            (change)="getFile($event)"
-          />
         </label>
 
-                <button type="submit" class="post__button" (click)="onSubmitPostForm()" [disabled]="postForm.invalid" [ngClass]="{ 'post__button--disabled': postForm.invalid }">
+                <button type="submit" class="post__button" (click)="onSubmitForm()">
           Poster
         </button>
             </fieldset>
@@ -43,5 +33,5 @@
 </a>
 
 <main>
-    <app-published-posts *ngFor="let postElement of postsArray" [post]="postElement"></app-published-posts>
+    <app-published-posts *ngFor="let postElement of postsArray" [post]="postElement" (event)="onRequestReceive($event)"></app-published-posts>
 </main>

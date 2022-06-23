@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AppService } from '../app.service';
 
@@ -12,6 +12,8 @@ export class PublishedPostsComponent implements OnInit {
   commentForm!:FormGroup;
 
   @Input() post: any; 
+
+  @Output() event = new EventEmitter();
   postTitle!: string;
   postDescription!: string;
   postImageUrl!: string;
@@ -59,6 +61,7 @@ export class PublishedPostsComponent implements OnInit {
   onSubmitComment():void{
     let comment: string = this.commentForm.value.comment;
     console.log(this.commentForm.value);
+
     this.appService.sendCommentFromPostToBackend(comment, this.postPostId).subscribe(
        (result: any)=>{
         console.log("Le commentaire a été créé avec succès: ", result);
@@ -75,11 +78,27 @@ showModal():void{
 }
 
 modifyPost():void{
-
+  this.event.emit({
+          action: "update",
+          data: this.post
+        });
 }
 
 deletePost():void{
-
+console.log("Post à supprimer with postID = "+this.postPostId);
+    console.log("PostID = ",this.postPostId)
+this.appService.deletePostToBackend(this.postPostId).subscribe(
+   (result: any)=>{
+        console.log(result);
+        this.event.emit({
+          action: "delete",
+          data: this.post
+        });
+        },
+      (error: any)=>{
+        console.log(error)
+      }
+)
 }
 
   getCommentsInPost(): void{

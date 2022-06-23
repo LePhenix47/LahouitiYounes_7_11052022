@@ -67,14 +67,14 @@ sendPostToBackend(bodyRequest: object): Observable<object>{
 // Updates the title, description or image of a post
 */
 updatePostToBackend(bodyRequest:object, postId:number): Observable<object>{
-  return this.http.put(this.urlPostAPI+postId, bodyRequest,{"headers": this.headers})
+  return this.http.put(this.urlPostAPI+"/"+postId, bodyRequest,{"headers": this.headers})
 }
 
 /*
 // Deletes entirely a post
 */
 deletePostToBackend(postId:number): Observable<object>{
-  return this.http.delete(this.urlPostAPI+postId, {"headers": this.headers})
+  return this.http.delete(this.urlPostAPI+"/"+postId, {"headers": this.headers})
 }
 
 /*
@@ -102,7 +102,7 @@ sendCommentFromPostToBackend(commentInPost: string, postId:number):Observable<ob
 //Updates the comment
 */
 updateCommentToBackend(bodyRequest:object, postId:number, commentId:number): Observable<object>{
-  return this.http.put(this.urlPostAPI+postId, bodyRequest,{"headers": this.headers})
+  return this.http.put(this.urlPostAPI+"/"+postId, bodyRequest,{"headers": this.headers})
 }
 
 /*

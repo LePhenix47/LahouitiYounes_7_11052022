@@ -12,12 +12,12 @@ export class PostCommentsComponent implements OnInit {
 commentComment!:string;
 commentUserId!:number;
 commentEmail!:string;
-removeQuotesRegex: RegExp = /["]+/g;
+removeBackslashQuotesRegex: RegExp = /[\\"]+/g;
   constructor(private appService: AppService) { }
 
   ngOnInit(): void {
     this.commentEmail = this.comment?.user?.user_email;
-    this.commentComment = JSON.stringify(this.comment.comment).replace(this.removeQuotesRegex, '');
+    this.commentComment = JSON.stringify(this.comment.comment).replace(this.removeBackslashQuotesRegex, '"').slice(1, -1);
     this.commentUserId = this.comment.userUserId;
     console.log(JSON.stringify(this.comment))
   }

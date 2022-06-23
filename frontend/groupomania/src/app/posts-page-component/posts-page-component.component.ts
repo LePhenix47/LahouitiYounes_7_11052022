@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppService } from '../app.service';
 
@@ -11,48 +10,72 @@ import { AppService } from '../app.service';
 
 
 export class PostsPageComponent implements OnInit {
-
-
-  postForm! :FormGroup;
+id:number = 0;
   file: any;
   postsArray: any;
+  title:string="";
+  description:string="";
 
   imageUrl: string|undefined = "";
 
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private appService:  AppService) { }
+  constructor(private router: Router,  private appService:  AppService) { }
 
   ngOnInit(): void {
     this.getPosts();
-
-    this.postForm = this.formBuilder.group({
-      title: [null, [Validators.required, Validators.maxLength(50)]],
-      description: [null, [Validators.required, Validators.maxLength(180)]],
-      image_url: [null, [Validators.nullValidator]]
-    })
-
   }
 
-  onSubmitPostForm():void{
-    const postForm = this.postForm.value;
+reset():void{
+  this.title = "";
+  this.description = "";
+  this.id = 0;
+  this.imageUrl = undefined;
+  this.file = undefined;
+  
+}
+  
+  onSubmitForm():void{
     let formData: FormData = new FormData();
 
     formData.append("user_id", sessionStorage.getItem("userId") || "0")
-    formData.append("title", this.postForm.value.title)
-    formData.append("description", this.postForm.value.description)
+    formData.append("title", this.title)
+    formData.append("description", this.description)
     formData.append("file", this.file)
 
     console.log("Valeur du formulaire: ", formData); 
-    this.appService.sendPostToBackend(formData).subscribe(
-      (result: any)=>{
-        console.log(result);
-        this.postsArray.unshift(result);
-      },
-      (error: any)=>{
-        console.log(error)
-      }
-    )
-    //Faudra envoyer: user_id, description, description & image?
+    if(this.id && this.id>0){ console.log("ID======================",this.id);
+      this.appService.updatePostToBackend(formData, this.id).subscribe(
+         (result: any)=>{
+          console.log(result);
+          let index = this.postsArray.findIndex(
+            
+            (post: any)=>{
+return post.post_id === this.id;
+            }
+          )
+          if(index>-1){
+            this.postsArray[index] = result;
+          }
+          this.reset();
+        },
+        (error: any)=>{
+          console.log(error)
+        }
+      )
+    }else{
+      this.appService.sendPostToBackend(formData).subscribe(
+        (result: any)=>{
+          console.log(result);
+          this.postsArray.unshift(result);
+          this.reset();
+        },
+        (error: any)=>{
+          console.log(error)
+        }
+      )
+      //Faudra envoyer: user_id, description, description & image?
+
+    }
   }
 
   getFile(event: any): void{
@@ -64,6 +87,26 @@ export class PostsPageComponent implements OnInit {
     reader.onload = () => {
       this.imageUrl = reader.result?.toString();
     };
+}
+
+labelFunction():void{
+let newInput = document.createElement("input") as HTMLInputElement;
+newInput.type = "file";
+newInput.onchange = _ =>{
+  // @ts-ignore
+  let files = Array.from(newInput.files);
+
+  this.file = files[0];
+  console.log(this.file);
+  const reader = new FileReader();
+    reader.readAsDataURL(this.file);
+    reader.onload = () => {
+      this.imageUrl = reader.result?.toString();
+    };
+};
+
+newInput.click();
+
 }
 
 
@@ -81,4 +124,33 @@ getPosts():void{
       }
   )
 }
+
+deletePostVisually(event: any):void{
+  console.log("EVENT: "+ event);
+  const index = this.postsArray.findIndex(
+    (post: any)=>{
+     return post.post_id === event.data.post_id;
+    }
+    );
+    console.log(index);
+  if(index > -1){
+    this.postsArray.splice(index, 1);
+  }
+}
+
+updatePostVisually(event:any):void{
+  this.title = event.data.title;
+  this.description = event.data.description;
+  this.id = event.data.post_id;
+  this.imageUrl = event.data.image_url;
+}
+
+onRequestReceive(event:any):void{
+  if(event.action === "delete"){
+    this.deletePostVisually(event);
+  }else if(event.action === "update"){
+this.updatePostVisually(event);
+  }
+}
+
 }
