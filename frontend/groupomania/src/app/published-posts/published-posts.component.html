@@ -9,8 +9,8 @@
             </p>
 
             <div class="dialog__parent" *ngIf="postUserId === userId">
-                <input type="button" value="Modifier" class="post__modify" (click)="modifyPost()" />
-                <button title="Modifier le titre, description ou image" class="post__modify--mobile" (click)="modifyPost()">
+                <input type="button" value="Modifier" class="post__modify" (click)="modifyPost()" routerLink="/posts" fragment="postFormCard" />
+                <button title="Modifier le titre, description ou image" class="post__modify--mobile" (click)="modifyPost()" routerLink="/posts" fragment="postFormCard">
           <i class="fas fa-edit"></i>
         </button>
                 <button title="Supprimer le post" class="post__delete--mobile" (click)="deletePost()">
