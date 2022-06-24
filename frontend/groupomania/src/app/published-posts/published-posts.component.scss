@@ -187,12 +187,15 @@
     &__content {
         max-height: 450px;
         width: 100%;
+        background-color: $color-white;
+        border-radius: 25px 25px 0 0;
     }
     &__text-container {
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
         background-color: $color-white;
+        border-radius: 25px 25px 0 0;
     }
     &__title {
         overflow: hidden;
@@ -212,6 +215,7 @@
         overflow: hidden;
         background-color: $color-white;
         @include center-flex-column;
+        border-radius: 25px 25px 0 0;
         &>img {
             height: 100%;
             max-width: 100%;

@@ -17,6 +17,7 @@ export class PostCommentsComponent implements OnInit {
   commentCommentId!: number;
   removeBackslashQuotesRegex: RegExp = /[\\"]+/g;
   userId: number = parseInt(sessionStorage.getItem('userId') as string);
+  displayButton = false;
   constructor(private appService: AppService) {}
 
   ngOnInit(): void {
@@ -31,6 +32,8 @@ export class PostCommentsComponent implements OnInit {
     this.commentUserId = this.comment.userUserId;
     this.commentCommentId = this.comment.comment_id;
     console.log(JSON.stringify(this.comment));
+    let isUserAdmin = JSON.parse(sessionStorage.getItem('bruh') as string);
+    this.displayButton = this.userId === this.commentUserId || isUserAdmin;
   }
 
   deleteComment(): void {

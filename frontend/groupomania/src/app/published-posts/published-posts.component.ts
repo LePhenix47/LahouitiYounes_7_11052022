@@ -24,6 +24,8 @@ export class PublishedPostsComponent implements OnInit {
   unparsedUserId!: string;
   userId!: number;
   token!: string;
+  displayButton = false;
+  hasUserLiked = false;
 
   likedOrUnlikedMessage!: string;
 
@@ -55,6 +57,9 @@ export class PublishedPostsComponent implements OnInit {
     this.getCommentsInPost();
     this.token = this.appService.getCookieToken();
     this.getLikesInPost(this.postPostId);
+
+    let isUserAdmin = JSON.parse(sessionStorage.getItem('bruh') as string);
+    this.displayButton = this.userId === this.postUserId || isUserAdmin;
   }
 
   onSubmitComment(): void {
@@ -115,17 +120,21 @@ export class PublishedPostsComponent implements OnInit {
   }
 
   getLikesInPost(postId: number): void {
+    this.postAmountOfLikes = 0;
+    this.hasUserLiked = false;
+    this.hasPostOneLikeOrManyLikes = ' Like';
     this.appService.getAmountOfLikesInPost(postId).subscribe(
       (result: any) => {
-        let resultAmountOfLikes = result.likes;
-        console.log(
-          '%cLikes: ' + JSON.stringify(result),
-          'background-color: crimson;'
-        );
-        console.table(resultAmountOfLikes);
-        this.postAmountOfLikes = resultAmountOfLikes;
+        console.table(result);
+        for (let i = 0; i < result.length; i++) {
+          this.postAmountOfLikes++;
+          let liked = result[i];
+          if (liked.userUserId === this.userId) {
+            this.hasUserLiked = true;
+          }
+        }
         this.hasPostOneLikeOrManyLikes =
-          resultAmountOfLikes === 1 ? ' Like' : ' Likes';
+          this.postAmountOfLikes > 1 ? ' Like' : ' Likes';
       },
       (postHasNoLikesError: any) => {
         console.log(postHasNoLikesError);
@@ -142,10 +151,12 @@ export class PublishedPostsComponent implements OnInit {
           this.postAmountOfLikes--;
           this.hasPostOneLikeOrManyLikes =
             this.postAmountOfLikes === 1 ? ' Like' : ' Likes';
+          this.hasUserLiked = false;
         } else {
           this.postAmountOfLikes++;
           this.hasPostOneLikeOrManyLikes =
             this.postAmountOfLikes === 1 ? ' Like' : ' Likes';
+          this.hasUserLiked = true;
         }
       },
 

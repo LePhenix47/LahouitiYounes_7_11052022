@@ -24,14 +24,13 @@ export class AppService {
     return this.cookieService.get('userToken');
   }
 
-  deleteCookieToken(): void {
-    this.cookieService.delete('userToken');
-  }
-
   headers = new HttpHeaders().set(
     'Authorization',
     `Bearer ${this.getCookieToken()}`
   );
+  deleteCookieToken(): void {
+    this.cookieService.delete('userToken');
+  }
 
   urlAuthAPI: string = 'https://localhost:3000/api/auth';
 
@@ -40,9 +39,7 @@ export class AppService {
       "Tentative d'envoi du formulaire SIGNUP avec le body request APP SERVICE: " +
         JSON.stringify(bodyRequest)
     );
-    return this.http.post(this.urlAuthAPI + '/signup', bodyRequest, {
-      headers: this.headers,
-    });
+    return this.http.post(this.urlAuthAPI + '/signup', bodyRequest);
   }
 
   sendLoginFormToBackend(bodyRequest: object): Observable<object> {
@@ -50,9 +47,7 @@ export class AppService {
       "Tentative d'envoi du formulaire LOGIN avec le body request APP SERVICE: " +
         JSON.stringify(bodyRequest)
     );
-    return this.http.post(this.urlAuthAPI + '/login', bodyRequest, {
-      headers: this.headers,
-    });
+    return this.http.post(this.urlAuthAPI + '/login', bodyRequest);
   }
 
   sendAdminLoginFormToBackend(bodyRequest: object): Observable<object> {
@@ -68,7 +63,11 @@ export class AppService {
 // Recovers all the posts stocked in the DB
 */
   getAllPostsFromBackend(): Observable<any> {
-    return this.http.get(this.urlPostAPI, { headers: this.headers });
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
+    return this.http.get(this.urlPostAPI, { headers: headerRequest });
   }
 
   /*
@@ -81,8 +80,13 @@ export class AppService {
       )}`
     );
 
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
+
     return this.http.post(this.urlPostAPI, bodyRequest, {
-      headers: this.headers,
+      headers: headerRequest,
     });
   }
 
@@ -90,8 +94,12 @@ export class AppService {
 // Updates the title, description or image of a post
 */
   updatePostToBackend(bodyRequest: object, postId: number): Observable<object> {
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
     return this.http.put(this.urlPostAPI + '/' + postId, bodyRequest, {
-      headers: this.headers,
+      headers: headerRequest,
     });
   }
 
@@ -99,8 +107,12 @@ export class AppService {
 // Deletes entirely a post
 */
   deletePostToBackend(postId: number): Observable<object> {
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
     return this.http.delete(this.urlPostAPI + '/' + postId, {
-      headers: this.headers,
+      headers: headerRequest,
     });
   }
 
@@ -111,9 +123,13 @@ export class AppService {
     console.log(
       `Requête en cours pour le post avec ID = ${postId} de l'utilisateur`
     );
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
 
     return this.http.get(`${this.urlPostAPI}/${postId}/comments`, {
-      headers: this.headers,
+      headers: headerRequest,
     });
   }
 
@@ -129,10 +145,14 @@ export class AppService {
       comment: commentInPost,
     };
     console.log();
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
     return this.http.post(
       `${this.urlPostAPI}/${postId}/comments`,
       bodyRequest,
-      { headers: this.headers }
+      { headers: headerRequest }
     );
   }
 
@@ -144,8 +164,12 @@ export class AppService {
     postId: number,
     commentId: number
   ): Observable<object> {
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
     return this.http.put(this.urlPostAPI + '/' + postId, bodyRequest, {
-      headers: this.headers,
+      headers: headerRequest,
     });
   }
 
@@ -156,10 +180,14 @@ export class AppService {
     postId: number,
     commentId: number
   ): Observable<object> {
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
     return this.http.delete(
       this.urlPostAPI + '/' + postId + '/comments/' + commentId,
       {
-        headers: this.headers,
+        headers: headerRequest,
       }
     );
   }
@@ -175,8 +203,12 @@ export class AppService {
       user_id: userId,
     };
 
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
     return this.http.post(`${this.urlPostAPI}/${postId}/like`, bodyRequest, {
-      headers: this.headers,
+      headers: headerRequest,
     });
   }
 
@@ -184,8 +216,12 @@ export class AppService {
 //Recovers the amount of likes in a post from the DB
 */
   getAmountOfLikesInPost(postId: number): Observable<object> {
+    let headerRequest = new HttpHeaders().set(
+      'Authorization',
+      `Bearer ${this.getCookieToken()}`
+    );
     return this.http.get(`${this.urlPostAPI}/${postId}/like`, {
-      headers: this.headers,
+      headers: headerRequest,
     });
   }
 }
