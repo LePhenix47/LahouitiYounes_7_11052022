@@ -86,6 +86,8 @@ exports.login = (req, res, next) => {
                 .json({ message: "User does not exist → not registered" });
         }
         //let { user_id, user_email, user_password} = user[0]
+        let isUserModerator = user[0].moderator;
+        console.log("'''''''''''''''''''''''''''''''''" + isUserModerator);
         let userIdFromDatabase = user[0].user_id;
         let emailFromDatabase = user[0].user_email;
         let hashedPasswordInDatabase = user[0].user_password;
@@ -109,6 +111,7 @@ exports.login = (req, res, next) => {
                             expiresIn: "24h",
                         }
                     ),
+                    moderator: isUserModerator,
                 });
             })
             .catch((passwordComparisonError) => {
@@ -120,76 +123,6 @@ exports.login = (req, res, next) => {
                 });
             });
     });
-};
-
-/*
-//Authentification pour les modos
-*/
-exports.loginModerator = (req, res, next) => {
-    console.log(
-        "Corps de la requête des MODERATEURS: " + JSON.stringify(req.body)
-    );
-    console.assert(req.body !== undefined, "Le corps de la requête est indéfini");
-    let emailFromBodyRequest = req.body.user_email;
-    let passwordFromBodyRequest = req.body.user_password;
-
-    console.log(
-        "%cTentative de connexion en tant que modérateur: " +
-        JSON.stringify(emailFromBodyRequest) +
-        JSON.stringify(passwordFromBodyRequest),
-        "color: blue"
-    );
-    User.findAll({
-            where: {
-                //SELECT * FROM users WHERE user_email = [email] AND moderator = true
-                user_email: emailFromBodyRequest,
-                moderator: true,
-            },
-        })
-        .then((mod) => {
-            let stringifiedMod = JSON.stringify(mod);
-            console.log("USER logging in: " + stringifiedMod);
-            let isUserNotMod = mod.length === 0 ? true : false;
-            if (isUserNotMod) {
-                //The email isn't registered in the database → logging error, unexsiting
-                console.log("L'utilisateur n'est pas un modérateur!");
-                return res.status(403).json({ message: "User is not a moderator" });
-            }
-            //let { user_id, user_email, user_password} = mod[0]
-            let userIdFromDatabase = mod[0].user_id;
-            let emailFromDatabase = mod[0].user_email;
-            let hashedPasswordInDatabase = mod[0].user_password;
-            bcrypt
-                .compare(passwordFromBodyRequest, hashedPasswordInDatabase)
-                .then((isPasswordValid) => {
-                    if (!isPasswordValid) {
-                        return res.status(401).json({
-                            message: "The password is incorrect → Access unauthorized",
-                        });
-                    }
-
-                    res.status(200).json({
-                        user_id: userIdFromDatabase,
-                        token: jwt.sign({ user_id: mod.user_id },
-                            process.env.ACCESS_TOKEN_SECRET, {
-                                expiresIn: "24h",
-                            }
-                        ),
-                    });
-                })
-                .catch((passwordComparisonError) => {
-                    console.log("ERREUR ROUTE MODÉRATEURS: " + passwordComparisonError);
-                    return res.status(403).json({
-                        message: "Forbidden request, couldn't log in as a moderator",
-                    });
-                });
-        })
-        .catch((error) => {
-            console.log(error);
-            res
-                .status(500)
-                .json({ message: "Error while attempting to login as a moderator" });
-        });
 };
 
 /*
