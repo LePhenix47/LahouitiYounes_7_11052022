@@ -55,6 +55,12 @@ export class AppService {
     });
   }
 
+  sendAdminLoginFormToBackend(bodyRequest: object): Observable<object> {
+    return this.http.post(this.urlAuthAPI + '/login/mod', bodyRequest, {
+      headers: this.headers,
+    });
+  }
+
   //Service des posts
   urlPostAPI: string = 'https://localhost:3000/api/posts';
 
