@@ -150,9 +150,12 @@ export class AppService {
     postId: number,
     commentId: number
   ): Observable<object> {
-    return this.http.delete(this.urlPostAPI + postId, {
-      headers: this.headers,
-    });
+    return this.http.delete(
+      this.urlPostAPI + '/' + postId + '/comments/' + commentId,
+      {
+        headers: this.headers,
+      }
+    );
   }
 
   /*

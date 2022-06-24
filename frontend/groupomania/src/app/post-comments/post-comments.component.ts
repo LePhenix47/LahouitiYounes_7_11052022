@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AppService } from '../app.service';
 
 @Component({
@@ -8,6 +8,8 @@ import { AppService } from '../app.service';
 })
 export class PostCommentsComponent implements OnInit {
   @Input() comment: any;
+  @Input() postId: any;
+  @Output() event = new EventEmitter();
 
   commentComment!: string;
   commentUserId!: number;
@@ -32,6 +34,25 @@ export class PostCommentsComponent implements OnInit {
   }
 
   deleteComment(): void {
-    console.log('delete comment');
+    console.log(
+      'delete comment du post w/ ID = ' +
+        this.postId +
+        ' et comment ID = ' +
+        this.commentCommentId
+    );
+    let idOfComment = this.comment.comment_id;
+    console.log(idOfComment);
+    this.appService.deleteCommentToBackend(this.postId, idOfComment).subscribe(
+      (result: any) => {
+        console.log(result);
+        this.event.emit({
+          action: 'delete',
+          data: this.comment,
+        });
+      },
+      (error: any) => {
+        console.error(error.error);
+      }
+    );
   }
 }

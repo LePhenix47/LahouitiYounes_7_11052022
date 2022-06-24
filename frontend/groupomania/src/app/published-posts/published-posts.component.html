@@ -58,7 +58,7 @@
             </fieldset>
         </form>
         <aside class="comments">
-            <app-post-comments *ngFor="let commentElement of commentsArray" [comment]="commentElement" (event)="onRequestReceive($event)"></app-post-comments>
+            <app-post-comments *ngFor="let commentElement of commentsArray" [comment]="commentElement" [postId]="postPostId" (event)="onRequestReceive($event)"></app-post-comments>
         </aside>
     </div>
 </section>
