@@ -123,7 +123,7 @@ L'API est séparée en 2 routes :
   | ---------- | ------------------ | ---------------------------------------------------------- | --------------------------------------- | ---------------------------------------------------------------------------- |
   | POST | /api/auth/signup | {<br>user_email: [string],<br>user_password: [string]<br>} | {<br>message: [string]<br>} | Inscrit l'utilisateur dans le base de données <br>avec un mot de passe haché |
   | POST | /api/auth/login | { user_email: [string], user_password: [string] } | { user_id: [integer], token: [string] } | Connecte l'utilisateur |
-  | POST | /api/auth/loginMod | { user_email: [string], user_password: [string] } | { user_id: [integer], token: [string] } | Connecte l'administrateur avec les droits CRUD |
+  | POST | /api/auth/login/mod | { user_email: [string], user_password: [string] } | { user_id: [integer], token: [string] } | Connecte l'administrateur avec les droits CRUD |
 
 - Une autre `posts/` route pour les posts
 
