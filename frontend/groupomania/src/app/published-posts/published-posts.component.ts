@@ -53,9 +53,8 @@ export class PublishedPostsComponent implements OnInit {
     this.postUserId = this.post.user_id;
     console.log(typeof this.postPostId);
     this.getCommentsInPost();
-    this.getLikesInPost(this.postPostId);
-
     this.token = this.appService.getCookieToken();
+    this.getLikesInPost(this.postPostId);
   }
 
   onSubmitComment(): void {
