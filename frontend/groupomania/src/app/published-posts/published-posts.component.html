@@ -11,11 +11,11 @@
             <div class="dialog__parent" *ngIf="postUserId === userId">
                 <input type="button" value="Modifier" class="post__modify" (click)="modifyPost()" routerLink="/posts" fragment="postFormCard" />
                 <button title="Modifier le titre, description ou image" class="post__modify--mobile" (click)="modifyPost()" routerLink="/posts" fragment="postFormCard">
-          <i class="fas fa-edit"></i>
-        </button>
+                    <i class="fas fa-edit"></i>
+                </button>
                 <button title="Supprimer le post" class="post__delete--mobile" (click)="deletePost()">
-          <i class="fas fa-trash-alt"></i>
-        </button>
+                    <i class="fas fa-trash-alt"></i>
+                </button>
                 <input type="button" value="Supprimer" class="post__delete" (click)="deletePost()" />
             </div>
         </div>
@@ -53,12 +53,12 @@
                 <legend class="comment__legend">Postez un commentaire</legend>
                 <input type="text" placeholder="Écrivez un commentaire" formControlName="comment" class="comment__input" />
                 <button type="submit" (click)="onSubmitComment()" [ngClass]="{ 'comment__button--disabled': commentForm.invalid }" [disabled]="commentForm.invalid" class="comment__button">
-          Envoyer
-        </button>
+                    Envoyer
+                </button>
             </fieldset>
         </form>
         <aside class="comments">
-            <app-post-comments *ngFor="let commentElement of commentsArray" [comment]="commentElement"></app-post-comments>
+            <app-post-comments *ngFor="let commentElement of commentsArray" [comment]="commentElement" (event)="onRequestReceive($event)"></app-post-comments>
         </aside>
     </div>
 </section>

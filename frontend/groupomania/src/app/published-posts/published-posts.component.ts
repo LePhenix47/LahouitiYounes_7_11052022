@@ -5,46 +5,46 @@ import { AppService } from '../app.service';
 @Component({
   selector: 'app-published-posts',
   templateUrl: './published-posts.component.html',
-  styleUrls: ['./published-posts.component.scss']
+  styleUrls: ['./published-posts.component.scss'],
 })
 export class PublishedPostsComponent implements OnInit {
+  commentForm!: FormGroup;
 
-  commentForm!:FormGroup;
-
-  @Input() post: any; 
+  @Input() post: any;
 
   @Output() event = new EventEmitter();
   postTitle!: string;
   postDescription!: string;
   postImageUrl!: string;
-  postCreationDate!:string;
-  postPostId!:number;
-  postUserId!:number;
-  postAmountOfLikes!:any;
-  hasPostOneLikeOrManyLikes!:string;
+  postCreationDate!: string;
+  postPostId!: number;
+  postUserId!: number;
+  postAmountOfLikes!: any;
+  hasPostOneLikeOrManyLikes!: string;
   unparsedUserId!: string;
-  userId!:number;
-  token!:string;
+  userId!: number;
+  token!: string;
 
-  likedOrUnlikedMessage!:string;
+  likedOrUnlikedMessage!: string;
 
   test: boolean = true;
 
-  commentsArray: any[]= [];
+  commentsArray: any[] = [];
 
-
-  constructor(private appService: AppService, private formBuilder: FormBuilder) { }
+  constructor(
+    private appService: AppService,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.commentForm = this.formBuilder.group({
-      comment: [null, [Validators.required, Validators.maxLength(180)]]
-
-  })
-    this.unparsedUserId = sessionStorage.getItem("userId") as string;
+      comment: [null, [Validators.required, Validators.maxLength(180)]],
+    });
+    this.unparsedUserId = sessionStorage.getItem('userId') as string;
     this.userId = parseInt(this.unparsedUserId);
     console.log(typeof this.userId);
-    console.log("Input post = ", this.post);
-    
+    console.log('Input post = ', this.post);
+
     this.postTitle = this.post.title;
     this.postDescription = this.post.description;
     this.postImageUrl = this.post.image_url;
@@ -58,97 +58,121 @@ export class PublishedPostsComponent implements OnInit {
     this.token = this.appService.getCookieToken();
   }
 
-  onSubmitComment():void{
+  onSubmitComment(): void {
     let comment: string = this.commentForm.value.comment;
     console.log(this.commentForm.value);
 
-    this.appService.sendCommentFromPostToBackend(comment, this.postPostId).subscribe(
-       (result: any)=>{
-        console.log("Le commentaire a été créé avec succès: ", result);
-                this.commentsArray.unshift(result);
+    this.appService
+      .sendCommentFromPostToBackend(comment, this.postPostId)
+      .subscribe(
+        (result: any) => {
+          console.log('Le commentaire a été créé avec succès: ', result);
+          this.commentsArray.unshift(result);
+        },
+        (error: any) => {
+          console.log(error);
+        }
+      );
+  }
+
+  showModal(): void {
+    //.showModal
+  }
+
+  modifyPost(): void {
+    this.event.emit({
+      action: 'update',
+      data: this.post,
+    });
+  }
+
+  deletePost(): void {
+    console.log('Post à supprimer with postID = ' + this.postPostId);
+    console.log('PostID = ', this.postPostId);
+    this.appService.deletePostToBackend(this.postPostId).subscribe(
+      (result: any) => {
+        console.log(result);
+        this.event.emit({
+          action: 'delete',
+          data: this.post,
+        });
       },
-      (error: any)=>{
-        console.log(error)
+      (error: any) => {
+        console.log(error);
       }
     );
   }
 
-showModal():void{
-  //.showModal 
-}
-
-modifyPost():void{
-  this.event.emit({
-          action: "update",
-          data: this.post
-        });
-}
-
-deletePost():void{
-console.log("Post à supprimer with postID = "+this.postPostId);
-    console.log("PostID = ",this.postPostId)
-this.appService.deletePostToBackend(this.postPostId).subscribe(
-   (result: any)=>{
-        console.log(result);
-        this.event.emit({
-          action: "delete",
-          data: this.post
-        });
-        },
-      (error: any)=>{
-        console.log(error)
-      }
-)
-}
-
-  getCommentsInPost(): void{
+  getCommentsInPost(): void {
     this.appService.getAllCommentsFromPost(this.postPostId).subscribe(
-       (result: any)=>{
+      (result: any) => {
         this.commentsArray = result;
-        console.log("Comment: ", result)
-
+        console.log('Comment: ', result);
       },
-      (error: any)=>{
-        console.log(error)
+      (error: any) => {
+        console.log(error);
       }
-    )
+    );
   }
 
-
-  getLikesInPost(postId: number): void{
+  getLikesInPost(postId: number): void {
     this.appService.getAmountOfLikesInPost(postId).subscribe(
-       (result: any)=>{
-        let resultAmountOfLikes = result.likes
-        console.log("%cLikes: "+ JSON.stringify(result), "background-color: crimson;");
+      (result: any) => {
+        let resultAmountOfLikes = result.likes;
+        console.log(
+          '%cLikes: ' + JSON.stringify(result),
+          'background-color: crimson;'
+        );
         console.table(resultAmountOfLikes);
         this.postAmountOfLikes = resultAmountOfLikes;
-        this.hasPostOneLikeOrManyLikes = resultAmountOfLikes === 1 ? " Like": " Likes";
+        this.hasPostOneLikeOrManyLikes =
+          resultAmountOfLikes === 1 ? ' Like' : ' Likes';
       },
-      (postHasNoLikesError: any)=>{
-        console.log(postHasNoLikesError)
+      (postHasNoLikesError: any) => {
+        console.log(postHasNoLikesError);
       }
-    )
+    );
   }
 
-  sendLikeToPost(postId:number ,userId: number):void{
+  sendLikeToPost(postId: number, userId: number): void {
     this.appService.likePost(postId, userId).subscribe(
-      (result: any)=>{
-        console.log("GIVE LIKE TO POST",result);
+      (result: any) => {
+        console.log('GIVE LIKE TO POST', result);
         this.likedOrUnlikedMessage = result.message;
-        if(result.message === "The post has been unliked (-1)"){
+        if (result.message === 'The post has been unliked (-1)') {
           this.postAmountOfLikes--;
-          this.hasPostOneLikeOrManyLikes = this.postAmountOfLikes === 1 ? " Like": " Likes";
-        }else{
+          this.hasPostOneLikeOrManyLikes =
+            this.postAmountOfLikes === 1 ? ' Like' : ' Likes';
+        } else {
           this.postAmountOfLikes++;
-          this.hasPostOneLikeOrManyLikes = this.postAmountOfLikes === 1 ? " Like": " Likes";
+          this.hasPostOneLikeOrManyLikes =
+            this.postAmountOfLikes === 1 ? ' Like' : ' Likes';
         }
       },
 
-      (error: any)=>{
-        console.error("ERREUR INTERCEPTÉE LORS DE L'ENVOI DU LIKE AU POST",error.error)
-            console.assert(this.unparsedUserId !== null, "Le tableau est vide")
+      (error: any) => {
+        console.error(
+          "ERREUR INTERCEPTÉE LORS DE L'ENVOI DU LIKE AU POST",
+          error.error
+        );
+        console.assert(this.unparsedUserId !== null, 'Le tableau est vide');
       }
-    )
+    );
   }
 
+  deleteCommentVisually(event: any): void {
+    console.log('EVENT: ' + event);
+    const index = this.commentsArray.findIndex((comments: any) => {
+      return comments.comment_id === event.data.comment_id;
+    });
+    console.log(index);
+    if (index > -1) {
+      this.commentsArray.splice(index, 1);
+    }
+  }
+  onRequestReceive(event: any): void {
+    if (event.action === 'delete') {
+      this.deleteCommentVisually(event);
+    }
+  }
 }
