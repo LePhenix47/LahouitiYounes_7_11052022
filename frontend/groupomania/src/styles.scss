@@ -45,12 +45,6 @@ body {
 ::-webkit-scrollbar-track-piece {
     background-color: $color-secondary;
     border-left: 2px dashed $color-primary;
-    &:hover {
-        background-color: darken($color-secondary, 10%);
-    }
-    &:active {
-        background-color: lighten($color-secondary, 10%);
-    }
 }
 
 ::-webkit-scrollbar-corner {

@@ -18,17 +18,17 @@
           ">
                     Email pas au bon format!
                 </p>
-                <input type="text" class="container__input" placeholder="Email" required formControlName="user_email" title="Champ de saisie d'email" (change)="restoreInput()" />
+                <input type="text" class="container__input" placeholder="Email" required formControlName="user_email" title="Champ de saisie d'email" (change)="restoreInput()" autocomplete="email" />
                 <p class="container__input--invalid-password" *ngIf="
             passwordRegex.test(signupForm.value.user_password) === false &&
             signupForm.value.user_password != null
           ">
                     Mot de passe pas assez robuste!
                 </p>
-                <input type="password" class="container__input password__input" placeholder="Mot de passe" required id="password" formControlName="user_password" title="Champ de saisie de mot de passe" (change)="restoreInput()" />
+                <input type="password" class="container__input password__input" placeholder="Mot de passe" required id="password" formControlName="user_password" title="Champ de saisie de mot de passe" (change)="restoreInput()" autocomplete="current-password" />
                 <button type="submit" class="container__button" (click)="onSubmitForm()" [disabled]="signupForm.invalid" [ngClass]="{ 'container__button--disabled': signupForm.invalid }">
-          S'inscrire
-        </button>
+                    S'inscrire
+                </button>
             </fieldset>
         </form>
 
@@ -40,8 +40,8 @@
         </ol> -->
         <div class="already-signed-up-container">
             <a class="container__already-signed-up" routerLink="/login">
-        Êtes-vous déjà inscrit?
-      </a>
+                Êtes-vous déjà inscrit?
+            </a>
         </div>
 
         <div class="error-form" *ngIf="isUserAlreadyRegistered">

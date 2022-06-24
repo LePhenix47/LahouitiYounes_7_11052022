@@ -1,7 +1,7 @@
 @import "../SASS-utils/utils";
 .emote-container {
     width: 100%;
-    height: 87vh;
+    height: 100vh;
     background-color: $color-secondary;
     display: flex;
     flex-direction: column;
@@ -13,6 +13,9 @@
     &__emote {
         width: 100%;
         font-size: 10rem;
+        @include mobile-only {
+            font-size: 5rem;
+        }
         text-align: center;
         &:hover {
             cursor: vertical-text;

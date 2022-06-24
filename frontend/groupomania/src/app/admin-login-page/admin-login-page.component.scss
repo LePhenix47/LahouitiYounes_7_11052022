@@ -1,0 +1,216 @@
+@import "../SASS-utils/utils";
+//------------------------------------------------------
+.container {
+    // width: 100%;
+    height: 100vh;
+    background-color: darken($color-secondary, 20%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    &__card {
+        width: 50%;
+        height: 550px;
+        min-height: 180px;
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        &--rounded {
+            border-radius: 25px;
+        }
+        @include mobile-only {
+            margin: 0;
+            width: 75%;
+        }
+    }
+    &__image-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &__image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 125px;
+        width: 125px;
+        aspect-ratio: 16/9;
+    }
+    &__form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 30%;
+        margin: 10px 0;
+    }
+    &__input {
+        font-family: "Lato";
+        width: 80%;
+        position: relative;
+        @include rounded-inputs;
+        padding: 16px;
+        background-color: $color-secondary;
+        &::placeholder {
+            font-size: 16px;
+            color: $color-tertiary;
+            opacity: 69%;
+            transition: transform 750ms;
+        }
+        &:focus {
+            outline: 3px solid $color-primary;
+            &::placeholder {
+                transform: translate(-50%, 0%);
+            }
+        }
+        &--invalid-email {
+            border-radius: 50px;
+            outline: 2px dashed $color-primary;
+            padding: 2px 8px;
+            margin: 5px 0;
+        }
+        &--invalid-password {
+            border-radius: 50px;
+            outline: 2px dashed $color-primary;
+            padding: 2px 8px;
+            margin-top: 5px;
+        }
+    }
+    &__text {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin: 10px 0;
+        padding: 15px 0;
+    }
+    &__heading2 {
+        @include center-flex;
+        text-align: center;
+        margin: 5px 0;
+        padding: 5px;
+        font-size: 30px;
+    }
+    &__button {
+        font-family: "Lato";
+        font-size: 16px;
+        @include rounded-inputs;
+        height: 35px;
+        width: 80%;
+        background-color: $color-primary;
+        color: #fff;
+        padding: 16px;
+        line-height: 0;
+        &:hover {
+            background-color: darken($color-primary, 10%);
+            cursor: pointer;
+        }
+        &:active {
+            background-color: lighten($color-primary, 10%);
+        }
+        &--disabled {
+            background-color: $color-invalid;
+            &:hover {
+                background-color: $color-invalid;
+                cursor: not-allowed;
+            }
+            &:active {
+                background-color: $color-invalid;
+            }
+        }
+    }
+    &__not-signed-up {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        height: 25px;
+        color: $color-tertiary;
+        cursor: pointer;
+        &:active {
+            opacity: 85%;
+        }
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.fieldset {
+    @include center-flex-column;
+    margin: 25px 0;
+    flex-wrap: wrap;
+    width: 100%;
+    height: 250px;
+    border: 0;
+    &__legend {
+        padding: 1% 0;
+        margin: 2% 12%;
+        @include center-flex;
+    }
+}
+
+.not-signed-up-container {
+    height: 25%;
+    @include center-flex-column;
+}
+
+.error-form {
+    width: 100%;
+    height: 85px;
+    color: $color-white;
+    @include center-flex;
+    @include mobile-only {
+        height: 150px;
+    }
+    border-radius: 25px;
+    background-color: darken($color-secondary, 55%);
+    overflow: hidden;
+    &__icon {
+        margin: 1%;
+        color: $color-primary;
+        background-color: $color-white;
+        border-radius: 90px;
+    }
+    &__text {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @include mobile-only {
+            white-space: break-spaces;
+            padding: 2%;
+            margin-left: 2%;
+        }
+    }
+}
+
+.success-form {
+    width: 100%;
+    height: 85px;
+    @include mobile-only {
+        height: 150px;
+    }
+    color: $color-white;
+    @include center-flex;
+    border-radius: 25px;
+    background-color: $color-valid;
+    color: $color-black;
+    overflow: hidden;
+    &__icon {
+        margin: 1%;
+        color: lighten($color-valid, 8%);
+        background-color: $color-white;
+        border-radius: 90px;
+    }
+    &__text {
+        color: black;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        @include mobile-only {
+            white-space: break-spaces;
+            padding: 2%;
+            margin-left: 2%;
+        }
+    }
+}
