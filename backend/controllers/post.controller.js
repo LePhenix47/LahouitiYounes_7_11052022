@@ -141,19 +141,37 @@ exports.updatePost = (req, res, next) => {
     const postId = req.params.postId;
     let imageFile = req.files ? req.files[0] : undefined;
     console.log(`Mis à jour du post w/ ID = ${postId}`);
-    Post.update(req.body, {
+    let post = {...req.body, post_id: postId };
+    console.log(
+        "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%" + JSON.stringify(imageFile)
+    );
+    if (imageFile) {
+        let hasPostImageUrl = post.image_url === null ? false : true;
+        if (hasPostImageUrl) {
+            let imageUrl = post.image_url.split("/images/")[1];
+
+            console.log("IMAGE *****************************************" + imageUrl);
+            fileSystem.unlink(`images/${imageUrl}`, () => {
+                console.log(
+                    "OLD Image with url: " + imageUrl + " successfully deleted"
+                );
+            });
+        }
+        post = {
+            ...post,
+            image_url: imageFile ?
+                `${req.protocol}://${req.get("host")}/images/${imageFile.filename}` :
+                null,
+        };
+    }
+    console.log("POST = ", post);
+
+    Post.update(post, {
             where: { post_id: postId },
         })
         .then((numberReturned) => {
             if (numberReturned == 1) {
-                res.status(200).send({
-                    ...req.body,
-                    image_url: imageFile ?
-                        `${req.protocol}://${req.get("host")}/images/${
-                imageFile.filename
-              }` :
-                        null,
-                });
+                res.status(200).send(post);
             } else {
                 res.status(400).send({
                     message: `Cannot update Post with id of ${postId}. Maybe Post was not found or req.body is empty!`,
@@ -176,38 +194,62 @@ exports.updatePost = (req, res, next) => {
 */
 exports.deletePost = (req, res, next) => {
     const postId = req.params.postId;
-    Post.destroy({
-            where: { post_id: postId }, //DELETE FROM posts WHERE post_id = [ID du post du corps de la requête]
-        })
-        .then((numberReturned) => {
-            if (numberReturned == 1) {
+    const file = req.files ? req.files[0] : undefined;
+
+    Post.findByPk(postId)
+        .then((post) => {
+            let hasPostImageUrl = post.dataValues.image_url === null ? false : true;
+            if (hasPostImageUrl) {
+                let imageUrl = post.dataValues.image_url.split("/images/")[1];
+
                 console.log(
-                    "Post SUPPRIMÉ AVEC SUCCÈS ! → Nombre retourné = " + numberReturned
+                    "IMAGE *****************************************" + imageUrl
                 );
-                return res.status(200).send({
-                    message: "Post was deleted successfully!",
-                });
-            } else {
-                console.log(
-                    "Post cannot be deleted! → Number returned = " + numberReturned
-                );
-                return res.status(404).send({
-                    message: `Cannot delete Post with id = ${postId}. Post was not found!`,
+                fileSystem.unlink(`images/${imageUrl}`, () => {
+                    console.log(
+                        "OLD Image with url: " + imageUrl + " successfully deleted"
+                    );
                 });
             }
+            Post.destroy({
+                    where: { post_id: postId }, //DELETE FROM posts WHERE post_id = [ID du post du corps de la requête]
+                })
+                .then((numberReturned) => {
+                    if (numberReturned == 1) {
+                        console.log(
+                            "Post SUPPRIMÉ AVEC SUCCÈS ! → Nombre retourné = " +
+                            numberReturned
+                        );
+                        return res.status(200).send({
+                            message: "Post was deleted successfully!",
+                        });
+                    } else {
+                        console.log(
+                            "Post cannot be deleted! → Number returned = " + numberReturned
+                        );
+                        return res.status(404).send({
+                            message: `Cannot delete Post with id = ${postId}. Post was not found!`,
+                        });
+                    }
+                })
+                .catch((deletePostError) => {
+                    console.log(
+                        "Tentative de suppresion du post w/ ID = " +
+                        postId +
+                        ", erreur: " +
+                        deletePostError
+                    );
+                    res.status(500).send({
+                        message: "Could not delete Post with id=" +
+                            postId +
+                            " due to an unexpected error",
+                    });
+                });
         })
-        .catch((deletePostError) => {
-            console.log(
-                "Tentative de suppresion du post w/ ID = " +
-                postId +
-                ", erreur: " +
-                deletePostError
-            );
-            res.status(500).send({
-                message: "Could not delete Post with id=" +
-                    postId +
-                    " due to an unexpected error",
-            });
+        .catch((imageUrlError) => {
+            res
+                .status(500)
+                .json({ message: "Erreur au find du post" + imageUrlError.message });
         });
 };
 
@@ -489,7 +531,7 @@ exports.getAllCommentsInOnePost = (req, res, next) => {
     let postIdFromURL = req.params.postId;
     Comment.findAll({
             include: User,
-            attributes: ["comment", "userUserId"],
+            attributes: ["comment", "userUserId", "comment_id"],
             where: {
                 postPostId: postIdFromURL,
             },
